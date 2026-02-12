@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, statSync, writeFileSync } from "node:fs";
-import { dirname, relative, resolve } from "node:path";
+import { basename, dirname, relative, resolve } from "node:path";
 
 const AGENTS = `# Coding Agent Contract
 
@@ -8,7 +8,7 @@ for every coding agent.
 
 ## Before changing code
 
-- Read this file and [docs/llm/INDEX.md](docs/llm/INDEX.md).
+- Read this file and \`docs/llm/INDEX.md\`.
 - Inspect the relevant code and its callers before editing.
 - Reuse existing patterns and dependencies before adding new ones.
 
@@ -31,42 +31,140 @@ Read and follow [AGENTS.md](AGENTS.md). It is the canonical repository
 contract; do not duplicate or override its rules here.
 `;
 
-const INDEX = `# LLM Wiki
+function wikiAgents() {
+  return `# LLM Wiki Instructions
 
-This directory contains the LLM-facing documentation for the repository.
+This directory is the LLM-facing view of the repository. Source code,
+manifests, tests, and Git history remain the source of truth.
 
-Keep this index as the entry point and link to detailed pages from here.
+## Workflow
+
+1. Read \`INDEX.md\` before changing a page.
+2. Ground every claim in a repository path, commit, issue, or supplied source.
+3. Update the affected page, \`INDEX.md\`, and append an entry to \`LOG.md\`.
+4. Mark unsupported claims as open questions; do not infer missing decisions.
+
+## Page shape
+
+Use a short \`## Sources\` section with repository-relative paths or stable URLs.
+Keep architecture in \`architecture/\`, repeatable processes in \`workflows/\`,
+and durable decisions in \`decisions/\`.
 `;
-
-function ensureFile(targetDir, name, contents) {
-  const file = resolve(targetDir, name);
-  if (existsSync(file)) return false;
-  mkdirSync(dirname(file), { recursive: true });
-  writeFileSync(file, contents, "utf8");
-  return true;
 }
 
-const targetDir = resolve(process.argv[2] ?? process.cwd());
+function wikiIndex(repo, mode) {
+  return `# LLM Wiki
 
-try {
-  if (!statSync(targetDir).isDirectory()) {
-    throw new Error(`Not a directory: ${targetDir}`);
+LLM-facing, source-linked context for \`${basename(repo)}\`.
+
+## Architecture
+
+${mode === "full" ? "- [Overview](architecture/overview.md) — AI-maintained repository overview.\n" : "- No pages yet. Use \`refresh-llm-wiki\` after sources are available.\n"}
+## Workflows
+
+${mode === "full" ? "- [Setup codebase](workflows/setup-codebase.md) — AI-maintained setup workflow.\n" : "- No pages yet. Use \`refresh-llm-wiki\` after sources are available.\n"}
+## Decisions
+
+Add durable, source-backed decisions under \`decisions/\`.
+
+## Activity
+
+- [Log](LOG.md) — append-only record of wiki maintenance.
+`;
+}
+
+function wikiLog() {
+  return `# Wiki Log
+
+Append wiki maintenance in this format:
+
+## [YYYY-MM-DD] <operation> | <summary>
+
+- Sources: <repository paths or URLs>
+- Updated: <wiki pages>
+`;
+}
+
+function overviewPlaceholder(repo) {
+  return `# ${basename(repo)} Architecture Overview
+
+Populate this page with \`refresh-llm-wiki\` after it reads the relevant
+source code, tests, manifests, and existing documentation.
+
+## Sources
+
+- Open question: sources have not been ingested yet.
+`;
+}
+
+function setupPlaceholder() {
+  return `# Setup Codebase
+
+Populate this page with \`refresh-llm-wiki\` after it traces the repository's
+actual setup flow and verifies the supporting sources.
+
+## Sources
+
+- \`AGENTS.md\`
+- \`docs/llm/AGENTS.md\`
+`;
+}
+
+function relativePath(repo, file) {
+  return relative(repo, file).replaceAll("\\", "/") || ".";
+}
+
+function isDirectory(file) {
+  try {
+    return statSync(file).isDirectory();
+  } catch {
+    return false;
   }
-} catch (error) {
-  console.error(error.message);
+}
+
+function ensureDirectory(repo, folder) {
+  const target = resolve(repo, folder);
+  if (existsSync(target)) return;
+  mkdirSync(target, { recursive: true });
+  console.log(`created ${relativePath(repo, target)}/`);
+}
+
+function ensureFile(repo, file, contents) {
+  const target = resolve(repo, file);
+  if (existsSync(target)) {
+    console.log(`kept ${relativePath(repo, target)}`);
+    return;
+  }
+  mkdirSync(dirname(target), { recursive: true });
+  writeFileSync(target, contents, "utf8");
+  console.log(`created ${relativePath(repo, target)}`);
+}
+
+const args = process.argv.slice(2);
+const wikiOption = args.find((arg) => arg.startsWith("--wiki="));
+const wikiMode = wikiOption?.slice("--wiki=".length) ?? "full";
+const repoArg = args.find((arg) => !arg.startsWith("--"));
+
+if (!new Set(["full", "placeholder"]).has(wikiMode)) {
+  console.error("Usage: node scripts/ai/setup.js [repo-path] [--wiki=full|placeholder]");
   process.exit(1);
 }
 
-const files = [
-  ["AGENTS.md", AGENTS],
-  ["CLAUDE.md", CLAUDE],
-  ["docs/llm/INDEX.md", INDEX],
-];
-const results = files.map(([name, contents]) => ({
-  name,
-  created: ensureFile(targetDir, name, contents),
-}));
+const repo = resolve(repoArg ?? process.cwd());
+if (!isDirectory(repo)) {
+  console.error(`Not a directory: ${repo}`);
+  process.exit(1);
+}
 
-for (const { name, created } of results) {
-  console.log(`${created ? "created" : "kept"} ${relative(targetDir, resolve(targetDir, name))}`);
+ensureFile(repo, "AGENTS.md", AGENTS);
+ensureFile(repo, "CLAUDE.md", CLAUDE);
+ensureDirectory(repo, "docs/llm/architecture");
+ensureDirectory(repo, "docs/llm/workflows");
+ensureDirectory(repo, "docs/llm/decisions");
+ensureFile(repo, "docs/llm/AGENTS.md", wikiAgents());
+ensureFile(repo, "docs/llm/INDEX.md", wikiIndex(repo, wikiMode));
+ensureFile(repo, "docs/llm/LOG.md", wikiLog());
+if (wikiMode === "full") {
+  ensureFile(repo, "docs/llm/architecture/overview.md", overviewPlaceholder(repo));
+  ensureFile(repo, "docs/llm/workflows/setup-codebase.md", setupPlaceholder());
 }

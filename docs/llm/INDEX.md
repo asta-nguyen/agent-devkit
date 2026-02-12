@@ -1,9 +1,19 @@
 # LLM Wiki
 
-This directory is the LLM-facing index of the repository.
+LLM-facing, source-linked context for `agent-devkit`.
 
-The refresh workflow will add or update pages here when the codebase changes.
-Keep this index short and link to the detailed pages instead of duplicating
-their content.
+## Architecture
 
-_Status: bootstrap skeleton; refresh generation is not implemented yet._
+- [Overview](architecture/overview.md) — detected stack, structure, and entry points.
+
+## Workflows
+
+- [Setup codebase](workflows/setup-codebase.md) — establish and maintain agent context.
+
+## Decisions
+
+Add durable, source-backed decisions under `decisions/`.
+
+## Activity
+
+- [Log](LOG.md) — append-only record of wiki maintenance.
