@@ -9,7 +9,8 @@ Use AI code reading to identify user-meaningful features and flows. Do not
 classify files, folders, or every helper as a feature.
 
 1. Read `AGENTS.md`, `docs/llm/AGENTS.md`, `INDEX.md`, existing wiki pages,
-   entry points, routes/commands, relevant callers, and tests.
+   then use `read-codebase-context` to locate entry points, routes/commands,
+   relevant callers, and tests.
 2. Build a feature list from behavior: what a user or developer can do, what
    starts the flow, and the source files that establish it.
 3. Match each feature to an existing wiki page. Mark it:

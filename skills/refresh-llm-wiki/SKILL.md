@@ -9,9 +9,9 @@ Write wiki pages from evidence, not file-name heuristics.
 
 1. Read `AGENTS.md`, `docs/llm/AGENTS.md`, `INDEX.md`, `LOG.md`, the plan,
    selected feature(s), and existing related pages.
-2. Trace each selected flow through its real entry point, callers, behavior,
-   error paths, and relevant tests. Use `ingest-wiki-sources` if evidence is
-   unavailable.
+2. Use `read-codebase-context`, then trace each selected flow through its real
+   entry point, callers, behavior, error paths, and relevant tests. Use
+   `ingest-wiki-sources` if evidence is unavailable.
 3. Create or update only the relevant page under `architecture/`,
    `workflows/`, or `decisions/`. Use Obsidian-compatible Markdown:
 

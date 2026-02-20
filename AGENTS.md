@@ -16,8 +16,8 @@ coding-agent context and an LLM-facing codebase wiki in sync.
 - Preserve user changes and do not rewrite unrelated files.
 - Treat generated LLM documentation as a product artifact: update it when the
   documented code or behavior changes.
-- Do not add OpenEZ, TypeScript, a build system, or multi-agent behavior to the
-  MVP unless the task explicitly asks for it.
+- Do not add TypeScript, a build system, or multi-agent behavior to the MVP
+  unless the task explicitly asks for it.
 - Never hide errors that could leave code or documentation stale.
 - Do not commit secrets, generated dependency directories, or temporary files.
 
