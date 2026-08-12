@@ -1,0 +1,22 @@
+scripts/ai/setup.js
+  s_c4d69e8a805753::t_37934e7706d34f 57,65-68,70-71
+  s_c4d69e8a805753::t_59509781103fd3 1-56,58-64,69,72
+skills/setup-codebase/SKILL.md
+  s_c4d69e8a805753::t_59509781103fd3 1-5,8,10-15,17-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "8132b9ad5bf9dd7cdea771a7d31f521305c73f9b",
+  "prompts": {},
+  "sessions": {
+    "s_c4d69e8a805753": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ff692-2e0c-7f42-8d88-ca5056e631ec",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
