@@ -6,5 +6,6 @@ description: Review a repository change and verify its implementation and LLM wi
 # review-and-verify
 
 Review the diff for correctness, stale documentation, accidental scope, and
-missing error handling. Run the smallest relevant checks and report any
-remaining limitation explicitly.
+missing error handling. For wiki changes, also verify source paths, `## Sources`,
+internal Obsidian wikilinks, index links, and placeholder removal. Run the
+smallest relevant checks and report any remaining limitation explicitly.

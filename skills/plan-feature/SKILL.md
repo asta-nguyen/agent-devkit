@@ -23,7 +23,7 @@ Turn an approved design into a short execution plan before editing code.
 3. Put contract/data changes before their callers; put tests beside the behavior
    they verify. Do not add tasks for speculative abstractions.
 4. Include a final `review-and-verify` task. If the feature is new or changes
-   user-visible behavior, include `discover-wiki-features` after verification.
+   user-visible behavior, include `document-wiki` after verification.
 5. Ask for confirmation on a plan that changes public APIs, data schemas,
    dependencies, CI, or more than a small set of files. Otherwise hand off to
    `implement-task`.

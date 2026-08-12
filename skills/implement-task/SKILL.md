@@ -9,6 +9,5 @@ Before coding, read `AGENTS.md` and `docs/llm/INDEX.md`, trace the relevant
 code path, and follow the approved `plan-feature` output. If no approved plan
 exists and the change is not an unambiguous small fix, use `brainstorm-feature`
 then `plan-feature`. Reuse local patterns, keep the diff focused, and leave one
-runnable check for non-trivial logic. For a new or materially changed feature, invoke
-`discover-wiki-features` after verification so it appears in coverage; then
-follow `plan-wiki-refresh` and `refresh-llm-wiki` when the user selects it.
+runnable check for non-trivial logic. For a new or materially changed feature,
+use `document-wiki` after verification to refresh its source-grounded coverage.

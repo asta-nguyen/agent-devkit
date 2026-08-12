@@ -1,0 +1,4 @@
+interface:
+  display_name: "Document Project Wiki"
+  short_description: "Document existing app features in the project wiki"
+  default_prompt: "Document the verified features of this project in docs/llm; if the wiki already has content, show me uncovered features to choose."

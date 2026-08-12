@@ -46,9 +46,11 @@ manifests, tests, and Git history remain the source of truth.
 
 ## Page shape
 
-Use a short \`## Sources\` section with repository-relative paths or stable URLs.
-Keep architecture in \`architecture/\`, repeatable processes in \`workflows/\`,
-and durable decisions in \`decisions/\`.
+Use Obsidian wikilinks (\`[[path/to/page|Label]]\`) for internal pages and a
+short \`## Sources\` section with repository-relative paths or stable URLs.
+Add \`## Related\` when a page has related wiki content. Keep architecture in
+\`architecture/\`, repeatable processes in \`workflows/\`, and durable decisions
+in \`decisions/\`.
 `;
 }
 
@@ -59,10 +61,10 @@ LLM-facing, source-linked context for \`${basename(repo)}\`.
 
 ## Architecture
 
-${mode === "full" ? "- [Overview](architecture/overview.md) — AI-maintained repository overview.\n" : "- No pages yet. Use \`refresh-llm-wiki\` after sources are available.\n"}
+${mode === "full" ? "- [[architecture/overview|Overview]] — AI-maintained repository overview.\n" : "- No pages yet. Use \`document-wiki\` after sources are available.\n"}
 ## Workflows
 
-${mode === "full" ? "- [Setup codebase](workflows/setup-codebase.md) — AI-maintained setup workflow.\n" : "- No pages yet. Use \`refresh-llm-wiki\` after sources are available.\n"}
+${mode === "full" ? "- [[workflows/setup-codebase|Setup codebase]] — AI-maintained setup workflow.\n" : "- No pages yet. Use \`document-wiki\` after sources are available.\n"}
 ## Decisions
 
 Add durable, source-backed decisions under \`decisions/\`.
@@ -88,7 +90,7 @@ Append wiki maintenance in this format:
 function overviewPlaceholder(repo) {
   return `# ${basename(repo)} Architecture Overview
 
-Populate this page with \`refresh-llm-wiki\` after it reads the relevant
+Populate this page with \`document-wiki\` after it reads the relevant
 source code, tests, manifests, and existing documentation.
 
 ## Sources
@@ -100,8 +102,12 @@ source code, tests, manifests, and existing documentation.
 function setupPlaceholder() {
   return `# Setup Codebase
 
-Populate this page with \`refresh-llm-wiki\` after it traces the repository's
+Populate this page with \`document-wiki\` after it traces the repository's
 actual setup flow and verifies the supporting sources.
+
+## Related
+
+- [[architecture/overview|Architecture overview]]
 
 ## Sources
 
@@ -146,7 +152,7 @@ const wikiMode = wikiOption?.slice("--wiki=".length) ?? "full";
 const repoArg = args.find((arg) => !arg.startsWith("--"));
 
 if (!new Set(["full", "placeholder"]).has(wikiMode)) {
-  console.error("Usage: node scripts/ai/setup.js [repo-path] [--wiki=full|placeholder]");
+  console.error("Usage: node setup.js [repo-path] [--wiki=full|placeholder]");
   process.exit(1);
 }
 
