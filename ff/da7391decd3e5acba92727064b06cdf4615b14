@@ -1,0 +1,63 @@
+scripts/ai/setup.js
+  s_c4d69e8a805753::t_37934e7706d34f 156
+  s_c4d69e8a805753::t_59509781103fd3 1,3-10,12-33,36,39,97,102,111-112,116,122,157-158,170
+  s_c4d69e8a805753::t_dfd117428d2739 34-35,40-41,43-54,56-61,63-64,66-87,98-99,101,105-107,110,115,125-131,161-164,166
+  s_c4d69e8a805753::t_7519051cd4e347 132-142,154-155,160
+  s_c4d69e8a805753::t_f8ffb3da58d658 2,11,37-38,42,55,62,65,88-96,100,103-104,113-114,117-121,123-124,159,165,168-169
+  s_c4d69e8a805753::t_44f889afcf95b3 143-153,167
+  s_c4d69e8a805753::t_ce7383b02def82 108-109
+skills/setup-codebase/SKILL.md
+  s_c4d69e8a805753::t_59509781103fd3 1-2,4-5
+  s_c4d69e8a805753::t_44f889afcf95b3 10,20
+  s_c4d69e8a805753::t_f8ffb3da58d658 3,8,11-13,15,17-19,21
+  s_c4d69e8a805753::t_09eb86ca7a1bcb 23-25
+  s_c4d69e8a805753::t_dfd117428d2739 16
+  s_c4d69e8a805753::t_b78958386c45bb 14
+skills/plan-wiki-refresh/SKILL.md
+  s_c4d69e8a805753::t_5ab125448ecdbc 1-2,4-7
+  s_c4d69e8a805753::t_b4c52b46ab7876 3,8-29
+skills/ingest-wiki-sources/SKILL.md
+  s_c4d69e8a805753::t_ba3534524dac75 1-2,4-7
+  s_c4d69e8a805753::t_f8673b37ef683d 3,8-32
+docs/llm/architecture/overview.md
+  s_c4d69e8a805753::t_05099545c9401e 5
+  s_c4d69e8a805753::t_342bf57c7dbd64 1-4,6-9
+docs/llm/INDEX.md
+  s_c4d69e8a805753::t_dfd117428d2739 3,5,7-19
+skills/discover-wiki-features/SKILL.md
+  s_c4d69e8a805753::t_a6189c39bb3872 3,8-32
+  s_c4d69e8a805753::t_895f5a814bf846 1-2,4-7
+skills/refresh-llm-wiki/SKILL.md
+  s_c4d69e8a805753::t_a6189c39bb3872 1-4,6,8-42
+docs/llm/AGENTS.md
+  s_c4d69e8a805753::t_342bf57c7dbd64 1-17
+skills/review-and-verify/SKILL.md
+  s_c4d69e8a805753::t_527bb6335a6325 1-5
+skills/implement-task/SKILL.md
+  s_c4d69e8a805753::t_a6189c39bb3872 1-6,11-13
+CLAUDE.md
+  s_c4d69e8a805753::t_6cff035da517a2 1-4
+docs/llm/LOG.md
+  s_c4d69e8a805753::t_342bf57c7dbd64 1-8
+skills/design-wiki/SKILL.md
+  s_c4d69e8a805753::t_5ab125448ecdbc 1-2,4-7
+  s_c4d69e8a805753::t_b4c52b46ab7876 3,8-26
+docs/llm/workflows/setup-codebase.md
+  s_c4d69e8a805753::t_342bf57c7dbd64 1-10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "ffda7391decd3e5acba92727064b06cdf4615b14",
+  "prompts": {},
+  "sessions": {
+    "s_c4d69e8a805753": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ff692-2e0c-7f42-8d88-ca5056e631ec",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
