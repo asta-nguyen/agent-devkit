@@ -1,0 +1,39 @@
+skills/review-and-verify/SKILL.md
+  s_c4d69e8a805753::t_7a823ae667dc20 1-5
+scripts/ai/setup.js
+  s_c4d69e8a805753::t_7a823ae667dc20 1
+AGENTS.md
+  s_c4d69e8a805753::t_7a823ae667dc20 1-35
+README.md
+  s_c4d69e8a805753::t_7a823ae667dc20 1-14
+skills/refresh-llm-wiki/SKILL.md
+  s_c4d69e8a805753::t_7a823ae667dc20 1-7
+skills/setup-codebase/SKILL.md
+  s_c4d69e8a805753::t_7a823ae667dc20 1-9
+skills/implement-task/SKILL.md
+  s_c4d69e8a805753::t_7a823ae667dc20 1-6
+package.json
+  s_c4d69e8a805753::t_7a823ae667dc20 1-6
+scripts/ai/refresh.js
+  s_c4d69e8a805753::t_7a823ae667dc20 1
+scripts/ai/check.js
+  s_c4d69e8a805753::t_7a823ae667dc20 1
+docs/llm/INDEX.md
+  s_c4d69e8a805753::t_7a823ae667dc20 1-9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "3514007e629b7f143eb12744686cc7a2f136e770",
+  "prompts": {},
+  "sessions": {
+    "s_c4d69e8a805753": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ff692-2e0c-7f42-8d88-ca5056e631ec",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
