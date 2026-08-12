@@ -1,0 +1,36 @@
+skills/implement-task/SKILL.md
+  s_c4d69e8a805753::t_b61e700fb5bae4 3,9-12
+skills/brainstorm-feature/SKILL.md
+  s_c4d69e8a805753::t_b61e700fb5bae4 3,8-9,12-22
+  s_c4d69e8a805753::t_277dc813f26a52 10-11
+  s_c4d69e8a805753::t_c22ad07cf71c99 1-2,4-7
+AGENTS.md
+  s_c4d69e8a805753::t_277dc813f26a52 19-20
+skills/plan-feature/SKILL.md
+  s_c4d69e8a805753::t_b61e700fb5bae4 3,8-9,12-18,22-32
+  s_c4d69e8a805753::t_c22ad07cf71c99 1-2,4-7
+  s_c4d69e8a805753::t_277dc813f26a52 10-11,19-21
+skills/discover-wiki-features/SKILL.md
+  s_c4d69e8a805753::t_277dc813f26a52 12-13
+skills/refresh-llm-wiki/SKILL.md
+  s_c4d69e8a805753::t_277dc813f26a52 12-14
+skills/read-codebase-context/SKILL.md
+  s_c4d69e8a805753::t_c8ef36ddb9aae5 1-2,4-7
+  s_c4d69e8a805753::t_277dc813f26a52 3,8-43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "6ffecb445b44cda75b9c39233a27bb2374a55c2b",
+  "prompts": {},
+  "sessions": {
+    "s_c4d69e8a805753": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ff692-2e0c-7f42-8d88-ca5056e631ec",
+        "model": "gpt-5.6-terra"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
