@@ -1,6 +1,6 @@
 ---
 name: document-wiki
-description: Inspect an existing application and add source-grounded documentation for its user-visible features. Use when a repository has no LLM wiki yet, when the wiki is only a skeleton, or when the user wants to choose undocumented or stale features to document.
+description: Use when a repository has no LLM wiki yet, when the wiki is only a skeleton, or when features are undocumented or stale.
 ---
 
 # Document Wiki
@@ -84,3 +84,13 @@ other wiki skills.
    updated”.
 
 Do not modify application code, install dependencies, or invent architecture.
+
+## Red flags
+
+| Thought | Reality |
+|---|---|
+| "I'll document this inferred feature" | If evidence is missing, omit the claim or label it an open question. |
+| "I'll update the wiki without reading source" | Source establishes facts. Index accelerates discovery. Read the code. |
+| "I'll skip the feature inventory and just write pages" | Inventory first, user selects, then write. No exceptions. |
+| "I'll modify application code to match the wiki" | Wiki follows source, never the reverse. |
+| "I'll report 'pages updated' and stop" | Report domain, features documented, features skipped, unresolved questions. |

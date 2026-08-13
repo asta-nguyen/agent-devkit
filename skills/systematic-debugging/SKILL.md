@@ -1,6 +1,6 @@
 ---
 name: systematic-debugging
-description: Find root cause before attempting fixes. Use for any technical issue — test failures, bugs, unexpected behavior, performance problems, build failures. Especially when under time pressure or previous fixes did not work.
+description: Use for any technical issue — test failures, bugs, unexpected behavior, performance problems, build failures. Especially when under time pressure or previous fixes did not work.
 ---
 
 # Systematic Debugging

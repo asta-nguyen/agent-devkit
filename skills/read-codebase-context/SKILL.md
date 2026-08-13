@@ -1,6 +1,6 @@
 ---
 name: read-codebase-context
-description: Index and trace repository code before feature design, planning, impact analysis, or wiki generation. Use when a task needs accurate affected files, callers, tests, dependencies, or behavior; prefer OpenEZ graph queries and bootstrap its local index when it is unavailable or stale.
+description: Use when a task needs accurate affected files, callers, tests, dependencies, or behavior — before feature design, planning, impact analysis, or wiki generation.
 ---
 
 # Read Codebase Context
@@ -37,6 +37,25 @@ and memory accelerate discovery; current source code and tests establish facts.
 6. If OpenEZ cannot be installed or queried, use `rg` and direct file reads,
    state the fallback, and continue. Never fabricate a file impact list from
    index results or memory alone.
+
+## Quick reference
+
+| Need | Tool |
+|---|---|
+| Semantic code search | `code_query` |
+| Symbol context (callers/callees) | `code_context` |
+| Graph traversal across modules | `graph_neighbors` |
+| Past decisions or patterns | `memory_recall` |
+| Fallback (no OpenEZ) | `rg` + direct file reads |
+
+## Red flags
+
+| Thought | Reality |
+|---|---|
+| "I'll skip tracing callers, it's a small change" | Small changes break callers you did not read. |
+| "The index is probably current" | Stale index returns wrong callers. Run `openez index .` if unsure. |
+| "I'll fabricate the impact list from memory" | Memory is not evidence. Read the actual source. |
+| "I don't need OpenEZ, I'll just grep" | Grep finds strings, not call graphs. Use OpenEZ when available. |
 
 The local `.openez/` directory is derived index data. Keep it out of source
 documentation and version control unless the target repository explicitly

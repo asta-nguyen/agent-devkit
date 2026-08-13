@@ -1,6 +1,6 @@
 ---
 name: review-and-verify
-description: Review a repository change and verify its implementation and LLM wiki stay correct. Use after implementing a feature, refreshing wiki pages, or before declaring a task complete.
+description: Use after implementing a feature, refreshing wiki pages, or before declaring a task complete.
 ---
 
 # review-and-verify

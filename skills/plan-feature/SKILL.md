@@ -1,6 +1,6 @@
 ---
 name: plan-feature
-description: Create small, verifiable implementation tasks for an approved software feature. Use after feature design approval and before coding a non-trivial feature, behavior change, API change, or cross-file implementation.
+description: Use after feature design approval and before coding a non-trivial feature, behavior change, API change, or cross-file implementation.
 ---
 
 # Plan Feature
@@ -65,6 +65,15 @@ After writing the complete plan, review it against the approved design:
    names used in later tasks match what was defined in earlier tasks?
 
 Fix any issues inline. No need to re-review — just fix and move on.
+
+## Red flags
+
+| Thought | Reality |
+|---|---|
+| "I'll figure out the details during implementation" | Plan must contain actual content. No placeholders. |
+| "This task is small enough to skip the template" | Every task states Files, Change, Verify. No exceptions. |
+| "I'll add tests in a separate task later" | Tests go beside the behavior they verify. Same task. |
+| "The plan is obvious from the design" | Obvious to you ≠ obvious to the implementing agent. Write it out. |
 
 Plans are execution artifacts, not essays. Prefer the fewest tasks that
 make the sequence and verification unambiguous.

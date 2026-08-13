@@ -1,6 +1,6 @@
 ---
 name: brainstorm-feature
-description: Clarify a proposed software feature and obtain design approval before implementation planning. Use when a user request is new, ambiguous, affects product behavior, or has unresolved scope, UX, API, data, or compatibility decisions.
+description: Use when a user request is new, ambiguous, affects product behavior, or has unresolved scope, UX, API, data, or compatibility decisions.
 ---
 
 # Brainstorm Feature

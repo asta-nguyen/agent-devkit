@@ -35,6 +35,7 @@ The shortest routing guide is:
 
 ```text
 setup-codebase                         # first visit to a repo missing context
+setup-openez                           # index codebase for semantic queries
 read-codebase-context                  # understand code before changing it
 document-wiki                          # document existing app features
 brainstorm-feature → plan-feature      # design and plan a new feature
@@ -62,7 +63,8 @@ the workflow itself.
 | Skill | Purpose |
 |---|---|
 | `setup-codebase` | Create missing `AGENTS.md`, `CLAUDE.md`, and `docs/llm/` skeleton. Run once per repo. |
-| `read-codebase-context` | Index the codebase with OpenEZ and trace code paths. Used before feature work or wiki generation. |
+| `setup-openez` | Install, initialize, index, and verify OpenEZ MCP connection for a repository. |
+| `read-codebase-context` | Query OpenEZ and trace code paths. Used before feature work or wiki generation. |
 
 ### Feature development
 

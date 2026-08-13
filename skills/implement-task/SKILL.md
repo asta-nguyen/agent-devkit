@@ -1,6 +1,6 @@
 ---
 name: implement-task
-description: Implement a focused approved repository change while preserving LLM wiki coverage. Use after an approved feature plan, or for an unambiguous small fix; trace the affected flow, make the smallest change, verify it, and add new or materially changed features to wiki coverage.
+description: Use after an approved feature plan exists, or for an unambiguous small fix requiring code changes.
 ---
 
 # Implement Task

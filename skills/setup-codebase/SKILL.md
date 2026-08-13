@@ -1,6 +1,6 @@
 ---
 name: setup-codebase
-description: Bootstrap missing repository context for coding agents. Use when a project lacks AGENTS.md, CLAUDE.md, or docs/llm/; inspect available repository evidence and write only the missing, project-specific context files.
+description: Use when a project lacks AGENTS.md, CLAUDE.md, or docs/llm/ — missing agent-readable context files.
 ---
 
 # Setup Codebase
@@ -18,23 +18,55 @@ context belongs to the project: never overwrite or shorten it.
 
    - `AGENTS.md`: concise purpose, relevant layout, verified commands,
      explicit conventions/gotchas, and verification. Omit unknown sections.
+     If a `skills/` or `.agents/skills` folder exists in the repository, add a `## Skills`
+     section listing each skill by name with its `SKILL.md` path so every
+     agent platform can discover them.
    - `CLAUDE.md`: a short repository-specific pointer to `AGENTS.md`; include
      extra instructions only when local evidence establishes them.
-   - `docs/llm/AGENTS.md`: evidence and maintenance rules for the wiki.
-   - `docs/llm/INDEX.md` and `LOG.md`: an empty navigable entry point and an
-     append-only log. Create `architecture/`, `workflows/`, and `decisions/`
-     only when absent.
+   - `docs/llm/`: create the wiki skeleton (`AGENTS.md`, `INDEX.md`, `LOG.md`,
+     and `architecture/`, `workflows/`, `decisions/` folders) only when the
+     repository has enough source to warrant it (rough threshold: 5+ source
+     files or a multi-package layout). For smaller projects, create only
+     `docs/llm/AGENTS.md` and `INDEX.md` — skip the subfolders and `LOG.md`.
 
    Every claim must have a repository source. If evidence is insufficient,
    state an open question instead of inventing a rule.
-4. Preserve existing files byte-for-byte. Do not restore from Git or edit a
+4. If OpenEZ is available (`openez` command or MCP server), note it in
+   `AGENTS.md` under a `## Code intelligence` section: mention that agents
+   should prefer OpenEZ MCP tools (`code_query`, `code_context`,
+   `graph_neighbors`) for semantic code questions, with direct file reads
+   as fallback. Do not run `openez setup` — the project's `AGENTS.md`
+   remains the instruction source of truth. If OpenEZ is not available,
+   skip this section silently.
+5. Preserve existing files byte-for-byte. Do not restore from Git or edit a
    context file unless the user explicitly asks. Read back every created file
    before reporting it.
-5. Use Obsidian wikilinks (`[[path/to/page|Label]]`) for internal wiki links,
+6. Use Obsidian wikilinks (`[[path/to/page|Label]]`) for internal wiki links,
    `## Sources` for evidence, and `## Related` when a related page exists.
    Do not document features here; `document-wiki` owns that.
-6. Run `git diff --check`. Report distinct `created` and `kept` lists plus the
+7. Run `git diff --check`. Report distinct `created` and `kept` lists plus the
    evidence paths used.
+
+## Quick reference
+
+| File | When to create | Key content |
+|---|---|---|
+| `AGENTS.md` | Missing | Purpose, layout, commands, conventions, gotchas, skills list |
+| `CLAUDE.md` | Missing | Pointer to `AGENTS.md` + repo-specific instructions |
+| `docs/llm/AGENTS.md` | Missing | Wiki evidence and maintenance rules |
+| `docs/llm/INDEX.md` | Missing | Navigable entry point |
+| `docs/llm/LOG.md` | 5+ source files only | Append-only change log |
+| `docs/llm/{architecture,workflows,decisions}/` | 5+ source files only | Feature documentation folders |
+
+## Red flags
+
+| Thought | Reality |
+|---|---|
+| "I'll use a generic template to save time" | Generic templates miss project-specific conventions. Read the repo. |
+| "I'll overwrite this section, it looks outdated" | Existing context belongs to the project. Never overwrite without asking. |
+| "I can infer this convention from the filename" | Filenames are not evidence. Read the source. |
+| "I'll skip reading back the file I just created" | Read back every created file before reporting. |
+| "I'll add features to AGENTS.md" | `document-wiki` owns features. `AGENTS.md` is conventions only. |
 
 Prompt contract:
 
@@ -42,6 +74,7 @@ Prompt contract:
 Inspect repository evidence. Create only missing context files with concise,
 project-specific facts grounded in that evidence. Do not use a generic
 template, overwrite existing context, infer commands/conventions, or claim a
-file was created without reading it back. Report created, kept, evidence, and
-git diff --check.
+file was created without reading it back. If a skills/ folder exists, list all
+skills in AGENTS.md. If OpenEZ is available, note it in AGENTS.md. Report
+created, kept, evidence, and git diff --check.
 ```
