@@ -1,0 +1,47 @@
+skills/review-and-verify/SKILL.md
+  s_685238a9bf1f8c::t_9bf15e8f5ee2bb 3
+skills/plan-feature/SKILL.md
+  s_685238a9bf1f8c::t_93c59e77f6e657 3,69-76
+  s_685238a9bf1f8c::t_958c1fbe499d4c 77
+.agents/skills/writing-skills/SKILL.md
+  s_685238a9bf1f8c::t_02660865a1743e 1-152
+skills/document-wiki/SKILL.md
+  s_685238a9bf1f8c::t_4b8602089ac66d 3,87-96
+skills/systematic-debugging/SKILL.md
+  s_685238a9bf1f8c::t_9bbdb9ee8bbcf5 3
+skills/brainstorm-feature/SKILL.md
+  s_685238a9bf1f8c::t_71275c9411fa4c 3
+skills/implement-task/SKILL.md
+  s_685238a9bf1f8c::t_57f16e9caa1d95 3
+README.md
+  s_685238a9bf1f8c::t_3806bb180231f9 38,66-67
+skills/setup-openez/SKILL.md
+  s_685238a9bf1f8c::t_133cf7fc2fdfc6 3
+  s_685238a9bf1f8c::t_601d9b84c8b4d9 1-2,4-100
+skills/setup-codebase/SKILL.md
+  s_685238a9bf1f8c::t_593359630ecfc3 3,50-69
+  s_685238a9bf1f8c::t_46b40a06a2a1a4 22-23,34-41,44,47
+  s_685238a9bf1f8c::t_cd37ad145bd2fb 26-30
+  s_685238a9bf1f8c::t_b788fc9c61b35e 77-79
+  s_685238a9bf1f8c::t_6ddd7b668413b4 21
+  s_685238a9bf1f8c::t_154baf1da07bdf 70
+skills/read-codebase-context/SKILL.md
+  s_685238a9bf1f8c::t_96cf2d014e9497 3,41-58
+  s_685238a9bf1f8c::t_12994b6852f7f4 59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "92c7dea04cff7b20c93d8463dba6c218e8adcb94",
+  "prompts": {},
+  "sessions": {
+    "s_685238a9bf1f8c": {
+      "agent_id": {
+        "tool": "windsurf",
+        "id": "9db075b5-e53d-4de6-8edd-db59bc6177d5",
+        "model": "GLM-5.2 High"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
