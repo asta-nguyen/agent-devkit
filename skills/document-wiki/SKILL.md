@@ -13,8 +13,7 @@ other wiki skills.
 
 1. Resolve the target repository from the user's path or the current directory.
    Read `AGENTS.md`. If `docs/llm/` is missing, run the repository's
-   `setup-codebase` procedure (run `node <path-to-skills>/setup-codebase/setup.js
-   <repo> --wiki=full`). Preserve every existing file.
+   `setup-codebase` procedure inline. Preserve every existing file.
 2. Read `docs/llm/AGENTS.md`, `INDEX.md`, and all existing wiki pages. Treat the
    wiki as **empty** when it is missing, contains only the setup skeleton, or
    its pages still contain placeholder text such as `Populate this page` or

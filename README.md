@@ -1,28 +1,28 @@
 # agent-devkit
 
-Minimal Node.js workflow for giving coding agents a stable repository contract
-and a refreshable LLM-facing codebase wiki.
+Minimal prompt-driven workflow for giving coding agents a stable repository
+contract and a refreshable LLM-facing codebase wiki.
 
 ## What it does
 
 Coding agents need accurate, up-to-date context to work effectively. This
-project provides a set of skills (Markdown playbooks) and small Node.js scripts
-that:
+project provides a set of prompt-driven skills (Markdown playbooks) that:
 
 1. **Bootstrap** a repository with agent-readable context files (`AGENTS.md`,
-   `CLAUDE.md`, `docs/llm/` skeleton).
+   `CLAUDE.md`, `docs/llm/` skeleton) by following the `setup-codebase` skill.
 2. **Index** the codebase with OpenEZ so agents can trace callers, dependencies,
    and behavior without guessing.
 3. **Plan and implement** features through a structured brainstorm → plan →
    implement → verify pipeline.
-4. **Maintain** an LLM-facing wiki under `docs/llm/` that stays grounded in real
+4. **Debug** systematically — find root cause before fixing.
+5. **Maintain** an LLM-facing wiki under `docs/llm/` that stays grounded in real
    source code — never fabricated.
 
 ## Skills
 
-Skills are Markdown files under `skills/` that define repeatable workflows for
-coding agents. Each skill has a `name`, `description`, and step-by-step
-instructions.
+Skills are prompt-driven Markdown playbooks under `skills/`. Each skill has a
+`name`, `description`, and step-by-step instructions. No scripts — the agent
+follows the instructions directly.
 
 ## Using the skills
 
@@ -39,6 +39,7 @@ read-codebase-context                  # understand code before changing it
 document-wiki                          # document existing app features
 brainstorm-feature → plan-feature      # design and plan a new feature
 implement-task → review-and-verify     # implement and check the change
+systematic-debugging                   # investigate before fixing bugs
 ```
 
 OpenEZ is a separate code-intelligence MCP service. Install/index a repository
@@ -67,10 +68,11 @@ the workflow itself.
 
 | Skill | Purpose |
 |---|---|
-| `brainstorm-feature` | Clarify an ambiguous feature request and produce a minimal design for approval. |
-| `plan-feature` | Turn an approved design into small, ordered, verifiable implementation tasks. |
+| `brainstorm-feature` | Classify task (spike/bounded/architectural), clarify scope, get design approval. |
+| `plan-feature` | Turn an approved design into bite-sized, ordered, verifiable tasks with no placeholders. |
 | `implement-task` | Execute an approved plan: trace code, make the smallest change, verify, then flag wiki coverage. |
-| `review-and-verify` | Review a diff for correctness, stale docs, scope creep, and missing error handling. |
+| `systematic-debugging` | Find root cause before fixing. Four phases: investigate → analyze → hypothesize → implement. |
+| `review-and-verify` | Iron Law: no completion claims without fresh evidence. Diff review, code review reception, red flags. |
 
 ### Wiki lifecycle
 
@@ -87,8 +89,8 @@ setup-codebase
   → creates AGENTS.md, CLAUDE.md, docs/llm/ skeleton
 ```
 
-Run `node skills/setup-codebase/setup.js [repo-path]` from the repo root, or
-`node setup.js [repo-path]` from inside the skill folder.
+Invoke `setup-codebase` in an agent session; it reads repository evidence and
+creates only missing, project-specific context files.
 
 ### 2. Implement a feature from scratch
 
@@ -104,7 +106,15 @@ review-and-verify         → review diff, catch stale docs
 document-wiki             → refresh documentation for the changed feature
 ```
 
-### 3. Document an existing app
+### 3. Debug a bug
+
+```
+systematic-debugging      → investigate root cause, fix, regression test
+  ↓
+review-and-verify         → verify fix, check for regressions
+```
+
+### 4. Document an existing app
 
 ```
 setup-codebase             → create the missing wiki skeleton
@@ -117,7 +127,7 @@ document-wiki              → document all verified features when empty;
 
 - `AGENTS.md` as the coding-agent contract.
 - `docs/llm/` as the wiki entry point.
-- JavaScript scripts collocated with their skills (`skills/<name>/*.js`).
+- Prompt-driven Markdown skills — no scripts, the agent follows instructions.
 - OpenEZ is an optional local index for AI source discovery; it never replaces
   direct source/test inspection.
 - No TypeScript, build system, or multi-agent orchestration yet.

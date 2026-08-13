@@ -7,12 +7,18 @@ description: Create small, verifiable implementation tasks for an approved softw
 
 Turn an approved design into a short execution plan before editing code.
 
+## Process
+
 1. Read the approved design, `AGENTS.md`, related wiki pages, and use
    `read-codebase-context` to inspect affected source, callers, and tests.
-2. Split the work into small, ordered tasks. Each task must state:
+2. Map out which files will be created or modified and what each one is
+   responsible for. Design units with clear boundaries. Follow existing
+   patterns; do not unilaterally restructure.
+3. Split the work into small, ordered tasks. Each task must state:
 
    ```text
-   Files: <paths to change>
+   Files: <paths to change, with line ranges for modifications>
+   Interfaces: <what this task consumes from earlier tasks and produces for later ones>
    Change: <observable behavior or implementation>
    Verify: <smallest relevant test/check>
    ```
@@ -20,13 +26,45 @@ Turn an approved design into a short execution plan before editing code.
    For cross-file work, also list `Files inspected, no change` so the plan
    distinguishes evidence from guesses.
 
-3. Put contract/data changes before their callers; put tests beside the behavior
-   they verify. Do not add tasks for speculative abstractions.
-4. Include a final `review-and-verify` task. If the feature is new or changes
-   user-visible behavior, include `document-wiki` after verification.
-5. Ask for confirmation on a plan that changes public APIs, data schemas,
-   dependencies, CI, or more than a small set of files. Otherwise hand off to
-   `implement-task`.
+4. **Bite-sized steps within each task.** Each step is one action:
+   - Write the failing test
+   - Run it to verify it fails
+   - Write the minimal implementation
+   - Run the tests to verify they pass
+   - Commit
 
-Plans are execution artifacts, not essays. Prefer the fewest tasks that make
-the sequence and verification unambiguous.
+5. Put contract/data changes before their callers; put tests beside the
+   behavior they verify. Do not add tasks for speculative abstractions.
+6. Include a final `review-and-verify` task. If the feature is new or
+   changes user-visible behavior, include `document-wiki` after verification.
+7. Ask for confirmation on a plan that changes public APIs, data schemas,
+   dependencies, CI, or more than a small set of files. Otherwise hand off
+   to `implement-task`.
+
+## No placeholders
+
+Every step must contain the actual content an engineer needs. These are
+plan failures — never write them:
+
+- "TBD", "TODO", "implement later", "fill in details"
+- "Add appropriate error handling" (without specifying what)
+- "Write tests for the above" (without actual test code)
+- "Similar to Task N" (repeat the code — tasks may be read out of order)
+- Steps that describe what to do without showing how
+- References to types or functions not defined in any task
+
+## Self-review
+
+After writing the complete plan, review it against the approved design:
+
+1. **Spec coverage** — can you point to a task that implements each
+   requirement from the design? List any gaps.
+2. **Placeholder scan** — search for any pattern from the "No placeholders"
+   section above. Fix them.
+3. **Type consistency** — do function names, parameter types, and property
+   names used in later tasks match what was defined in earlier tasks?
+
+Fix any issues inline. No need to re-review — just fix and move on.
+
+Plans are execution artifacts, not essays. Prefer the fewest tasks that
+make the sequence and verification unambiguous.
