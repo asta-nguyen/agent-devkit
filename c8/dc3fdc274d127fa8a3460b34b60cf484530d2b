@@ -1,0 +1,49 @@
+skills/brainstorm-feature/SKILL.md
+  s_685238a9bf1f8c::t_d7b3a6bf63b466 10-39,42-47,49-50,52,54,58-92
+skills/plan-feature/SKILL.md
+  s_685238a9bf1f8c::t_79795c7d3ec642 10-11,14-17,20-21,29-67,69-70
+skills/implement-task/SKILL.md
+  s_685238a9bf1f8c::t_6ae62f93570c6e 8-43
+skills/document-wiki/SKILL.md
+  s_95449e70057513::t_db299de6e6b159 16
+package.json
+  s_685238a9bf1f8c::t_3ed1c439b15c62 4
+skills/review-and-verify/SKILL.md
+  s_685238a9bf1f8c::t_62ba0b6ab27755 8-85
+README.md
+  s_685238a9bf1f8c::t_7bdd172612f6c6 12,17-18,23-25,130
+  s_685238a9bf1f8c::t_5d70de826c4c68 9
+  s_685238a9bf1f8c::t_39e642e36d51af 3-4
+  s_685238a9bf1f8c::t_6dcfd41523365d 109-117
+  s_95449e70057513::t_db299de6e6b159 92-93
+  s_685238a9bf1f8c::t_e7a22baf6f43e6 42,71-72,74-75
+skills/systematic-debugging/SKILL.md
+  s_685238a9bf1f8c::t_581ae637bb2112 84-86
+  s_685238a9bf1f8c::t_6ea98e8605ae2e 1-83,87-126
+skills/setup-codebase/SKILL.md
+  s_95449e70057513::t_db299de6e6b159 3,6,8-9,11-17,19-26,28-47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "c8dc3fdc274d127fa8a3460b34b60cf484530d2b",
+  "prompts": {},
+  "sessions": {
+    "s_685238a9bf1f8c": {
+      "agent_id": {
+        "tool": "windsurf",
+        "id": "9db075b5-e53d-4de6-8edd-db59bc6177d5",
+        "model": "GLM-5.2 High"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    },
+    "s_95449e70057513": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ff6e9-ea87-79c2-846e-a485ea202361",
+        "model": "gpt-5.6-terra"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
