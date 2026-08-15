@@ -1,0 +1,68 @@
+skills/implement-task/SKILL.md
+  s_c8ff078ee2dcf1::t_b049fbadfc93c9 12-16
+  s_c8ff078ee2dcf1::t_172a29b60f85ad 23
+  s_c8ff078ee2dcf1::t_8688faaad212e5 3,17-19,29-30
+  s_c8ff078ee2dcf1::t_3e35e2acc3c6af 10-11,34
+AGENTS.md
+  s_c8ff078ee2dcf1::t_172a29b60f85ad 3,8-9,11-12,28-29,34-36
+skills/document-wiki/SKILL.md
+  s_c8ff078ee2dcf1::t_e3685a42281979 24-32,44,52-66,85,94-102,107-111,113-115,127,129
+  s_c8ff078ee2dcf1::t_3a2510349e5682 33-41,103-106,128
+  s_c8ff078ee2dcf1::t_8688faaad212e5 67-69
+  s_c8ff078ee2dcf1::t_a8bfd04a6bd808 118-119
+  s_c8ff078ee2dcf1::t_b049fbadfc93c9 21-23
+skills/systematic-debugging/SKILL.md
+  s_c8ff078ee2dcf1::t_8688faaad212e5 71-72,94
+  s_c8ff078ee2dcf1::t_d44a8703976c0d 80-93
+README.md
+  s_c8ff078ee2dcf1::t_741f2e3030de7c 55,88,116,120,150-151
+  s_c8ff078ee2dcf1::t_e3685a42281979 97,142-143
+  s_c8ff078ee2dcf1::t_28ac991b88ff5f 34-42,47,155-156
+  s_c8ff078ee2dcf1::t_c7d4fbf2021fba 117-119
+  s_c8ff078ee2dcf1::t_8688faaad212e5 43-46
+EVALS.md
+  s_c8ff078ee2dcf1::t_b049fbadfc93c9 26-28
+  s_c8ff078ee2dcf1::t_c7d4fbf2021fba 19-23,25
+  s_c8ff078ee2dcf1::t_abd20ce39e2dff 1-18,29-35,42-63,69-74,81-83,86-96,98-105
+  s_c8ff078ee2dcf1::t_a8bfd04a6bd808 24
+  s_c8ff078ee2dcf1::t_d44a8703976c0d 36-41
+  s_c8ff078ee2dcf1::t_e3685a42281979 64-66,75
+  s_c8ff078ee2dcf1::t_3a2510349e5682 67-68,76-80
+  s_c8ff078ee2dcf1::t_8688faaad212e5 84-85,97
+skills/brainstorm-feature/SKILL.md
+  s_c8ff078ee2dcf1::t_28ac991b88ff5f 59-61,69-70
+  s_c8ff078ee2dcf1::t_c7d4fbf2021fba 64-66
+  s_c8ff078ee2dcf1::t_b049fbadfc93c9 54-56
+  s_c8ff078ee2dcf1::t_a8bfd04a6bd808 31-32,62-63,93-94
+  s_c8ff078ee2dcf1::t_db1a55e91b2054 40-43
+  s_c8ff078ee2dcf1::t_efc78d56a2ffcd 95
+skills/setup-codebase/SKILL.md
+  s_c8ff078ee2dcf1::t_e3685a42281979 64
+  s_c8ff078ee2dcf1::t_c7d4fbf2021fba 12-14,17-19,24-26,84-86
+  s_c8ff078ee2dcf1::t_28ac991b88ff5f 32-35,63,65
+skills/plan-feature/SKILL.md
+  s_c8ff078ee2dcf1::t_db1a55e91b2054 15-18
+  s_c8ff078ee2dcf1::t_8688faaad212e5 47-49,53-54
+  s_c8ff078ee2dcf1::t_b049fbadfc93c9 40-43
+  s_c8ff078ee2dcf1::t_a8bfd04a6bd808 8-11,50-52
+  s_c8ff078ee2dcf1::t_b75cced06b418f 39
+skills/review-and-verify/SKILL.md
+  s_c8ff078ee2dcf1::t_8688faaad212e5 30-34,92-94
+  s_c8ff078ee2dcf1::t_3e35e2acc3c6af 91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "d39514431ff7909f022473a0a58192fe54132781",
+  "prompts": {},
+  "sessions": {
+    "s_c8ff078ee2dcf1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a003b8-cb6b-7bf2-b804-c1e149dd5434",
+        "model": "gpt-5.6-terra"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
