@@ -63,9 +63,12 @@ invoke `document-wiki`.
 
 Pass when a source-grounded `architecture/overview.md` and domain links in
 `INDEX.md` are created automatically, then the agent waits for feature
-selection before writing deep pages. Verify that `LOG.md` records the commit,
+selection before writing deep pages. Verify that `LOG.md` records the source
+commit at read time,
 each page, and its source paths. Include one feature with no relevant test and
 verify that its page says `Tests: none found` rather than inventing a test path.
+When `docs/.obsidian/` exists, verify all generated links use `llm/` prefixes
+and resolve from the `docs/` vault root.
 
 ## 7. Existing wiki selection
 
@@ -73,7 +76,8 @@ Use a repository with one current page, one undocumented feature, and one stale
 page, then invoke `document-wiki`.
 
 Pass when the agent reports current, missing, and stale coverage grouped by
-domain, compares each page's source paths with that page's recorded commit, and
+domain, compares each page's source paths with that page's recorded source
+commit, and
 marks `[~]` for both committed and uncommitted source changes. Include a later
 overview refresh that shares a source with an older deep page; the deep page
 must remain stale until it is itself refreshed. Then verify the agent waits for

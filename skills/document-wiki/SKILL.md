@@ -13,7 +13,12 @@ other wiki skills.
 
 1. Resolve the target repository from the user's path or the current directory.
    Read `AGENTS.md`. If `docs/llm/` is missing, run the repository's
-   `setup-codebase` procedure inline. Preserve every existing file.
+   `setup-codebase` procedure inline. Preserve every existing file. Before
+   writing links, find the Obsidian vault root: use the nearest ancestor of
+   `docs/llm/` containing `.obsidian/`. Internal wikilink targets are relative
+   to that vault root. For example, with `docs/.obsidian/`, link to
+   `docs/llm/architecture/overview.md` as `[[llm/architecture/overview|Architecture overview]]`.
+   If no vault exists, retain the existing `docs/llm`-relative form.
 2. Read `docs/llm/AGENTS.md`, `INDEX.md`, and all existing wiki pages. Treat the
    wiki as **empty** when it is missing, contains only the setup skeleton, or
    its pages still contain placeholder text such as `Populate this page` or
@@ -31,7 +36,8 @@ other wiki skills.
    point, callers, error paths, and relevant tests before documenting it.
 4. Determine coverage before writing deep feature pages. Read every page's
    `## Sources`, then find the latest `LOG.md` entry that names that exact wiki
-   page. In a Git repository, compare its source paths with that entry's commit
+   page. In a Git repository, compare its source paths with that entry's source
+   commit at read time
    using `git diff <commit> -- <source paths>` and inspect
    `git status --porcelain -- <source paths>` for uncommitted or untracked
    changes. Mark coverage `[~]` when either check reports a change, a page is
@@ -88,7 +94,8 @@ other wiki skills.
    Keep prose concise. Never turn a helper, file, or inferred product idea
    into a feature. If evidence is missing, omit the claim or label it an open
    question. Use Obsidian wikilinks (`[[path/to/page|Label]]`) for internal
-   wiki pages; use ordinary Markdown links only for external URLs. Add a
+   wiki pages, with targets relative to the vault root determined in step 1;
+   use ordinary Markdown links only for external URLs. Add a
    `## Related` section to every non-overview page when a related wiki page
    exists. YAML frontmatter is optional and should not be invented just for
    formatting. Never invent a test path; if a relevant search finds none, state
@@ -99,17 +106,20 @@ other wiki skills.
    ```md
    ## YYYY-MM-DD
 
-   Commit: <git HEAD SHA, or "not a Git repository">
+   Source commit at read time: <git HEAD SHA, or "not a Git repository">
 
    - Page: <wiki page created or refreshed>
      Sources:
-     - <source path checked for this page>
+   - <source path checked for this page>
    ```
+
+   This records the source snapshot used for freshness checks. It is not a
+   commit created by the agent and does not imply the wiki changes were committed.
 
    Update `docs/llm/FEATURES.md` only if that file already exists; do not create
    a second tracking system.
-9. Verify that every new source path exists, every internal wikilink resolves,
-   every index link resolves, and `git diff --check` passes. The final report
+9. Verify that every new source path exists, every internal wikilink resolves
+   from the vault root, every index link resolves, and `git diff --check` passes. The final report
    must repeat the domain map, list the baseline and features documented, list
    verified features skipped, and list unresolved evidence questions. Never
    report only “pages updated”.
@@ -125,7 +135,7 @@ describes only verified current behavior grounded in source and tests.
 | "I'll document this inferred feature" | If evidence is missing, omit the claim or label it an open question. |
 | "I'll update the wiki without reading source" | Source establishes facts. Index accelerates discovery. Read the code. |
 | "The wiki is empty, so I can document every feature now" | Write the baseline map, then wait for deep-coverage selection. |
-| "The source path exists, so the page is current" | Compare committed and working-tree changes with that page's recorded commit. |
+| "The source path exists, so the page is current" | Compare committed and working-tree changes with that page's recorded source commit. |
 | "I'll add a plausible test path" | Document only tests found by evidence; otherwise state none found. |
 | "I'll modify application code to match the wiki" | Wiki follows source, never the reverse. |
 | "I'll report 'pages updated' and stop" | Report domain, features documented, features skipped, unresolved questions. |

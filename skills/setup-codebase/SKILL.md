@@ -46,8 +46,11 @@ context belongs to the project: never overwrite or shorten it.
 5. Preserve existing files byte-for-byte. Do not restore from Git or edit a
    context file unless the user explicitly asks. Read back every created file
    before reporting it.
-6. Use Obsidian wikilinks (`[[path/to/page|Label]]`) for internal wiki links,
-   `## Sources` for evidence, and `## Related` when a related page exists.
+6. Use Obsidian wikilinks (`[[path/to/page|Label]]`) for internal wiki links.
+   When an ancestor of `docs/llm/` contains `.obsidian/`, targets must be
+   relative to that vault root (for example, `[[llm/architecture/overview]]`
+   for a `docs/` vault). Use `## Sources` for evidence and `## Related` when a
+   related page exists.
    Do not document features here; `document-wiki` owns that.
 7. Run `git diff --check`. Report distinct `created` and `kept` lists plus the
    evidence paths used.
