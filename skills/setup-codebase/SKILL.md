@@ -9,25 +9,30 @@ Create context with repository-reading, not a static file template. Existing
 context belongs to the project: never overwrite or shorten it.
 
 1. Check the exact status of `AGENTS.md`, `CLAUDE.md`, and `docs/llm/`. Read
-   every existing context file before writing anything.
+   every existing context file before writing anything. If the repository has
+   no application source and an approved design exists under
+   `docs/agent-devkit/specs/`, read that design before writing context.
 2. If context is missing, inspect only enough evidence to ground it: `README*`,
    root/workspace manifests, task scripts, environment examples, CI/config,
-   and top-level source layout. Do not install dependencies, start services, or
-   infer facts from filenames alone.
+   top-level source layout, and any approved design from the previous step. Do
+   not install dependencies, start services, or infer facts from filenames
+   alone.
 3. Write only missing files from that evidence:
 
    - `AGENTS.md`: concise purpose, relevant layout, verified commands,
      explicit conventions/gotchas, and verification. Omit unknown sections.
+     For a source-less new project, the approved design establishes intended
+     purpose and planned layout only; do not claim unimplemented behavior or
+     commands as verified.
      If a `skills/` or `.agents/skills` folder exists in the repository, add a `## Skills`
      section listing each skill by name with its `SKILL.md` path so every
      agent platform can discover them.
    - `CLAUDE.md`: a short repository-specific pointer to `AGENTS.md`; include
      extra instructions only when local evidence establishes them.
-   - `docs/llm/`: create the wiki skeleton (`AGENTS.md`, `INDEX.md`, `LOG.md`,
-     and `architecture/`, `workflows/`, `decisions/` folders) only when the
-     repository has enough source to warrant it (rough threshold: 5+ source
-     files or a multi-package layout). For smaller projects, create only
-     `docs/llm/AGENTS.md` and `INDEX.md` — skip the subfolders and `LOG.md`.
+   - `docs/llm/`: always create the wiki skeleton (`AGENTS.md`, `INDEX.md`, and
+     `LOG.md`). Create `architecture/`, `workflows/`, or `decisions/` only when
+     `document-wiki` has a real page to place there; do not add placeholder
+     pages just to preserve empty directories.
 
    Every claim must have a repository source. If evidence is insufficient,
    state an open question instead of inventing a rule.
@@ -55,8 +60,9 @@ context belongs to the project: never overwrite or shorten it.
 | `CLAUDE.md` | Missing | Pointer to `AGENTS.md` + repo-specific instructions |
 | `docs/llm/AGENTS.md` | Missing | Wiki evidence and maintenance rules |
 | `docs/llm/INDEX.md` | Missing | Navigable entry point |
-| `docs/llm/LOG.md` | 5+ source files only | Append-only change log |
-| `docs/llm/{architecture,workflows,decisions}/` | 5+ source files only | Feature documentation folders |
+| `docs/llm/LOG.md` | Missing | Append-only change log |
+| `docs/llm/architecture/overview.md` | Baseline map | Source-grounded repository orientation |
+| `docs/llm/{architecture,workflows,decisions}/` | A real page needs the folder | Feature documentation folders |
 
 ## Red flags
 
@@ -75,6 +81,7 @@ Inspect repository evidence. Create only missing context files with concise,
 project-specific facts grounded in that evidence. Do not use a generic
 template, overwrite existing context, infer commands/conventions, or claim a
 file was created without reading it back. If a skills/ folder exists, list all
-skills in AGENTS.md. If OpenEZ is available, note it in AGENTS.md. Report
-created, kept, evidence, and git diff --check.
+skills in AGENTS.md. When a source-less project has an approved design, use it
+only for intended purpose and planned layout. If OpenEZ is available, note it
+in AGENTS.md. Report created, kept, evidence, and git diff --check.
 ```

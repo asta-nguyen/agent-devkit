@@ -1,34 +1,37 @@
 ---
 name: implement-task
-description: Use after an approved feature plan exists, or for an unambiguous small fix requiring code changes.
+description: Use after the user approves a bounded change or an approved feature plan exists and code changes are ready to begin.
 ---
 
 # Implement Task
 
 ## Before coding
 
-1. Read `AGENTS.md` and `docs/llm/INDEX.md` for project conventions and
-   affected wiki pages.
-2. Trace the relevant code path using `read-codebase-context` or direct
-   file reads. Understand callers, data flow, and error paths before
-   editing.
-3. Follow the approved `plan-feature` output. If no approved plan exists
-   and the change is not an unambiguous small fix, use `brainstorm-feature`
-   then `plan-feature`.
+1. Read `AGENTS.md` and, when it exists, `docs/llm/INDEX.md` for project
+   conventions and affected wiki pages. A missing wiki must not block work.
+2. If application source exists, trace the relevant code path using
+   `read-codebase-context` or direct file reads. Understand callers, data flow,
+   and error paths before editing. For a source-less new project, read the
+   approved spec and plan, then create the first planned entry point; state that
+   callers and existing error paths do not exist yet.
+3. Follow the approved `plan-feature` output when one exists. Without a plan,
+   require an approved bounded design from `brainstorm-feature`; otherwise use
+   `brainstorm-feature` before editing.
 
 ## During implementation
 
-1. Reuse local patterns. Keep the diff focused — one logical change per
-   commit.
+1. Reuse local patterns. Keep the diff focused on one logical change.
 2. Make the smallest change that satisfies the task. Do not refactor
    unrelated code.
 3. If you hit a bug or unexpected behavior, switch to `systematic-debugging`.
    Do not guess-and-check.
 4. Run the smallest relevant check after each non-trivial change.
+5. Do not create commits during implementation. Even when the user requests a
+   commit, wait until final `review-and-verify` passes.
 
 ## After implementation
 
-1. Hand off to `review-and-verify` — review the diff, run fresh
+1. **REQUIRED SUB-SKILL:** Use `review-and-verify` to review the diff, run fresh
    verification, and confirm no stale documentation.
 2. For a new or materially changed feature, use `document-wiki` after
    verification to refresh its source-grounded coverage.

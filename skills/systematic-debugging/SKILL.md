@@ -68,6 +68,8 @@ You must complete each phase before proceeding to the next.
    cause because Y". Be specific.
 2. **Test minimally** — make the smallest possible change to test the
    hypothesis. One variable at a time. Do not fix multiple things at once.
+   Revert experimental code changes after observing the result so Phase 4
+   starts from the failing baseline.
 3. **Verify before continuing** — did it work? Yes → Phase 4. No → form a
    new hypothesis. Do not add more fixes on top.
 4. **When you do not know** — say "I don't understand X". Do not pretend.
@@ -75,15 +77,21 @@ You must complete each phase before proceeding to the next.
 
 ### Phase 4: Implementation
 
-1. **Write a regression test** that reproduces the original symptom.
-2. **Verify the test fails** without the fix (red).
-3. **Apply the fix.**
-4. **Verify the test passes** (green).
-5. **Run the full test suite** to check for regressions.
-6. **Commit** with a message that names the root cause.
-7. **Hand off to `review-and-verify`** — review the diff, run fresh
-   verification, and confirm no stale documentation. If the fix changes
-   user-visible behavior, use `document-wiki` after verification.
+1. **Establish expected behavior.** Use source, tests, and current wiki pages.
+   If they do not establish the intended behavior, stop and use
+   `brainstorm-feature` to get the user's approval before changing behavior.
+2. **Write a regression test** that reproduces the original symptom.
+3. **Verify the test fails** without the fix (red).
+4. **Apply the fix.**
+5. **Verify the test passes** (green).
+6. **Run the full test suite** to check for regressions.
+7. **REQUIRED SUB-SKILL:** Use `review-and-verify` to review the diff and run
+   fresh verification. Use `document-wiki` after verification only when the
+   fix changes observable behavior or reveals stale wiki documentation. Do not
+   update the wiki when it already correctly describes the intended behavior
+   and the fix only restores code to that behavior.
+8. Do not create commits during debugging. Even when the user requests a
+   commit, wait until final `review-and-verify` passes.
 
 ## Red flags — stop and return to Phase 1
 

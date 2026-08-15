@@ -27,6 +27,11 @@ Before claiming any status or expressing satisfaction:
    - If yes: state claim with evidence
 5. **Only then** — make the claim
 
+Before final completion, run every repository-mandated full verification
+command documented in `AGENTS.md`, manifests, or CI configuration. Targeted
+checks are useful during implementation but do not replace this final gate. If
+no full command is established, report that limitation explicitly.
+
 ## Claims vs evidence
 
 | Claim | Requires | Not sufficient |
@@ -83,3 +88,7 @@ full context, violates YAGNI, or conflicts with architectural decisions.
 
 Report any remaining limitation explicitly. A task is complete only when
 code, documentation, and verification output agree.
+
+Leave the verified working tree for the user to review and commit. If the user
+explicitly requests a commit, create it only after this final verification gate
+passes; never commit known failing or unverified work.

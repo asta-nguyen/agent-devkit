@@ -28,8 +28,8 @@ out loud so the user can override it:
 
 - **Architectural** — new projects, new subsystems, changes that restructure
   how components fit together or alter interfaces others depend on. Follow the
-  full process: questions, approaches, sectioned design, written spec, then
-  `plan-feature`.
+  full process: questions, approaches, sectioned design, a written spec at
+  `docs/agent-devkit/specs/YYYY-MM-DD-<slug>-design.md`, then `plan-feature`.
 
 When in doubt between two paths, take the heavier one. Hidden complexity
 discovered mid-task upgrades the path — stop, say so, and step up. Nothing
@@ -37,8 +37,10 @@ downgrades mid-task.
 
 ## Process
 
-1. Read `AGENTS.md`, relevant wiki pages, and use `read-codebase-context` to
-   establish the affected code path before asking questions.
+1. Read `AGENTS.md` and relevant wiki pages when they exist. If the target has
+   application source, use `read-codebase-context` to establish the affected
+   code path before asking questions. Otherwise state that the project is new
+   and establish scope from the user's request; there is no code path to trace.
 2. If the project is too large for a single spec, help the user decompose into
    sub-projects: what are the independent pieces, how do they relate, what
    order should they be built? Then brainstorm the first sub-project through
@@ -49,12 +51,23 @@ downgrades mid-task.
    known facts so the user need not repeat them. Ask one question per message.
 4. Offer the smallest viable design first. Include scope, observable behavior,
    affected interfaces/files, error cases, and verification approach.
+   For a source-less new project, also state the approved runtime, package or
+   build tool, test command, and first entry point. If these are undecided,
+   continue clarifying before presenting the design for approval.
 5. Present the design in short sections and ask for approval before planning.
    Do not write production code while material decisions remain unresolved.
-6. After approval, hand off to `plan-feature`.
+6. After approval, follow the selected path:
+   - Spike: investigate and report a recommendation; keep probe code throwaway.
+   - Bounded: hand off directly to `implement-task`; do not create a plan file.
+   - Architectural: create `docs/agent-devkit/specs/` if needed, write and
+     self-review `YYYY-MM-DD-<slug>-design.md`, get the user's approval of the
+     written spec, then hand off to `plan-feature`. If the target has no
+     `AGENTS.md` or application source, use `setup-codebase` first so it can
+     create the initial repository contract from the approved spec.
 
 Keep the design proportionate. For a one-line fix with an unambiguous expected
-result, state the assumption and proceed without a ceremony-heavy design.
+result, the design may be one or two sentences, but wait for explicit approval
+before implementation.
 
 ## Approval gate
 
@@ -76,6 +89,9 @@ simplicity is the artifact, never the approval.
 | "It grew, but I'm almost done — no need to re-classify" | Hidden complexity upgrades the path mid-task. Stop and say so. |
 
 ## Spec self-review (architectural path only)
+
+Save the spec under `docs/agent-devkit/specs/`. This is a process artifact, not
+a wiki page: never place a proposed design in `docs/llm/`.
 
 After writing the spec document, review it with fresh eyes before handing off:
 

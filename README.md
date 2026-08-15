@@ -31,6 +31,20 @@ the `skills/<name>/` folder visible to the agent's skill loader, then invoke
 the skill by name or ask for the task it describes. `SKILL.md` is the required
 file; `agents/openai.yaml` only adds Codex/OpenAI UI metadata.
 
+For a project that discovers repository-local skills from `.agents/skills`,
+run this from the target project and replace the source path with this clone:
+
+```bash
+mkdir -p .agents/skills
+cp -R /path/to/agent-devkit/skills/. .agents/skills/
+find .agents/skills -name SKILL.md -print
+```
+
+Copy the whole set because the workflow skills reference each other. Treat the
+copies as managed files: do not customize them in the target project. Updating
+overwrites same-named skills, and retired skill folders must be removed manually.
+Start a fresh agent session after copying so its skill list is reloaded.
+
 The shortest routing guide is:
 
 ```text
@@ -38,7 +52,7 @@ setup-codebase                         # first visit to a repo missing context
 setup-openez                           # index codebase for semantic queries
 read-codebase-context                  # understand code before changing it
 document-wiki                          # document existing app features
-brainstorm-feature → plan-feature      # design and plan a new feature
+brainstorm-feature → plan-feature      # architectural work: save spec then plan
 implement-task → review-and-verify     # implement and check the change
 systematic-debugging                   # investigate before fixing bugs
 ```
@@ -71,7 +85,7 @@ the workflow itself.
 | Skill | Purpose |
 |---|---|
 | `brainstorm-feature` | Classify task (spike/bounded/architectural), clarify scope, get design approval. |
-| `plan-feature` | Turn an approved design into bite-sized, ordered, verifiable tasks with no placeholders. |
+| `plan-feature` | Save an approved architectural plan under `docs/agent-devkit/plans/` with bite-sized, verifiable tasks. |
 | `implement-task` | Execute an approved plan: trace code, make the smallest change, verify, then flag wiki coverage. |
 | `systematic-debugging` | Find root cause before fixing. Four phases: investigate → analyze → hypothesize → implement. |
 | `review-and-verify` | Iron Law: no completion claims without fresh evidence. Diff review, code review reception, red flags. |
@@ -80,7 +94,7 @@ the workflow itself.
 
 | Skill | Purpose |
 |---|---|
-| `document-wiki` | One-stop workflow: detect empty wiki, document all verified features, or let the user choose missing/stale features. |
+| `document-wiki` | Build a source-grounded domain baseline, then let the user choose missing or stale feature coverage. |
 
 ## Example workflows
 
@@ -99,7 +113,11 @@ creates only missing, project-specific context files.
 ```
 brainstorm-feature        → clarify scope, get design approval
   ↓
-plan-feature              → break design into ordered tasks
+docs/agent-devkit/specs/  → save approved architectural design
+  ↓
+setup-codebase            → new projects only: create initial contract
+  ↓
+plan-feature              → save ordered plan under docs/agent-devkit/plans/
   ↓
 implement-task            → code, verify, run checks
   ↓
@@ -121,17 +139,21 @@ review-and-verify         → verify fix, check for regressions
 ```
 setup-codebase             → create the missing wiki skeleton
   ↓
-document-wiki              → document all verified features when empty;
-                              otherwise choose missing/stale features
+document-wiki              → create or refresh the domain baseline map;
+                              then choose missing/stale feature coverage
 ```
 
 ## MVP scope
 
 - `AGENTS.md` as the coding-agent contract.
 - `docs/llm/` as the wiki entry point.
+- `docs/agent-devkit/{specs,plans}/` for approved architectural process
+  artifacts, separate from the source-verified wiki.
 - Prompt-driven Markdown skills — no scripts, the agent follows instructions.
 - OpenEZ is an optional local index for AI source discovery; it never replaces
   direct source/test inspection.
+- Agents leave verified changes uncommitted unless the user explicitly asks
+  them to commit.
 - No TypeScript, build system, or multi-agent orchestration yet.
 
 The implementation is being built in the order described by the repository

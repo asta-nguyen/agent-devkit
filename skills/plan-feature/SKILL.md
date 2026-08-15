@@ -5,12 +5,17 @@ description: Use after feature design approval and before coding a non-trivial f
 
 # Plan Feature
 
-Turn an approved design into a short execution plan before editing code.
+Turn an approved design into a short execution plan before editing code. Save
+the plan at `docs/agent-devkit/plans/YYYY-MM-DD-<slug>-plan.md`, creating the
+folder only when writing the plan. Plans are process artifacts, never wiki
+pages under `docs/llm/`.
 
 ## Process
 
-1. Read the approved design, `AGENTS.md`, related wiki pages, and use
-   `read-codebase-context` to inspect affected source, callers, and tests.
+1. Read the approved design, `AGENTS.md`, and related wiki pages. If application
+   source exists, use `read-codebase-context` to inspect affected source,
+   callers, and tests. Otherwise map planned files and interfaces from the
+   approved design; state that callers and tests do not exist yet.
 2. Map out which files will be created or modified and what each one is
    responsible for. Design units with clear boundaries. Follow existing
    patterns; do not unilaterally restructure.
@@ -31,15 +36,22 @@ Turn an approved design into a short execution plan before editing code.
    - Run it to verify it fails
    - Write the minimal implementation
    - Run the tests to verify they pass
-   - Commit
+
+   For a source-less new project, the first task bootstraps the runtime and
+   test command approved in the design before this red-green loop. State the
+   exact setup and verification commands. If the approved design does not
+   establish them, return to `brainstorm-feature`; do not invent a toolchain.
 
 5. Put contract/data changes before their callers; put tests beside the
    behavior they verify. Do not add tasks for speculative abstractions.
-6. Include a final `review-and-verify` task. If the feature is new or
-   changes user-visible behavior, include `document-wiki` after verification.
-7. Ask for confirmation on a plan that changes public APIs, data schemas,
-   dependencies, CI, or more than a small set of files. Otherwise hand off
-   to `implement-task`.
+6. End every plan with `**REQUIRED SUB-SKILL:** Use review-and-verify`. If the
+   feature is new or changes user-visible behavior, include `document-wiki`
+   after verification.
+7. Save the complete plan at the required path. Ask for confirmation on a plan
+   that changes public APIs, data schemas, dependencies, CI, or more than a
+   small set of files. Otherwise hand off to `implement-task`.
+8. Do not include commit steps. If the user requests a commit, leave that action
+   until after the final `review-and-verify` task passes.
 
 ## No placeholders
 
