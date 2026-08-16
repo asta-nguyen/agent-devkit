@@ -148,7 +148,8 @@ document-wiki              → create or refresh the domain baseline map;
 - `AGENTS.md` as the coding-agent contract.
 - `docs/llm/` as the wiki entry point.
 - `docs/agent-devkit/{specs,plans}/` for approved architectural process
-  artifacts, separate from the source-verified wiki.
+  artifacts, plus `docs/agent-devkit/INDEX.md` to link them. Designs may link
+  to wiki context; the source-verified wiki never links back.
 - Prompt-driven Markdown skills — no scripts, the agent follows instructions.
 - OpenEZ is an optional local index for AI source discovery; it never replaces
   direct source/test inspection.

@@ -23,7 +23,9 @@ waits for approval of the written spec. It must then use `setup-codebase` to
 create the initial context from the approved spec before writing
 `docs/agent-devkit/plans/YYYY-MM-DD-<slug>-plan.md`. Neither artifact may be
 written under `docs/llm/`; the wiki remains a skeleton until code is verified.
-The approved design must establish the runtime, test command, and first entry
+Verify `docs/agent-devkit/INDEX.md` links both artifacts, the plan links the
+approved design, and no `docs/llm/` page links back to either artifact. The
+approved design must establish the runtime, test command, and first entry
 point. Before that entry point exists, `document-wiki` must report no verified
 behavior and leave the skeleton unchanged.
 

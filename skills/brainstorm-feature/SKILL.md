@@ -60,8 +60,9 @@ downgrades mid-task.
    - Spike: investigate and report a recommendation; keep probe code throwaway.
    - Bounded: hand off directly to `implement-task`; do not create a plan file.
    - Architectural: create `docs/agent-devkit/specs/` if needed, write and
-     self-review `YYYY-MM-DD-<slug>-design.md`, get the user's approval of the
-     written spec, then hand off to `plan-feature`. If the target has no
+     self-review `YYYY-MM-DD-<slug>-design.md`, then create or update
+     `docs/agent-devkit/INDEX.md` with a link to it. Get the user's approval of
+     the written spec, then hand off to `plan-feature`. If the target has no
      `AGENTS.md` or application source, use `setup-codebase` first so it can
      create the initial repository contract from the approved spec.
 
@@ -92,6 +93,15 @@ simplicity is the artifact, never the approval.
 
 Save the spec under `docs/agent-devkit/specs/`. This is a process artifact, not
 a wiki page: never place a proposed design in `docs/llm/`.
+
+Use `docs/agent-devkit/INDEX.md` as the process-artifact index. Link every
+design from its `## Designs` section. When an Obsidian vault exists, targets
+are relative to its root (for a `docs/` vault:
+`[[agent-devkit/specs/YYYY-MM-DD-<slug>-design|Design]]`). Otherwise use a
+relative Markdown link. The design must include `## Related context` with links
+only to existing `docs/llm/` pages read during brainstorming; write `None` when
+there was no verified wiki context. Never add a link from `docs/llm/` back to a
+design.
 
 After writing the spec document, review it with fresh eyes before handing off:
 

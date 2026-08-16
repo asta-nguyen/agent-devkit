@@ -47,9 +47,16 @@ pages under `docs/llm/`.
 6. End every plan with `**REQUIRED SUB-SKILL:** Use review-and-verify`. If the
    feature is new or changes user-visible behavior, include `document-wiki`
    after verification.
-7. Save the complete plan at the required path. Ask for confirmation on a plan
-   that changes public APIs, data schemas, dependencies, CI, or more than a
-   small set of files. Otherwise hand off to `implement-task`.
+7. Save the complete plan at the required path. Include `## Approved design`
+   with a link to the exact approved design. Add that plan link to the design's
+   `## Execution` section, then add both artifacts to
+   `docs/agent-devkit/INDEX.md` (`## Designs` and `## Plans`). When an Obsidian
+   vault exists, targets are relative to its root (for a `docs/` vault:
+   `[[agent-devkit/specs/...|Design]]` and `[[agent-devkit/plans/...|Plan]]`);
+   otherwise use relative Markdown links. Do not link from `docs/llm/` to
+   either artifact. Ask for confirmation on a plan that changes public APIs,
+   data schemas, dependencies, CI, or more than a small set of files. Otherwise
+   hand off to `implement-task`.
 8. Do not include commit steps. If the user requests a commit, leave that action
    until after the final `review-and-verify` task passes.
 
@@ -75,6 +82,8 @@ After writing the complete plan, review it against the approved design:
    section above. Fix them.
 3. **Type consistency** — do function names, parameter types, and property
    names used in later tasks match what was defined in earlier tasks?
+4. **Artifact links** — do the index, design, and plan links resolve? Does the
+   design link only to wiki pages actually read as context?
 
 Fix any issues inline. No need to re-review — just fix and move on.
 
