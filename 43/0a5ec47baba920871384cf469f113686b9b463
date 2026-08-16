@@ -1,0 +1,27 @@
+skills/brainstorm-feature/SKILL.md
+  s_c8ff078ee2dcf1::t_17e6dc7508f0db 63-65,97-104
+  s_c8ff078ee2dcf1::t_e77edfc920a003 105
+EVALS.md
+  s_c8ff078ee2dcf1::t_17e6dc7508f0db 26
+  s_c8ff078ee2dcf1::t_c7b9a9b8306f1f 27-28
+README.md
+  s_c8ff078ee2dcf1::t_17e6dc7508f0db 151-152
+skills/plan-feature/SKILL.md
+  s_c8ff078ee2dcf1::t_17e6dc7508f0db 50-59,85-86
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "430a5ec47baba920871384cf469f113686b9b463",
+  "prompts": {},
+  "sessions": {
+    "s_c8ff078ee2dcf1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a003b8-cb6b-7bf2-b804-c1e149dd5434",
+        "model": "gpt-5.6-terra"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
