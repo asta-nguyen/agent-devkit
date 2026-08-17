@@ -40,6 +40,27 @@ cp -R /path/to/agent-devkit/skills/. .agents/skills/
 find .agents/skills -name SKILL.md -print
 ```
 
+### Install with Agent Skills CLI
+
+This repository follows the open Agent Skills layout: each skill is a
+`skills/<name>/SKILL.md` with YAML frontmatter containing `name` and
+`description`. No `skill.json` is required.
+
+Install all skills into Claude Code with:
+
+```bash
+npx skills add asta-nguyen/agent-devkit -a claude-code
+```
+
+Install one skill when only a focused capability is needed:
+
+```bash
+npx skills add asta-nguyen/agent-devkit --skill estimate-feature -a claude-code
+```
+
+The public repository is currently `asta-nguyen/agent-devkit`; the shorthand
+`asta/agent-devkit` is not the repository's current GitHub path.
+
 Copy the whole set because the workflow skills reference each other. Treat the
 copies as managed files: do not customize them in the target project. Updating
 overwrites same-named skills, and retired skill folders must be removed manually.
