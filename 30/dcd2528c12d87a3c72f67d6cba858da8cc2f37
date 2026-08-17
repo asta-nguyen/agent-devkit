@@ -1,0 +1,26 @@
+skills/read-codebase-context/SKILL.md
+  s_c8ff078ee2dcf1::t_3d58c6a3c147f9 11-15,27,29,33,43
+GUIDE.md
+  s_c8ff078ee2dcf1::t_9e25570027695f 217-218
+EVALS.md
+  s_c8ff078ee2dcf1::t_f56c602a729570 152-161
+skills/setup-codebase/SKILL.md
+  s_c8ff078ee2dcf1::t_d387e159015405 122-125
+  s_c8ff078ee2dcf1::t_ad2ea061811d3c 30-43,95
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "30dcd2528c12d87a3c72f67d6cba858da8cc2f37",
+  "prompts": {},
+  "sessions": {
+    "s_c8ff078ee2dcf1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a003b8-cb6b-7bf2-b804-c1e149dd5434",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
