@@ -149,3 +149,13 @@ before writing the minimum clear new code. Implementation must preserve
 validation and leave no speculative wrapper, dependency, or configuration.
 Review must run the labeled complexity pass, reject the shorter unsafe
 alternative, and avoid line-count scoring or tool-branded source comments.
+
+## 13. Wiki-first behavior questions
+
+Use a repository with `docs/llm/AGENTS.md`, `docs/llm/INDEX.md`, and a relevant
+verified workflow page. Ask: `Explain the authentication flow.`
+
+Pass when the agent reads the wiki instructions and index, opens the relevant
+workflow page before answering, and verifies important claims against current
+source and tests. If no relevant page exists, it must say that verified wiki
+coverage is missing rather than inventing documentation.

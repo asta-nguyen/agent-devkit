@@ -8,8 +8,11 @@ description: Use when a task needs accurate affected files, callers, tests, depe
 Use OpenEZ to locate context, then read the returned source directly. The index
 and memory accelerate discovery; current source code and tests establish facts.
 
-1. Check whether `openez` is available and run `openez status .`.
-2. Treat OpenEZ as the preferred path for semantic discovery. If OpenEZ or its
+1. If `docs/llm/AGENTS.md` and `docs/llm/INDEX.md` exist, read both and open the
+   relevant linked wiki page for the requested behavior or flow. If no relevant
+   page exists, state that the wiki has no verified coverage and continue.
+2. Check whether `openez` is available and run `openez status .`.
+3. Treat OpenEZ as the preferred path for semantic discovery. If OpenEZ or its
    local workspace index is missing, explain that it is an optional local code
    index that helps agents find symbols, callers, dependencies, and
    cross-module flows faster through semantic search and graph queries; source
@@ -21,13 +24,13 @@ and memory accelerate discovery; current source code and tests establish facts.
    direct-source fallback. Never install the CLI, Bun, or an agent MCP
    configuration silently.
 
-3. When OpenEZ is available, refresh the index with `openez index .` before a
+4. When OpenEZ is available, refresh the index with `openez index .` before a
    non-trivial feature plan.
-4. When OpenEZ is available, query the requested behavior with `code_query` or
+5. When OpenEZ is available, query the requested behavior with `code_query` or
    `code_context`; traverse
    callers/callees with `graph_neighbors` when the flow crosses modules. Use
    `memory_recall` only for previously recorded decisions or patterns.
-5. Read the entry point, returned implementation(s), direct callers, and
+6. Read the entry point, returned implementation(s), direct callers, and
    relevant tests. Record an impact map:
 
    ```text
@@ -37,7 +40,7 @@ and memory accelerate discovery; current source code and tests establish facts.
    Verification: <tests/checks to run>
    ```
 
-6. If OpenEZ cannot be installed or queried, use `rg` and direct file reads,
+7. If OpenEZ cannot be installed or queried, use `rg` and direct file reads,
    state the fallback, and continue. Never fabricate a file impact list from
    index results or memory alone.
 

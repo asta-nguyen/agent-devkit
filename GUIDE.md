@@ -214,6 +214,8 @@ setup-codebase
    evidence.
 3. Create **only** missing files. Every claim must have a source:
    - `AGENTS.md` — purpose, layout, commands, conventions, and gotchas
+   - `AGENTS.md` `## Documentation` — `docs/llm/INDEX.md` entry point and
+     wiki-first rules for behavior and workflow questions
    - `CLAUDE.md` — a short pointer to `AGENTS.md`
    - `docs/llm/` skeleton — `AGENTS.md`, `INDEX.md`, and `LOG.md`
 4. Append missing `.gitignore` rules for Obsidian and OpenEZ without untracking

@@ -27,6 +27,20 @@ context belongs to the project: never overwrite or shorten it.
      If a `skills/` or `.agents/skills` folder exists in the repository, add a `## Skills`
      section listing each skill by name with its `SKILL.md` path so every
      agent platform can discover them.
+     If `docs/llm/` exists or is created, add a `## Documentation` section:
+
+     ```md
+     ## Documentation
+
+     The verified codebase wiki is at `docs/llm/INDEX.md`.
+
+     For behavior, workflow, or domain questions:
+     1. Read `docs/llm/INDEX.md`.
+     2. Open the relevant wiki page.
+     3. Verify important claims against current source and tests.
+
+     The wiki describes verified behavior only; source and tests remain authoritative.
+     ```
    - `CLAUDE.md`: a short repository-specific pointer to `AGENTS.md`; include
      extra instructions only when local evidence establishes them.
    - `docs/llm/`: always create the wiki skeleton (`AGENTS.md`, `INDEX.md`, and
@@ -78,7 +92,7 @@ context belongs to the project: never overwrite or shorten it.
 
 | File | When to create | Key content |
 |---|---|---|
-| `AGENTS.md` | Missing | Purpose, layout, commands, conventions, gotchas, skills list |
+| `AGENTS.md` | Missing | Purpose, layout, commands, conventions, gotchas, skills list, wiki entry point |
 | `CLAUDE.md` | Missing | Pointer to `AGENTS.md` + repo-specific instructions |
 | `docs/llm/AGENTS.md` | Missing | Wiki evidence and maintenance rules |
 | `docs/llm/INDEX.md` | Missing | Navigable entry point |
@@ -105,9 +119,10 @@ Inspect repository evidence. Create only missing context files with concise,
 project-specific facts grounded in that evidence. Do not use a generic
 template, overwrite existing context, infer commands/conventions, or claim a
 file was created without reading it back. If a skills/ folder exists, list all
-skills in AGENTS.md. When a source-less project has an approved design, use it
-only for intended purpose and planned layout. If OpenEZ is available, note it
-in AGENTS.md. Add missing local Obsidian and OpenEZ rules to .gitignore without
+skills in AGENTS.md. If docs/llm/ exists or is created, add its INDEX.md as the
+wiki entry point and require wiki-first behavior questions. When a source-less
+project has an approved design, use it only for intended purpose and planned
+layout. If OpenEZ is available, note it in AGENTS.md. Add missing local Obsidian and OpenEZ rules to .gitignore without
 untracking files. Report created, updated, kept, tracked artifacts, evidence,
 and git diff --check.
 ```
