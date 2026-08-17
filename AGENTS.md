@@ -33,4 +33,8 @@ coding-agent context and an LLM-facing codebase wiki in sync.
 
 Prefer explicit instructions and the fewest files possible. If deterministic
 behavior eventually requires automation, prefer one simple script over a
-framework.
+framework. Before adding structure, reuse existing patterns, then prefer the
+standard library, native platform features, and installed dependencies. Choose
+the smallest clear implementation that preserves explicit requirements,
+validation, security, accessibility, and error handling that prevents data
+loss.

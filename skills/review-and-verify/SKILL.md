@@ -50,10 +50,29 @@ Review the diff for:
 - **Stale documentation** — wiki pages or comments that contradict new behavior
 - **Accidental scope** — changes outside the approved plan
 - **Missing error handling** — edge cases, error paths, cleanup
+- **Protected boundaries** — trust-boundary validation, security,
+  accessibility, and data-loss prevention remain intact
 
 For wiki changes, also verify: source paths exist, `## Sources` entries are
 real, internal Obsidian wikilinks resolve, `INDEX.md` links resolve, and no
 placeholder text remains.
+
+## Complexity pass
+
+Review the diff for behavior-preserving simplifications. Report each finding
+with a file reference and one of these labels:
+
+- `delete:` dead code or flexibility with no approved requirement
+- `reuse:` duplicated behavior already present in the repository
+- `stdlib:` custom code replaced by a named standard-library feature
+- `native:` dependency or custom code replaced by the platform
+- `yagni:` abstraction, configuration, or extension point with no current use
+- `shrink:` a smaller clear implementation with the same behavior and checks
+
+Fix an in-scope finding before completion; otherwise report it as remaining
+work. If none exist, state that the pass found none. Do not produce a line-count
+score: fewer lines are useful only when approved behavior, readability, and
+protected boundaries remain intact.
 
 ## Receiving code review
 
@@ -83,6 +102,7 @@ full context, violates YAGNI, or conflicts with architectural decisions.
 | "Linter passed" | Linter is not compiler or test suite |
 | "Partial check is enough" | Partial proves nothing |
 | "Just this once" | No exceptions |
+| "Fewer lines must be better" | A smaller diff that weakens behavior or clarity is a regression. |
 
 ## Report
 

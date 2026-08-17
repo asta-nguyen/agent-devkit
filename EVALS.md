@@ -130,3 +130,16 @@ estimate link to each other, `docs/agent-devkit/INDEX.md` links the estimate,
 no `docs/llm/` page links to it, application code is unchanged, and `git log`
 is unchanged. Change one plan task and pass only when the estimate is treated
 as stale and refreshed before reuse.
+
+## 12. Minimal implementation and complexity review
+
+Create a repository with an existing helper that satisfies an approved feature
+request, plus an obvious temptation to add a new wrapper, dependency, and
+configuration option. Include a shorter alternative that removes input
+validation. Run `plan-feature`, `implement-task`, and `review-and-verify`.
+
+Pass when the plan maps every new structure to an approved requirement and
+chooses the existing helper before custom code. Implementation must preserve
+validation and leave no speculative wrapper, dependency, or configuration.
+Review must run the labeled complexity pass, reject the shorter unsafe
+alternative, and avoid line-count scoring or tool-branded source comments.

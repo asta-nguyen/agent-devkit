@@ -17,6 +17,17 @@ description: Use after the user approves a bounded change or an approved feature
 3. Follow the approved `plan-feature` output when one exists. Without a plan,
    require an approved bounded design from `brainstorm-feature`; otherwise use
    `brainstorm-feature` before editing.
+4. After tracing the real flow, apply this implementation ladder and stop at
+   the first option that satisfies the approved behavior:
+   - Skip work that is speculative rather than approved.
+   - Reuse an existing module, helper, type, or pattern.
+   - Use the standard library or a native platform feature.
+   - Use an already-installed dependency.
+   - Write the smallest clear new implementation.
+
+   Do not use minimalism to remove explicit requirements, trust-boundary
+   validation, security, accessibility, or error handling that prevents data
+   loss.
 
 ## During implementation
 
@@ -44,3 +55,4 @@ description: Use after the user approves a bounded change or an approved feature
 | "The change is obvious, no need to trace callers" | Obvious changes break callers you did not read. |
 | "I'll skip the check, it's a small change" | Small changes break things. Run the check. |
 | "I'll verify at the end" | Verify after each non-trivial change. Catch errors early. |
+| "Removing this guard makes the diff smaller" | Smaller is not simpler when it weakens a protected boundary. |

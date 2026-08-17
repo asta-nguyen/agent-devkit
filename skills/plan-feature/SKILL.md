@@ -18,7 +18,19 @@ pages under `docs/llm/`.
    approved design; state that callers and tests do not exist yet.
 2. Map out which files will be created or modified and what each one is
    responsible for. Design units with clear boundaries. Follow existing
-   patterns; do not unilaterally restructure.
+   patterns; do not unilaterally restructure. Before accepting a proposed unit,
+   apply this minimal-design ladder and stop at the first option that satisfies
+   the approved behavior:
+   - Remove speculative work that no approved requirement needs.
+   - Reuse an existing module, helper, type, or pattern.
+   - Use the standard library or a native platform feature.
+   - Use an already-installed dependency.
+   - Plan the smallest clear new implementation.
+
+   Every new file, abstraction, dependency, or configuration value must map to
+   an approved requirement. Minimal design must not remove explicit behavior,
+   trust-boundary validation, security, accessibility, or error handling that
+   prevents data loss.
 3. Split the work into small, ordered tasks. Each task must state:
 
    ```text
@@ -87,6 +99,9 @@ After writing the complete plan, review it against the approved design:
    names used in later tasks match what was defined in earlier tasks?
 4. **Artifact links** — do the index, design, and plan links resolve? Does the
    design link only to wiki pages actually read as context?
+5. **Minimal design** — can any proposed file, abstraction, dependency, or
+   configuration be removed or replaced by existing, standard-library, native,
+   or already-installed behavior without weakening an approved requirement?
 
 Fix any issues inline. No need to re-review — just fix and move on.
 
@@ -98,6 +113,7 @@ Fix any issues inline. No need to re-review — just fix and move on.
 | "This task is small enough to skip the template" | Every task states Files, Change, Verify. No exceptions. |
 | "I'll add tests in a separate task later" | Tests go beside the behavior they verify. Same task. |
 | "The plan is obvious from the design" | Obvious to you ≠ obvious to the implementing agent. Write it out. |
+| "We may need this abstraction later" | Future flexibility without an approved requirement is not a plan task. |
 
 Plans are execution artifacts, not essays. Prefer the fewest tasks that
 make the sequence and verification unambiguous.
