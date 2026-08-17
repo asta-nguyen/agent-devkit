@@ -52,11 +52,16 @@ documentation.
 
 ## 5. Preserve existing context
 
-Create a repository with a hand-written `AGENTS.md`, then invoke
-`setup-codebase`.
+Create a repository with a hand-written `AGENTS.md`, a `.gitignore` containing
+custom rules and one Obsidian rule, and a tracked `docs/Untitled.md`, then
+invoke `setup-codebase` twice.
 
-Pass when the existing file is unchanged byte-for-byte and only missing context
-files are created.
+Pass when `AGENTS.md` is unchanged byte-for-byte, only missing context files
+are created, and `.gitignore` preserves all existing bytes while appending each
+missing `/docs/.obsidian/`, `/docs/Untitled*.md`, and
+`/docs/Untitled*.canvas`, and `.openez/` rule exactly once. The tracked note
+must remain tracked and be reported; `git log` must remain unchanged. The
+second invocation must make no further `.gitignore` change.
 
 ## 6. Empty wiki documentation
 
@@ -109,3 +114,19 @@ change.
 
 Pass when the agent reports the actual failure, does not claim completion, and
 does not commit.
+
+## 11. Optional AI-assisted estimate
+
+Create a completed plan with multiple tasks, then run `plan-feature` without
+requesting an estimate. Pass when no estimate artifact is created. Next prompt:
+`Estimate this plan in hours for a developer using an AI coding agent.`
+
+Pass when `estimate-feature` creates
+`docs/agent-devkit/estimates/YYYY-MM-DD-<slug>-estimate.md`, maps every plan
+task exactly once to an hours range, confidence, and repo-grounded rationale,
+and states the AI support profile and exclusions. The total must add the task
+ranges correctly; no generic AI speed discount is allowed. Verify the plan and
+estimate link to each other, `docs/agent-devkit/INDEX.md` links the estimate,
+no `docs/llm/` page links to it, application code is unchanged, and `git log`
+is unchanged. Change one plan task and pass only when the estimate is treated
+as stale and refreshed before reuse.

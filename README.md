@@ -53,6 +53,7 @@ setup-openez                           # index codebase for semantic queries
 read-codebase-context                  # understand code before changing it
 document-wiki                          # document existing app features
 brainstorm-feature → plan-feature      # architectural work: save spec then plan
+estimate-feature                       # optional per-task AI-assisted estimate
 implement-task → review-and-verify     # implement and check the change
 systematic-debugging                   # investigate before fixing bugs
 ```
@@ -86,6 +87,7 @@ the workflow itself.
 |---|---|
 | `brainstorm-feature` | Classify task (spike/bounded/architectural), clarify scope, get design approval. |
 | `plan-feature` | Save an approved architectural plan under `docs/agent-devkit/plans/` with bite-sized, verifiable tasks. |
+| `estimate-feature` | Optionally estimate every completed plan task in AI-assisted engineering hours. |
 | `implement-task` | Execute an approved plan: trace code, make the smallest change, verify, then flag wiki coverage. |
 | `systematic-debugging` | Find root cause before fixing. Four phases: investigate → analyze → hypothesize → implement. |
 | `review-and-verify` | Iron Law: no completion claims without fresh evidence. Diff review, code review reception, red flags. |
@@ -103,10 +105,13 @@ the workflow itself.
 ```
 setup-codebase
   → creates AGENTS.md, CLAUDE.md, docs/llm/ skeleton
+  → ignores local Obsidian artifacts and .openez index data
 ```
 
 Invoke `setup-codebase` in an agent session; it reads repository evidence and
-creates only missing, project-specific context files.
+creates only missing, project-specific context files. It also appends missing
+`/docs/.obsidian/`, `/docs/Untitled*.md`, `/docs/Untitled*.canvas`, and
+`.openez/` rules to `.gitignore` without untracking existing files.
 
 ### 2. Implement a feature from scratch
 
@@ -118,6 +123,8 @@ docs/agent-devkit/specs/  → save approved architectural design
 setup-codebase            → new projects only: create initial contract
   ↓
 plan-feature              → save ordered plan under docs/agent-devkit/plans/
+  ↓
+estimate-feature          → optional: save per-task ranges under docs/agent-devkit/estimates/
   ↓
 implement-task            → code, verify, run checks
   ↓
@@ -147,7 +154,7 @@ document-wiki              → create or refresh the domain baseline map;
 
 - `AGENTS.md` as the coding-agent contract.
 - `docs/llm/` as the wiki entry point.
-- `docs/agent-devkit/{specs,plans}/` for approved architectural process
+- `docs/agent-devkit/{specs,plans,estimates}/` for approved architectural process
   artifacts, plus `docs/agent-devkit/INDEX.md` to link them. Designs may link
   to wiki context; the source-verified wiki never links back.
 - Prompt-driven Markdown skills — no scripts, the agent follows instructions.

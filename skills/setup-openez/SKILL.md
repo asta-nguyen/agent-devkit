@@ -22,14 +22,17 @@ memory recall. This skill bootstraps it for a repository.
 
 ## Process
 
-1. **Initialize the workspace index:**
+1. **Initialize the workspace index.** Before initialization, ensure
+   `.gitignore` contains `.openez/`; append it only when missing and preserve
+   existing content. Never untrack an existing `.openez/` path automatically;
+   report it to the user instead. `setup-codebase` may already have added the
+   rule. Then run:
 
    ```bash
    openez init .
    ```
 
-   This creates a `.openez/` directory with index data. Add `.openez/` to
-   `.gitignore` — it is derived data, not source.
+   This creates a `.openez/` directory with derived index data.
 
 2. **Index the repository:**
 

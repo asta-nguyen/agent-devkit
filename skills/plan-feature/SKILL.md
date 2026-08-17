@@ -57,7 +57,10 @@ pages under `docs/llm/`.
    either artifact. Ask for confirmation on a plan that changes public APIs,
    data schemas, dependencies, CI, or more than a small set of files. Otherwise
    hand off to `implement-task`.
-8. Do not include commit steps. If the user requests a commit, leave that action
+8. Do not estimate effort in this skill. When the user explicitly requests an
+   estimate, hand the completed plan to `estimate-feature`; otherwise continue
+   without an estimate.
+9. Do not include commit steps. If the user requests a commit, leave that action
    until after the final `review-and-verify` task passes.
 
 ## No placeholders
