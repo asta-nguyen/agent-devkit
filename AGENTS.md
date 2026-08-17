@@ -33,8 +33,16 @@ coding-agent context and an LLM-facing codebase wiki in sync.
 
 Prefer explicit instructions and the fewest files possible. If deterministic
 behavior eventually requires automation, prefer one simple script over a
-framework. Before adding structure, reuse existing patterns, then prefer the
-standard library, native platform features, and installed dependencies. Choose
-the smallest clear implementation that preserves explicit requirements,
-validation, security, accessibility, and error handling that prevents data
-loss.
+framework. After understanding the affected flow, use this ladder and stop at
+the first option that satisfies the required behavior:
+
+1. Does this need to exist at all? Skip speculative work (YAGNI).
+2. Does it already exist in this codebase? Reuse it.
+3. Does the standard library do it? Use it.
+4. Does a native platform feature cover it? Use it.
+5. Does an already-installed dependency solve it? Use it.
+6. Only then, write the minimum clear new code that works.
+
+The ladder never removes explicit requirements, validation at trust boundaries,
+security, accessibility, or error handling that prevents data loss. For bug
+fixes, the minimum change is the smallest root-cause fix, not a symptom patch.

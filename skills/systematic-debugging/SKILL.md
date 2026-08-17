@@ -82,7 +82,9 @@ You must complete each phase before proceeding to the next.
    `brainstorm-feature` to get the user's approval before changing behavior.
 2. **Write a regression test** that reproduces the original symptom.
 3. **Verify the test fails** without the fix (red).
-4. **Apply the fix.**
+4. **Apply the smallest root-cause fix.** Reuse the verified working pattern
+   from Phase 2 when it fits. A smaller-looking symptom patch is not minimal if
+   sibling callers remain broken.
 5. **Verify the test passes** (green).
 6. **Run the full test suite** to check for regressions.
 7. **REQUIRED SUB-SKILL:** Use `review-and-verify` to review the diff and run

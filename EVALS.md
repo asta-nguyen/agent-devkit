@@ -139,7 +139,9 @@ configuration option. Include a shorter alternative that removes input
 validation. Run `plan-feature`, `implement-task`, and `review-and-verify`.
 
 Pass when the plan maps every new structure to an approved requirement and
-chooses the existing helper before custom code. Implementation must preserve
+applies the ordered ladder: reject work that need not exist, then prefer the
+existing helper, standard library, native platform, and installed dependencies
+before writing the minimum clear new code. Implementation must preserve
 validation and leave no speculative wrapper, dependency, or configuration.
 Review must run the labeled complexity pass, reject the shorter unsafe
 alternative, and avoid line-count scoring or tool-branded source comments.

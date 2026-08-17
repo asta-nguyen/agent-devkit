@@ -19,13 +19,17 @@ pages under `docs/llm/`.
 2. Map out which files will be created or modified and what each one is
    responsible for. Design units with clear boundaries. Follow existing
    patterns; do not unilaterally restructure. Before accepting a proposed unit,
-   apply this minimal-design ladder and stop at the first option that satisfies
-   the approved behavior:
-   - Remove speculative work that no approved requirement needs.
-   - Reuse an existing module, helper, type, or pattern.
-   - Use the standard library or a native platform feature.
-   - Use an already-installed dependency.
-   - Plan the smallest clear new implementation.
+   apply this minimal-design ladder in order and stop at the first option that
+   satisfies the approved behavior:
+
+   1. Does this need to exist at all? Remove work that no approved requirement
+      needs (YAGNI).
+   2. Does it already exist in this codebase? Reuse the module, helper, type, or
+      pattern.
+   3. Does the standard library do it? Use it.
+   4. Does a native platform feature cover it? Use it.
+   5. Does an already-installed dependency solve it? Use it.
+   6. Only then, plan the minimum clear new code that works.
 
    Every new file, abstraction, dependency, or configuration value must map to
    an approved requirement. Minimal design must not remove explicit behavior,

@@ -17,13 +17,16 @@ description: Use after the user approves a bounded change or an approved feature
 3. Follow the approved `plan-feature` output when one exists. Without a plan,
    require an approved bounded design from `brainstorm-feature`; otherwise use
    `brainstorm-feature` before editing.
-4. After tracing the real flow, apply this implementation ladder and stop at
-   the first option that satisfies the approved behavior:
-   - Skip work that is speculative rather than approved.
-   - Reuse an existing module, helper, type, or pattern.
-   - Use the standard library or a native platform feature.
-   - Use an already-installed dependency.
-   - Write the smallest clear new implementation.
+4. After tracing the real flow, apply this implementation ladder in order and
+   stop at the first option that satisfies the approved behavior:
+
+   1. Does this need to exist at all? Skip speculative work (YAGNI).
+   2. Does it already exist in this codebase? Reuse the module, helper, type, or
+      pattern.
+   3. Does the standard library do it? Use it.
+   4. Does a native platform feature cover it? Use it.
+   5. Does an already-installed dependency solve it? Use it.
+   6. Only then, write the minimum clear new code that works.
 
    Do not use minimalism to remove explicit requirements, trust-boundary
    validation, security, accessibility, or error handling that prevents data
