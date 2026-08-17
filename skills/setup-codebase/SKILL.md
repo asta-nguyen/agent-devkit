@@ -36,13 +36,18 @@ context belongs to the project: never overwrite or shorten it.
 
    Every claim must have a repository source. If evidence is insufficient,
    state an open question instead of inventing a rule.
-4. If OpenEZ is available (`openez` command or MCP server), note it in
-   `AGENTS.md` under a `## Code intelligence` section: mention that agents
-   should prefer OpenEZ MCP tools (`code_query`, `code_context`,
-   `graph_neighbors`) for semantic code questions, with direct file reads
-   as fallback. Do not run `openez setup` — the project's `AGENTS.md`
-   remains the instruction source of truth. If OpenEZ is not available,
-   skip this section silently.
+4. Check whether OpenEZ is available (`openez` command or MCP server). If it is
+   available, note it in `AGENTS.md` under a `## Code intelligence` section:
+   mention that agents should prefer OpenEZ MCP tools (`code_query`,
+   `code_context`, `graph_neighbors`) for semantic code questions, with direct
+   file reads as fallback. If it is not available, explain that OpenEZ is an
+   optional local code index that helps agents find symbols, callers,
+   dependencies, and cross-module flows faster through semantic search and
+   graph queries. Explain that setup requires Bun and the OpenEZ CLI, creates
+   ignored `.openez/` index data, and may take time. Then ask:
+   `Do you want to set up OpenEZ for this repo? It is recommended for
+   non-trivial codebases.` If the user agrees, use `setup-openez`; otherwise
+   continue without it. Do not install or run `openez setup` silently.
 5. Keep local Obsidian and OpenEZ state out of Git. Create `.gitignore` when it
    is missing, or append only these missing lines without reordering,
    normalizing, or duplicating existing content:

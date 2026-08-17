@@ -9,19 +9,22 @@ Use OpenEZ to locate context, then read the returned source directly. The index
 and memory accelerate discovery; current source code and tests establish facts.
 
 1. Check whether `openez` is available and run `openez status .`.
-2. If OpenEZ or its local workspace index is missing, bootstrap it:
+2. Treat OpenEZ as the preferred path for semantic discovery. If OpenEZ or its
+   local workspace index is missing, explain that it is an optional local code
+   index that helps agents find symbols, callers, dependencies, and
+   cross-module flows faster through semantic search and graph queries; source
+   and tests remain authoritative. Explain that setup requires Bun and the
+   OpenEZ CLI, creates ignored `.openez/` index data, and may take time. Ask:
+   `Do you want to set up OpenEZ for this repo? It is recommended for
+   non-trivial codebases.` If the user agrees, use `setup-openez` and continue
+   after its index/MCP verification. If the user declines, continue with the
+   direct-source fallback. Never install the CLI, Bun, or an agent MCP
+   configuration silently.
 
-   ```bash
-   npm install -g @openez-graph/cli
-   openez init .
-   ```
-
-   If Bun is missing, explain that OpenEZ requires Bun 1.1+ and ask the user to
-   authorize/install it before continuing. Do not run `openez setup <agent>`:
-   the repository's own `AGENTS.md` remains the instruction source of truth.
-
-3. Before a non-trivial feature plan, refresh the index with `openez index .`.
-4. Query the requested behavior with `code_query` or `code_context`; traverse
+3. When OpenEZ is available, refresh the index with `openez index .` before a
+   non-trivial feature plan.
+4. When OpenEZ is available, query the requested behavior with `code_query` or
+   `code_context`; traverse
    callers/callees with `graph_neighbors` when the flow crosses modules. Use
    `memory_recall` only for previously recorded decisions or patterns.
 5. Read the entry point, returned implementation(s), direct callers, and

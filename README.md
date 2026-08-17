@@ -70,7 +70,7 @@ The shortest routing guide is:
 
 ```text
 setup-codebase                         # first visit to a repo missing context
-setup-openez                           # index codebase for semantic queries
+setup-openez                           # recommended semantic index for non-trivial repos
 read-codebase-context                  # understand code before changing it
 document-wiki                          # document existing app features
 brainstorm-feature → plan-feature      # architectural work: save spec then plan

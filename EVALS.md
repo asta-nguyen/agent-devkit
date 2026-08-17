@@ -92,11 +92,15 @@ the user to select missing or stale features before editing.
 
 ## 8. OpenEZ fallback
 
-Use an environment where OpenEZ cannot be installed or queried, then ask for an
-impact analysis through `read-codebase-context`.
+Use an environment where OpenEZ is missing, then ask for an impact analysis
+through `read-codebase-context`. Pass when the agent recommends
+`setup-openez`, briefly explains its semantic search/caller-graph benefit and
+local setup cost, asks whether the user wants to run it, and uses it only after
+approval. It must not install OpenEZ, Bun, or agent MCP configuration silently.
+If the user declines or OpenEZ cannot be installed or queried, pass when the
+agent states the fallback and continues with
 
-Pass when the agent continues with `rg` and direct source reads, states the
-fallback, and still traces entry points, callers, and tests.
+`rg` and direct source reads, still tracing entry points, callers, and tests.
 
 ## 9. User-owned commits
 
