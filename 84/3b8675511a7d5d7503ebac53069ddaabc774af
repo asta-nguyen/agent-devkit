@@ -1,0 +1,32 @@
+EVALS.md
+  s_c8ff078ee2dcf1::t_1c3500d6c369d1 144
+  s_c8ff078ee2dcf1::t_1b5e94445a5ca0 142-143
+AGENTS.md
+  s_c8ff078ee2dcf1::t_1b5e94445a5ca0 36-43,45-48
+  s_c8ff078ee2dcf1::t_1c3500d6c369d1 44
+skills/plan-feature/SKILL.md
+  s_c8ff078ee2dcf1::t_1c3500d6c369d1 32
+  s_c8ff078ee2dcf1::t_1b5e94445a5ca0 22-31
+skills/implement-task/SKILL.md
+  s_c8ff078ee2dcf1::t_1b5e94445a5ca0 20-28
+  s_c8ff078ee2dcf1::t_1c3500d6c369d1 29
+skills/systematic-debugging/SKILL.md
+  s_c8ff078ee2dcf1::t_1c3500d6c369d1 86-87
+  s_c8ff078ee2dcf1::t_1b5e94445a5ca0 85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "843b8675511a7d5d7503ebac53069ddaabc774af",
+  "prompts": {},
+  "sessions": {
+    "s_c8ff078ee2dcf1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a003b8-cb6b-7bf2-b804-c1e149dd5434",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
