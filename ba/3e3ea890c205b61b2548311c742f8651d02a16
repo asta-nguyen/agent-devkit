@@ -1,0 +1,40 @@
+README.md
+  s_c8ff078ee2dcf1::t_ff8db58b92aeac 108,113-114
+  s_c8ff078ee2dcf1::t_43afc5c916e37c 90
+  s_c8ff078ee2dcf1::t_83d44ecd47f638 56,127-128,157
+  s_c8ff078ee2dcf1::t_6b284c7aacdf21 112
+skills/setup-codebase/SKILL.md
+  s_c8ff078ee2dcf1::t_ff8db58b92aeac 46-48,54,83,94,105-107
+  s_c8ff078ee2dcf1::t_6b284c7aacdf21 11-14,49-53,55-57,59-63,69
+  s_c8ff078ee2dcf1::t_8b1623c88bd923 70
+  s_c8ff078ee2dcf1::t_f716acea25939d 58
+skills/setup-openez/SKILL.md
+  s_c8ff078ee2dcf1::t_8b1623c88bd923 25-29,35
+skills/plan-feature/SKILL.md
+  s_c8ff078ee2dcf1::t_83d44ecd47f638 60-63
+skills/estimate-feature/SKILL.md
+  s_c8ff078ee2dcf1::t_83d44ecd47f638 1-2,4-7,10-12,14-16,20-21,26-28,30-74
+  s_c8ff078ee2dcf1::t_43afc5c916e37c 3,13
+  s_c8ff078ee2dcf1::t_242d8f42807294 8-9,17-19,22-25,29
+EVALS.md
+  s_c8ff078ee2dcf1::t_ff8db58b92aeac 62-64
+  s_c8ff078ee2dcf1::t_83d44ecd47f638 117-119,121-132
+  s_c8ff078ee2dcf1::t_6b284c7aacdf21 55-57,59-61
+  s_c8ff078ee2dcf1::t_43afc5c916e37c 120
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "ba3e3ea890c205b61b2548311c742f8651d02a16",
+  "prompts": {},
+  "sessions": {
+    "s_c8ff078ee2dcf1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a003b8-cb6b-7bf2-b804-c1e149dd5434",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
