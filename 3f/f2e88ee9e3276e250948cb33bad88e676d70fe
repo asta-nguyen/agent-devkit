@@ -1,0 +1,27 @@
+skills/review-and-verify/SKILL.md
+  s_c8ff078ee2dcf1::t_b6b22c965db42e 53-54,60-76,105
+skills/plan-feature/SKILL.md
+  s_c8ff078ee2dcf1::t_b6b22c965db42e 21-33,102-104,116
+AGENTS.md
+  s_c8ff078ee2dcf1::t_b6b22c965db42e 36-40
+skills/implement-task/SKILL.md
+  s_c8ff078ee2dcf1::t_b6b22c965db42e 20-30,58
+EVALS.md
+  s_c8ff078ee2dcf1::t_b6b22c965db42e 133-145
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "3ff2e88ee9e3276e250948cb33bad88e676d70fe",
+  "prompts": {},
+  "sessions": {
+    "s_c8ff078ee2dcf1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a003b8-cb6b-7bf2-b804-c1e149dd5434",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
