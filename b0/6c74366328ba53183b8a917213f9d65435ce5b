@@ -1,0 +1,19 @@
+CONTRIBUTING.md
+  s_74ef06e4bb60ed::t_335f7cfb2f6970 1-90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "b06c74366328ba53183b8a917213f9d65435ce5b",
+  "prompts": {},
+  "sessions": {
+    "s_74ef06e4bb60ed": {
+      "agent_id": {
+        "tool": "windsurf",
+        "id": "eebd5883-b15e-431e-a25f-455048ba59dc",
+        "model": "GLM-5.2 High"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
