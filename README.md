@@ -171,19 +171,6 @@ document-wiki              → create or refresh the domain baseline map;
                               then choose missing/stale feature coverage
 ```
 
-## MVP scope
+## License
 
-- `AGENTS.md` as the coding-agent contract.
-- `docs/llm/` as the wiki entry point.
-- `docs/agent-devkit/{specs,plans,estimates}/` for approved architectural process
-  artifacts, plus `docs/agent-devkit/INDEX.md` to link them. Designs may link
-  to wiki context; the source-verified wiki never links back.
-- Prompt-driven Markdown skills — no scripts, the agent follows instructions.
-- OpenEZ is an optional local index for AI source discovery; it never replaces
-  direct source/test inspection.
-- Agents leave verified changes uncommitted unless the user explicitly asks
-  them to commit.
-- No TypeScript, build system, or multi-agent orchestration yet.
-
-The implementation is being built in the order described by the repository
-contract and the files under `skills/`.
+MIT — see [LICENSE](./LICENSE).
