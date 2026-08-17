@@ -3,11 +3,12 @@
 This repository contains dependency-free Markdown skills for keeping
 coding-agent context and an LLM-facing codebase wiki in sync.
 
-## Before changing code
+## Before changing files
 
 - Read this file. Read `docs/llm/INDEX.md` only in target projects where the
   skills have created that wiki.
-- Inspect the existing implementation and its callers before editing.
+- Inspect the existing implementation and its callers before editing relevant
+  files.
 - Reuse the current Markdown skill patterns; do not add scripts, dependencies,
   or abstractions unless prompt-driven instructions are insufficient.
 
@@ -17,10 +18,13 @@ coding-agent context and an LLM-facing codebase wiki in sync.
 - Preserve user changes and do not rewrite unrelated files.
 - Treat generated LLM documentation as a product artifact: update it when the
   documented code or behavior changes.
-- Do not add TypeScript, a build system, or multi-agent behavior to the MVP
-  unless the task explicitly asks for it.
+- Do not add TypeScript, a build system, or multi-agent behavior unless the task
+  explicitly asks for it.
 - Never hide errors that could leave code or documentation stale.
 - Do not commit secrets, generated dependency directories, or temporary files.
+- Do not create commits during implementation. Leave the working tree for the
+  user to review; commit only after final `review-and-verify` passes and the
+  user explicitly requests it.
 
 ## Verification
 
