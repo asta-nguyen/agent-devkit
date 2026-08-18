@@ -63,20 +63,42 @@ pages under `docs/llm/`.
 6. End every plan with `**REQUIRED SUB-SKILL:** Use review-and-verify`. If the
    feature is new or changes user-visible behavior, include `document-wiki`
    after verification.
-7. Save the complete plan at the required path. Include `## Approved design`
+7. Add this section to every plan:
+
+   ```md
+   ## Approval Gate
+
+   Required: yes | no
+   Reason: <public API, data schema, dependency, CI, broad file impact, or low-risk scope>
+   Status: pending | approved | not-required
+   ```
+
+   Set `Required: yes` when the plan changes public APIs, data schemas,
+   dependencies, CI, or more than a small set of files; its initial status is
+   always `pending`. Otherwise set `Required: no` and `Status: not-required`.
+   Approval of the design/spec, including an instruction to implement given
+   before this plan existed, never changes a required gate from `pending`.
+8. Save the complete plan at the required path. Include `## Approved design`
    with a link to the exact approved design. Add that plan link to the design's
    `## Execution` section, then add both artifacts to
    `docs/agent-devkit/INDEX.md` (`## Designs` and `## Plans`). When an Obsidian
    vault exists, targets are relative to its root (for a `docs/` vault:
    `[[agent-devkit/specs/...|Design]]` and `[[agent-devkit/plans/...|Plan]]`);
    otherwise use relative Markdown links. Do not link from `docs/llm/` to
-   either artifact. Ask for confirmation on a plan that changes public APIs,
-   data schemas, dependencies, CI, or more than a small set of files. Otherwise
-   hand off to `implement-task`.
-8. Do not estimate effort in this skill. When the user explicitly requests an
-   estimate, hand the completed plan to `estimate-feature`; otherwise continue
-   without an estimate.
-9. Do not include commit steps. If the user requests a commit, leave that action
+   either artifact.
+9. Do not estimate effort in this skill. When the user explicitly requests an
+   estimate, hand the completed plan to `estimate-feature` before presenting
+   the approval gate; otherwise continue without an estimate. Estimation never
+   authorizes implementation.
+10. Present the complete plan, requested estimate when present, and approval
+   gate. For
+   `Required: yes`, stop without editing application code. After the user
+   explicitly approves the complete plan, update `Status: pending` to
+   `Status: approved` and hand off to `implement-task`; that approval is the
+   gate, so do not ask again. If an approved plan changes materially, reset its
+   status to `pending` and present it again. For `Required: no`, hand off with
+   `Status: not-required`.
+11. Do not include commit steps. If the user requests a commit, leave that action
    until after the final `review-and-verify` task passes.
 
 ## No placeholders
@@ -103,7 +125,9 @@ After writing the complete plan, review it against the approved design:
    names used in later tasks match what was defined in earlier tasks?
 4. **Artifact links** — do the index, design, and plan links resolve? Does the
    design link only to wiki pages actually read as context?
-5. **Minimal design** — can any proposed file, abstraction, dependency, or
+5. **Approval gate** — do impact and status match the required criteria? Is a
+   required gate still pending until the complete plan is approved?
+6. **Minimal design** — can any proposed file, abstraction, dependency, or
    configuration be removed or replaced by existing, standard-library, native,
    or already-installed behavior without weakening an approved requirement?
 
@@ -118,6 +142,8 @@ Fix any issues inline. No need to re-review — just fix and move on.
 | "I'll add tests in a separate task later" | Tests go beside the behavior they verify. Same task. |
 | "The plan is obvious from the design" | Obvious to you ≠ obvious to the implementing agent. Write it out. |
 | "We may need this abstraction later" | Future flexibility without an approved requirement is not a plan task. |
+| "The user already said implement" | Before the plan exists, that approves planning only. A required gate waits for approval of the complete plan. |
+| "I'll leave an approved status after changing the plan" | Material plan changes invalidate approval. Reset the gate to pending. |
 
 Plans are execution artifacts, not essays. Prefer the fewest tasks that
 make the sequence and verification unambiguous.

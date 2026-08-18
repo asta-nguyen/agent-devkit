@@ -14,9 +14,17 @@ description: Use after the user approves a bounded change or an approved feature
    and error paths before editing. For a source-less new project, read the
    approved spec and plan, then create the first planned entry point; state that
    callers and existing error paths do not exist yet.
-3. Follow the approved `plan-feature` output when one exists. Without a plan,
-   require an approved bounded design from `brainstorm-feature`; otherwise use
-   `brainstorm-feature` before editing.
+3. Follow the approved `plan-feature` output when one exists. Read its
+   `## Approval Gate` before editing application code:
+   - `Required: yes` proceeds only with `Status: approved`. Missing or `pending`
+     status means stop and request approval of the complete plan.
+   - `Required: no` proceeds with `Status: not-required`.
+   - For a legacy plan with no gate, inspect its impact. Public API, data schema,
+     dependency, CI, or broad file changes require approval before proceeding.
+
+   Approval given before the plan existed does not satisfy a required gate.
+   Without a plan, require an approved bounded design from `brainstorm-feature`;
+   otherwise use `brainstorm-feature` before editing.
 4. After tracing the real flow, apply this implementation ladder in order and
    stop at the first option that satisfies the approved behavior:
 
@@ -59,3 +67,4 @@ description: Use after the user approves a bounded change or an approved feature
 | "I'll skip the check, it's a small change" | Small changes break things. Run the check. |
 | "I'll verify at the end" | Verify after each non-trivial change. Catch errors early. |
 | "Removing this guard makes the diff smaller" | Smaller is not simpler when it weakens a protected boundary. |
+| "The spec was approved, so the plan must be approved" | A required execution-plan gate is separate and must say `Status: approved`. |

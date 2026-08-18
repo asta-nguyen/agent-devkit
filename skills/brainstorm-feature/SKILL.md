@@ -62,7 +62,11 @@ downgrades mid-task.
    - Architectural: create `docs/agent-devkit/specs/` if needed, write and
      self-review `YYYY-MM-DD-<slug>-design.md`, then create or update
      `docs/agent-devkit/INDEX.md` with a link to it. Get the user's approval of
-     the written spec, then hand off to `plan-feature`. If the target has no
+     the written spec, then hand off to `plan-feature`. Approval of the spec
+     authorizes creation of the execution plan, not execution of a high-impact
+     plan that does not exist yet. An instruction such as "implement it" given
+     before the plan exists does not approve a later `Required: yes` plan gate.
+     If the target has no
      `AGENTS.md` or application source, use `setup-codebase` first so it can
      create the initial repository contract from the approved spec.
 
@@ -88,6 +92,7 @@ simplicity is the artifact, never the approval.
 | "I understand this kind of app, so it's bounded" | Bounded measures the repo, not your familiarity. A new project has no existing flow — it is architectural. |
 | "The spike works, so I'll keep the code" | A spike's output is an answer. Keeping the code is a new request — classify it. |
 | "It grew, but I'm almost done — no need to re-classify" | Hidden complexity upgrades the path mid-task. Stop and say so. |
+| "They said implement after the spec, so the unseen plan is approved" | Spec approval permits planning. A required plan gate can be approved only after the complete plan exists. |
 
 ## Spec self-review (architectural path only)
 

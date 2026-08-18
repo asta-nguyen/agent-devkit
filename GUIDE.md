@@ -123,7 +123,7 @@ dependencies or change MCP configuration silently.
 | Skill | When to use | Summary |
 |---|---|---|
 | `brainstorm-feature` | A new, ambiguous request or a request that changes product behavior | Classifies Spike / Bounded / Architectural, asks clarifying questions, presents a design, and requires approval before coding. |
-| `plan-feature` | After design approval and before a non-trivial feature | Turns the design into an ordered execution plan. Each task has Files / Interfaces / Change / Verify. |
+| `plan-feature` | After design approval and before a non-trivial feature | Turns the design into an ordered execution plan with a persisted approval gate. Each task has Files / Interfaces / Change / Verify. |
 | `estimate-feature` | When a PM or BA explicitly requests an estimate | Estimates an hours range for each plan task with confidence and rationale. Runs only when requested. |
 | `implement-task` | An approved bounded design or an approved architectural plan exists | Traces code, applies the 6-step implementation ladder, verifies each non-trivial change, and flags wiki coverage. |
 | `systematic-debugging` | Any technical issue: bug, test failure, build failure, or performance problem | Four phases: Investigate → Analyze → Hypothesis → Implement. Never fixes before root-cause investigation. |
@@ -305,10 +305,16 @@ Add a background job subsystem with persistent retries.
 7. If the repo lacks `AGENTS.md`, run `setup-codebase` first.
 8. Run `plan-feature` and write
    `docs/agent-devkit/plans/2026-08-17-bg-jobs-plan.md` with ordered tasks.
-9. Run `estimate-feature` only if the user requests an estimate.
-10. Run `implement-task` for each plan task.
-11. Run `review-and-verify` for diff review, tests, and the complexity pass.
-12. Run `document-wiki` to refresh the wiki for the new feature.
+9. Run `estimate-feature` before plan approval only if the user requested an
+   estimate; an estimate never authorizes implementation.
+10. Because the plan changes public APIs, schemas, dependencies, CI, or a broad
+   set of files, save it with `Required: yes` / `Status: pending`, present it,
+   and wait for explicit plan approval. Spec approval does not approve an
+   execution plan that did not yet exist.
+11. After approval, update the plan to `Status: approved`.
+12. Run `implement-task` for each plan task.
+13. Run `review-and-verify` for diff review, tests, and the complexity pass.
+14. Run `document-wiki` to refresh the wiki for the new feature.
 
 **Artifact structure:**
 
@@ -486,6 +492,9 @@ Estimate this plan in hours for a developer using an AI coding agent.
   request seems clear, the agent should classify it and present a design.
 - **The approval gate is mandatory.** The agent must STOP and wait for you to
   say "yes" before implementation.
+- **High-impact plans have their own persisted gate.** Approval of a spec does
+  not approve an unseen plan. After the complete plan is approved, its status
+  changes from `pending` to `approved`; the agent must not ask twice.
 - **Do not ask for a commit** until `review-and-verify` passes. The agent leaves
   the working tree for you to review and commit.
 - **When debugging, do not push the agent to "fix it quickly."**
