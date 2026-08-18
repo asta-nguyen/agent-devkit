@@ -119,6 +119,12 @@ the workflow itself.
 |---|---|
 | `document-wiki` | Build a source-grounded domain baseline, then let the user choose missing or stale feature coverage. |
 
+Deep pages use evidence-backed folders only when needed: `architecture/` for
+system structure, `domains/` for state and business rules, `workflows/` for
+user/operator flows, `integrations/` for external systems, `operations/` for
+jobs/cron/deployment, and `decisions/` for source-backed decisions. Small repos
+may need only `architecture/` and `workflows/`; empty folders are never created.
+
 ## Example workflows
 
 ### 1. Bootstrap a new repository

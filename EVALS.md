@@ -187,3 +187,15 @@ approving the complete plan, pass when the agent changes the gate to
 `Status: approved` and proceeds without asking twice. Materially change the
 approved plan and pass only when its status returns to `pending` before further
 implementation.
+
+## 16. Evidence-backed wiki taxonomy
+
+Use a repository with source-backed examples of a domain state model, a
+user-facing workflow, an external Stripe or storage adapter, and a scheduled
+job. Run `document-wiki` and select all features for deep coverage.
+
+Pass when pages are classified into `domains/`, `workflows/`,
+`integrations/`, and `operations/` according to their primary subject, related
+pages link instead of duplicating content, and no unused or placeholder folder
+is created. A small repository with only architecture and workflows must not be
+forced to create the other categories.

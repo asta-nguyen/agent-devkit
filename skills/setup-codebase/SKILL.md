@@ -98,7 +98,7 @@ context belongs to the project: never overwrite or shorten it.
 | `docs/llm/INDEX.md` | Missing | Navigable entry point |
 | `docs/llm/LOG.md` | Missing | Append-only change log |
 | `docs/llm/architecture/overview.md` | Baseline map | Source-grounded repository orientation |
-| `docs/llm/{architecture,workflows,decisions}/` | A real page needs the folder | Feature documentation folders |
+| `docs/llm/{architecture,domains,workflows,integrations,operations,decisions}/` | A real page needs the folder | Evidence-backed wiki categories; create only when needed |
 | `.gitignore` | Setup | Add only missing local Obsidian and OpenEZ rules |
 
 ## Red flags

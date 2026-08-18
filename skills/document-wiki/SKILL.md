@@ -71,10 +71,23 @@ other wiki skills.
    list and wait for the user to choose deep coverage. Apply this selection gate
    even when the wiki was empty. If the user says “all”, select all listed
    features.
-7. Group selected behavior into a small number of pages under `architecture/`,
-   `workflows/`, and `decisions/`. Create a folder when writing its first real
-   page; never create placeholder pages just to populate the skeleton. Before
-   documenting each selected feature, trace it end to end:
+7. Group selected behavior into the smallest set of evidence-backed categories.
+   Use only categories that have a real page to contain:
+
+   | Category | Use for |
+   |---|---|
+   | `architecture/` | Cross-cutting structure, boundaries, and API topology |
+   | `domains/` | Domain concepts, state models, and business rules |
+   | `workflows/` | User or operator flows across multiple components |
+   | `integrations/` | Stripe, storage, email, and other external systems |
+   | `operations/` | Jobs, cron, deployment, maintenance, and runbooks |
+   | `decisions/` | Source-backed architectural decisions or existing ADRs |
+
+   A page belongs in the category that best describes its primary subject; link
+   related categories instead of duplicating the page. Create a folder only
+   when writing its first real page; never create placeholder folders. For
+   small repositories, `architecture/`, `decisions/` and `workflows/` may be sufficient.
+   Before documenting each selected feature, trace it end to end:
 
    ```text
    entry point and inbound caller

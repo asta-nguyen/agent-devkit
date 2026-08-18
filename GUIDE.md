@@ -135,6 +135,12 @@ dependencies or change MCP configuration silently.
 |---|---|---|
 | `document-wiki` | The repo has no LLM wiki, only a skeleton, or missing/stale feature docs | Builds a domain map from source, creates the baseline overview, waits for feature selection, and writes deep pages. Every claim needs a source path. |
 
+Deep pages use only categories established by evidence: `architecture/` for
+system structure, `domains/` for state and business rules, `workflows/` for
+user/operator flows, `integrations/` for external systems, `operations/` for
+jobs/cron/deployment, and `decisions/` for source-backed decisions. Folders are
+created only when a real page needs them.
+
 ---
 
 ## 4. Standard Workflow — Idea to Production
@@ -334,7 +340,7 @@ docs/
     LOG.md
     architecture/
       overview.md
-    workflows/
+    operations/
       background-jobs.md              # after implementation
 ```
 
