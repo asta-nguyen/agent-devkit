@@ -400,8 +400,10 @@ document-wiki
    inline).
 2. Identify the Obsidian vault root if `.obsidian/` exists.
 3. Read all existing wiki pages.
-4. Build a domain map from **behavior** (routes, commands, APIs, and tests),
-   not filenames.
+4. Build a domain map from **behavior**, not filenames. Trace each selected
+   feature from its entry point through services, state changes, storage or
+   external adapters, jobs/email/notifications, authorization, errors, and
+   tests.
 5. Create `architecture/overview.md` as the baseline map automatically.
 6. Present a feature inventory:
 

@@ -31,11 +31,16 @@ and memory accelerate discovery; current source code and tests establish facts.
    callers/callees with `graph_neighbors` when the flow crosses modules. Use
    `memory_recall` only for previously recorded decisions or patterns.
 6. Read the entry point, returned implementation(s), direct callers, and
-   relevant tests. Record an impact map:
+   downstream callees until the source establishes persistence and external
+   boundaries. Inspect state changes, storage/external adapters, jobs, events,
+   email/notifications, authorization, error paths, and relevant tests. Record
+   an impact map:
 
    ```text
    Entry: <file + symbol>
    Flow: <caller → implementation → dependency>
+   State changes: <persistence or "none found">
+   External effects: <storage/job/event/email/notification or "none found">
    Change candidates: <files likely to modify>
    Verification: <tests/checks to run>
    ```
@@ -59,6 +64,7 @@ and memory accelerate discovery; current source code and tests establish facts.
 | Thought | Reality |
 |---|---|
 | "I'll skip tracing callers, it's a small change" | Small changes break callers you did not read. |
+| "The controller is enough context" | Trace callees through persistence and external side effects before claiming the flow is understood. |
 | "The index is probably current" | Stale index returns wrong callers. Run `openez index .` if unsure. |
 | "I'll fabricate the impact list from memory" | Memory is not evidence. Read the actual source. |
 | "I don't need OpenEZ, I'll just grep" | Grep finds strings, not call graphs. Use OpenEZ when available. |

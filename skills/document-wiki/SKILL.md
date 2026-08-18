@@ -32,8 +32,9 @@ other wiki skills.
    `code_context`, `graph_neighbors`) when available; otherwise use `openez
    status/index` and direct `rg`/file reads. Group behavior by product domain
    such as authentication, billing, projects, or administration only when the
-   repository evidence establishes that boundary. Read each feature's entry
-   point, callers, error paths, and relevant tests before documenting it.
+   repository evidence establishes that boundary. For the inventory, inspect
+   enough evidence to establish each user-visible behavior and entry point;
+   reserve the end-to-end trace for features selected in step 6.
 4. Determine coverage before writing deep feature pages. Read every page's
    `## Sources`, then find the latest `LOG.md` entry that names that exact wiki
    page. In a Git repository, compare its source paths with that entry's source
@@ -41,7 +42,8 @@ other wiki skills.
    using `git diff <commit> -- <source paths>` and inspect
    `git status --porcelain -- <source paths>` for uncommitted or untracked
    changes. Mark coverage `[~]` when either check reports a change, a page is
-   partial, or its claims disagree with source. Never use an overview log entry
+   partial, omits a material flow stage or source-established side effect, or
+   its claims disagree with source. Never use an overview log entry
    to establish a deep page's freshness. If Git history or a page-specific log
    entry is unavailable, do not claim the page is current without re-reading its
    source. Report the repository's **domain map** and a **feature inventory**:
@@ -71,15 +73,31 @@ other wiki skills.
    features.
 7. Group selected behavior into a small number of pages under `architecture/`,
    `workflows/`, and `decisions/`. Create a folder when writing its first real
-   page; never create placeholder pages just to populate the skeleton. For each
-   selected feature, create or update the smallest relevant page with:
+   page; never create placeholder pages just to populate the skeleton. Before
+   documenting each selected feature, trace it end to end:
+
+   ```text
+   entry point and inbound caller
+   → service/use-case callees
+   → persistence and state changes
+   → storage/external adapters
+   → jobs, events, email, and notifications
+   → authorization, constraints, and error paths
+   → relevant tests
+   ```
+
+   Continue until the source establishes the user-visible outcome and material
+   side effects. Do not stop at a controller, but do not list unrelated helpers
+   merely because they are reachable. Then create or update the smallest
+   relevant page with:
 
    ```md
    # Feature name
 
    ## Flow
 
-   Source-grounded behavior and important error paths.
+   Source-grounded happy path, state changes, external side effects, constraints,
+   and important error paths.
 
    ## Related
 
@@ -91,7 +109,9 @@ other wiki skills.
    - `path/to/test` (when a relevant test exists)
    ```
 
-   Keep prose concise. Never turn a helper, file, or inferred product idea
+   `## Sources` must list every inspected file that materially supports the
+   documented flow; do not pad it with unrelated paths. Keep prose concise.
+   Never turn a helper, file, or inferred product idea
    into a feature. If evidence is missing, omit the claim or label it an open
    question. Use Obsidian wikilinks (`[[path/to/page|Label]]`) for internal
    wiki pages, with targets relative to the vault root determined in step 1;
@@ -134,6 +154,8 @@ describes only verified current behavior grounded in source and tests.
 |---|---|
 | "I'll document this inferred feature" | If evidence is missing, omit the claim or label it an open question. |
 | "I'll update the wiki without reading source" | Source establishes facts. Index accelerates discovery. Read the code. |
+| "The controller shows the whole flow" | Trace downstream services, state changes, external adapters, jobs, and notifications to the user-visible outcome. |
+| "Email or storage is just an implementation detail" | A source-established external side effect or state change is part of the workflow. Document it. |
 | "The wiki is empty, so I can document every feature now" | Write the baseline map, then wait for deep-coverage selection. |
 | "The source path exists, so the page is current" | Compare committed and working-tree changes with that page's recorded source commit. |
 | "I'll add a plausible test path" | Document only tests found by evidence; otherwise state none found. |

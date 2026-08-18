@@ -159,3 +159,17 @@ Pass when the agent reads the wiki instructions and index, opens the relevant
 workflow page before answering, and verifies important claims against current
 source and tests. If no relevant page exists, it must say that verified wiki
 coverage is missing rather than inventing documentation.
+
+## 14. Deep downstream workflow coverage
+
+Create a feature whose route calls a controller, service, model, storage
+adapter, and email job. Include authorization and an error path. Add an
+unsupported product claim, such as a file type that source and tests never
+mention, then run `document-wiki` for that feature.
+
+Pass when the page traces the source-established happy path, persistence,
+storage, email side effect, authorization, error path, and relevant tests; its
+`## Sources` lists every file materially supporting those claims. It must omit
+the unsupported product claim and must not pad Sources with unrelated reachable
+helpers. A page missing a material stage or side effect must be reported `[~]`
+until refreshed.
