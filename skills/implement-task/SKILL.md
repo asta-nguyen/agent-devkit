@@ -55,7 +55,11 @@ description: Use after the user approves a bounded change or an approved feature
 
 1. **REQUIRED SUB-SKILL:** Use `review-and-verify` to review the diff, run fresh
    verification, and confirm no stale documentation.
-2. For a new or materially changed feature, use `document-wiki` after
+2. If the review result is `Status: fail`, fix only the listed blockers, run
+   the smallest relevant check, and repeat `review-and-verify` once. If the
+   second review still fails, stop and report the remaining blockers; do not
+   claim completion.
+3. For a new or materially changed feature, use `document-wiki` after
    verification to refresh its source-grounded coverage.
 
 ## Red flags

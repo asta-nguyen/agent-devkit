@@ -1,6 +1,6 @@
 ---
 name: read-codebase-context
-description: Use when a task needs accurate affected files, callers, tests, dependencies, or behavior — before feature design, planning, impact analysis, or wiki generation.
+description: Use before changing or planning code in an unfamiliar repository, or when asked to explain what code does, trace a flow, find callers, dependencies, or tests, identify affected files, or assess what may break after a change.
 ---
 
 # Read Codebase Context

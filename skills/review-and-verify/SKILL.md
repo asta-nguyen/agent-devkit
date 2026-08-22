@@ -1,6 +1,6 @@
 ---
 name: review-and-verify
-description: Use after implementing a feature, refreshing wiki pages, or before declaring a task complete.
+description: Use when a user asks to review the diff, check the work, run or verify tests or builds, confirm a bug or feature is complete, or before declaring implementation or documentation done.
 ---
 
 # review-and-verify
@@ -74,6 +74,21 @@ work. If none exist, state that the pass found none. Do not produce a line-count
 score: fewer lines are useful only when approved behavior, readability, and
 protected boundaries remain intact.
 
+## Review result
+
+End every review with this exact result block:
+
+```md
+Status: pass | fail
+Evidence: <commands run and relevant results>
+Blockers: <required fixes, or none>
+Non-blockers: <optional findings, or none>
+Spec gaps: <missing requirements, or none>
+```
+
+Use `fail` when any blocker or spec gap remains. A passing verification command
+does not override a failed requirements or diff review.
+
 ## Receiving code review
 
 When receiving feedback from a reviewer or user:
@@ -106,8 +121,10 @@ full context, violates YAGNI, or conflicts with architectural decisions.
 
 ## Report
 
-Report any remaining limitation explicitly. A task is complete only when
-code, documentation, and verification output agree.
+Report any remaining limitation explicitly. A task is complete only when the
+result block says `Status: pass` and code, documentation, and verification
+output agree. Leave failed blockers for the implementer to fix; do not silently
+turn them into non-blockers.
 
 Leave the verified working tree for the user to review and commit. If the user
 explicitly requests a commit, create it only after this final verification gate

@@ -75,7 +75,7 @@ read-codebase-context                  # understand code before changing it
 document-wiki                          # document existing app features
 brainstorm-feature → plan-feature      # architectural work: save spec then plan
 estimate-feature                       # optional per-task AI-assisted estimate
-implement-task → review-and-verify     # implement and check the change
+implement-task → review-and-verify     # review, fix blockers once, review again
 systematic-debugging                   # investigate before fixing bugs
 ```
 
@@ -155,7 +155,9 @@ estimate-feature          → optional: save per-task ranges under docs/agent-de
   ↓
 implement-task            → code, verify, run checks
   ↓
-review-and-verify         → review diff, catch stale docs
+review-and-verify         → pass/fail report with evidence and blockers
+  ↓
+fix blockers once, then review again; stop if still failing
   ↓
 document-wiki             → refresh documentation for the changed feature
 ```

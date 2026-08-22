@@ -1,6 +1,6 @@
 ---
 name: setup-codebase
-description: Use when a project lacks AGENTS.md, CLAUDE.md, or docs/llm/ — missing agent-readable context files.
+description: Use when a user asks to set up, initialize, or bootstrap a repository for coding agents, especially when one or more of AGENTS.md, CLAUDE.md, or docs/llm/ is missing.
 ---
 
 # Setup Codebase
