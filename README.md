@@ -72,6 +72,7 @@ The shortest routing guide is:
 setup-codebase                         # first visit to a repo missing context
 setup-openez                           # recommended semantic index for non-trivial repos
 read-codebase-context                  # understand code before changing it
+context-handoff                        # checkpoint unfinished work before pausing
 document-wiki                          # document existing app features
 brainstorm-feature → plan-feature      # architectural work: save spec then plan
 estimate-feature                       # optional per-task AI-assisted estimate
@@ -101,6 +102,7 @@ the workflow itself.
 | `setup-codebase` | Create missing `AGENTS.md`, `CLAUDE.md`, and `docs/llm/` skeleton. Run once per repo. |
 | `setup-openez` | Install, initialize, index, and verify OpenEZ MCP connection for a repository. |
 | `read-codebase-context` | Query OpenEZ and trace code paths. Used before feature work or wiki generation. |
+| `context-handoff` | Save a compact evidence checkpoint when a session must pause or is approaching its context limit. |
 
 ### Feature development
 

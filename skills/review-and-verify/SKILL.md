@@ -32,6 +32,20 @@ command documented in `AGENTS.md`, manifests, or CI configuration. Targeted
 checks are useful during implementation but do not replace this final gate. If
 no full command is established, report that limitation explicitly.
 
+## Git safety invariants
+
+- Treat existing working-tree changes as user-owned. Inspect `git status
+  --short` and the relevant diff before changing or discarding anything.
+- Never run `git reset --hard`, `git clean -fd`/`-xdf`, `git checkout -- <path>`,
+  `git restore` that overwrites work, or broad delete commands to remove user
+  changes unless the user explicitly authorizes the exact target and command.
+- Never force-push or rewrite remote history without an explicit request naming
+  the remote, branch, and intended rewrite. A request to finish, clean up, or
+  fix the branch is not authorization.
+- Prefer recoverable actions: inspect first, edit with the repository's normal
+  tools, and leave commits and remote operations to the user unless explicitly
+  requested.
+
 ## Claims vs evidence
 
 | Claim | Requires | Not sufficient |

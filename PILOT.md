@@ -245,6 +245,21 @@ Ghi lại trong quá trình trial:
 
 ---
 
+## Backlog cần thảo luận sau pilot
+
+Các mục này chưa triển khai; chỉ promote khi pilot cho thấy nhu cầu thực tế:
+
+- **Monorepo support** — xác định boundary giữa root/package-level
+  `AGENTS.md`, wiki per-package, và cách trace cross-package dependency.
+- **CI validation** — chọn validator tối thiểu cho YAML frontmatter và
+  internal links; tránh thêm dependency nếu GitHub Actions/native tooling đủ.
+- **Sub-agent/parallel execution** — chỉ xem xét khi có bottleneck đo được và
+  đã thống nhất ownership, merge, verification evidence, cùng giới hạn chi
+  phí/context.
+
+Thảo luận ở retro cuối pilot: tần suất gặp monorepo, số lỗi documentation/link,
+và số task thực sự hưởng lợi từ parallel execution.
+
 ## 6. Quyết định sau trial
 
 ### Retro cuối trial (1 giờ)

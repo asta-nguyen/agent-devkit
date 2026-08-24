@@ -10,7 +10,7 @@
 
 1. [Why agent-devkit?](#1-why-agent-devkit)
 2. [Installation](#2-installation)
-3. [The 10 Skills](#3-the-10-skills)
+3. [The 11 Skills](#3-the-11-skills)
 4. [Standard Workflow — Idea to Production](#4-standard-workflow--idea-to-production)
 5. [Real Examples](#5-real-examples)
 6. [Tips & Best Practices](#6-tips--best-practices)
@@ -108,7 +108,7 @@ dependencies or change MCP configuration silently.
 
 ---
 
-## 3. The 10 Skills
+## 3. The 11 Skills
 
 ### Bootstrap & Context
 
@@ -117,6 +117,7 @@ dependencies or change MCP configuration silently.
 | `setup-codebase` | The repo lacks `AGENTS.md`, `CLAUDE.md`, or `docs/llm/` | Reads repository evidence and creates context files. Creates only missing files. |
 | `setup-openez` | The user agrees to use OpenEZ or the index is stale | Installs, indexes, and verifies the OpenEZ MCP connection. |
 | `read-codebase-context` | Before design, planning, or wiki work that needs affected files, callers, and tests | Prefers OpenEZ, asks about setup when missing, reads source directly, and records an impact map. |
+| `context-handoff` | A session must pause or is approaching its context limit | Saves a compact, source-grounded checkpoint under `docs/agent-devkit/handoffs/` for the next session. |
 
 ### Feature Development
 
@@ -191,6 +192,7 @@ created only when a real page needs them.
 setup-codebase                         # first visit to a repo missing context
 setup-openez                           # setup after the user agrees to use OpenEZ
 read-codebase-context                  # understand code before changing it
+context-handoff                        # checkpoint unfinished work before pausing
 document-wiki                          # document existing features
 brainstorm-feature → plan-feature      # architectural work: spec → plan
 estimate-feature                       # optional: AI-assisted estimate
@@ -590,7 +592,7 @@ page is marked `[~]` (stale).
 
 ### Q: How many skills are there? Can I add a new one?
 
-There are currently 10 skills. Add a new skill by creating
+There are currently 11 skills. Add a new skill by creating
 `skills/<name>/SKILL.md` with YAML frontmatter (`name`, `description`) and
 step-by-step instructions. Read this repo's `AGENTS.md` for conventions.
 
