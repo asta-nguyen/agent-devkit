@@ -1,0 +1,60 @@
+skills/plan-feature/SKILL.md
+  s_a04969554bed6a::t_270bb4c1db5638 16
+  s_a04969554bed6a::t_018d9351082589 17,60-61,65-67,92-93,99-102
+skills/setup-codebase/SKILL.md
+  s_a04969554bed6a::t_018d9351082589 63-65
+skills/estimate-feature/SKILL.md
+  s_a04969554bed6a::t_270bb4c1db5638 18
+  s_a04969554bed6a::t_018d9351082589 14-16,19-20
+skills/systematic-debugging/SKILL.md
+  s_a04969554bed6a::t_d217ec248a1eae 81-82
+  s_a04969554bed6a::t_018d9351082589 91-95
+  s_a04969554bed6a::t_270bb4c1db5638 90
+EVALS.md
+  s_a04969554bed6a::t_76aeec5f9494b0 219-231
+  s_a04969554bed6a::t_270bb4c1db5638 12-14,23-25,41-42,101-103,191-193
+CHANGELOG.md
+  s_a04969554bed6a::t_2949f5e0208fae 1-14,18,21-24,26
+  s_a04969554bed6a::t_ab7da8ca8d810c 28
+  s_b1f7aef196ea4d::t_67e1a96c02a886 15-17,19-20,25,27
+skills/read-codebase-context/SKILL.md
+  s_a04969554bed6a::t_018d9351082589 22-25
+skills/implement-task/SKILL.md
+  s_a04969554bed6a::t_018d9351082589 15,28,49,60,62-64
+  s_a04969554bed6a::t_270bb4c1db5638 50,57,61
+  s_a04969554bed6a::t_d217ec248a1eae 12-14
+skills/brainstorm-feature/SKILL.md
+  s_a04969554bed6a::t_270bb4c1db5638 42
+  s_a04969554bed6a::t_d217ec248a1eae 32-33,43-45,68-69
+  s_a04969554bed6a::t_018d9351082589 63-64,73-75,127-128
+GUIDE.md
+  s_a04969554bed6a::t_270bb4c1db5638 97-100,283-284,314-316,325-330
+package.json
+  s_a04969554bed6a::t_2949f5e0208fae 3
+.agents/skills/release-versioning/SKILL.md
+  s_a04969554bed6a::t_a8f9eaff6671d4 1-57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "cbfb3e69ee6bce75c4247d1c5d195bb25cb30a17",
+  "prompts": {},
+  "sessions": {
+    "s_a04969554bed6a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a032bc-e473-7d73-9bd3-16ba2b4a403a",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    },
+    "s_b1f7aef196ea4d": {
+      "agent_id": {
+        "tool": "windsurf",
+        "id": "dawn-maize",
+        "model": "unknown"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
