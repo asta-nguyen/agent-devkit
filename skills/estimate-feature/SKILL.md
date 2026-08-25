@@ -11,12 +11,13 @@ Never run this optional skill unless the user requests an estimate.
 ## Process
 
 1. Require a completed plan under `docs/agent-devkit/plans/`. If none exists,
-   use `plan-feature` only when the user also requested a plan and an approved
-   design exists; otherwise stop and request a plan. Never estimate directly
-   from a feature request.
+   tell the user to invoke `plan-feature` only when the user also requested a
+   plan and an approved design exists; otherwise stop and request a plan. Never
+   estimate directly from a feature request.
 2. Read `AGENTS.md`, the plan, linked design, relevant wiki, source, and tests.
-   Use `read-codebase-context` when source exists. If tasks omit files,
-   behavior, or verification, return to `plan-feature`.
+   Call the Skill tool with "read-codebase-context" when source exists. If
+   tasks omit files, behavior, or verification, tell the user to invoke
+   `plan-feature`.
 3. State the AI support profile. Assume the coding agent can inspect and edit
    source, write and run tests, and update documentation, while a developer
    reviews output and resolves product decisions. Include context gathering,

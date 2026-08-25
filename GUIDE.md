@@ -94,10 +94,10 @@ Do you want to set up OpenEZ for this repository?
 Recommendation: Yes for non-trivial repositories.
 ```
 
-If the user chooses **Yes**, the agent runs `setup-openez`, indexes the
-repository, and verifies MCP. If the user chooses **No**, skills use `rg` and
-direct file reads; the workflow is not blocked. Skills never install
-dependencies or change MCP configuration silently.
+If the user chooses **Yes**, the agent tells them to invoke `setup-openez`,
+which indexes the repository and verifies MCP. If the user chooses **No**,
+skills use `rg` and direct file reads; the workflow is not blocked. Skills
+never install dependencies or change MCP configuration silently.
 
 ### After installation
 
@@ -280,7 +280,8 @@ Add a --json flag to this existing command.
    ```
 
 5. **STOP** and wait for explicit approval.
-6. After approval, run `implement-task` → `review-and-verify`.
+6. After approval, tell the user to invoke `implement-task`, which calls
+   `review-and-verify` after implementation.
 
 **No spec file or plan file is created.** A short chat design is enough.
 
@@ -310,8 +311,9 @@ Add a background job subsystem with persistent retries.
    `docs/agent-devkit/specs/2026-08-17-bg-jobs-design.md`.
 5. Self-review the spec for placeholders, consistency, scope, and ambiguity.
 6. Wait for user approval of the written spec.
-7. If the repo lacks `AGENTS.md`, run `setup-codebase` first.
-8. Run `plan-feature` and write
+7. If the repo lacks `AGENTS.md`, tell the user to invoke `setup-codebase`
+   first.
+8. Tell the user to invoke `plan-feature`, which writes
    `docs/agent-devkit/plans/2026-08-17-bg-jobs-plan.md` with ordered tasks.
 9. Run `estimate-feature` before plan approval only if the user requested an
    estimate; an estimate never authorizes implementation.
@@ -320,9 +322,12 @@ Add a background job subsystem with persistent retries.
    and wait for explicit plan approval. Spec approval does not approve an
    execution plan that did not yet exist.
 11. After approval, update the plan to `Status: approved`.
-12. Run `implement-task` for each plan task.
-13. Run `review-and-verify` for diff review, tests, and the complexity pass.
-14. Run `document-wiki` to refresh the wiki for the new feature.
+12. After approval, tell the user to invoke `implement-task` for each plan
+    task.
+13. `implement-task` calls `review-and-verify` for diff review, tests, and the
+    complexity pass.
+14. After verification, tell the user to invoke `document-wiki` to refresh the
+    wiki for the new feature.
 
 **Artifact structure:**
 

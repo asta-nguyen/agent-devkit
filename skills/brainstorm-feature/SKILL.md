@@ -29,7 +29,8 @@ out loud so the user can override it:
 - **Architectural** — new projects, new subsystems, changes that restructure
   how components fit together or alter interfaces others depend on. Follow the
   full process: questions, approaches, sectioned design, a written spec at
-  `docs/agent-devkit/specs/YYYY-MM-DD-<slug>-design.md`, then `plan-feature`.
+  `docs/agent-devkit/specs/YYYY-MM-DD-<slug>-design.md`, then tell the user to
+  invoke `plan-feature`.
 
 When in doubt between two paths, take the heavier one. Hidden complexity
 discovered mid-task upgrades the path — stop, say so, and step up. Nothing
@@ -38,9 +39,10 @@ downgrades mid-task.
 ## Process
 
 1. Read `AGENTS.md` and relevant wiki pages when they exist. If the target has
-   application source, use `read-codebase-context` to establish the affected
-   code path before asking questions. Otherwise state that the project is new
-   and establish scope from the user's request; there is no code path to trace.
+   application source, call the Skill tool with "read-codebase-context" to
+   establish the affected code path before asking questions. Otherwise, state
+   that the project is new and establish scope from the user's request; there
+   is no code path to trace.
 2. If the project is too large for a single spec, help the user decompose into
    sub-projects: what are the independent pieces, how do they relate, what
    order should they be built? Then brainstorm the first sub-project through
@@ -58,17 +60,19 @@ downgrades mid-task.
    Do not write production code while material decisions remain unresolved.
 6. After approval, follow the selected path:
    - Spike: investigate and report a recommendation; keep probe code throwaway.
-   - Bounded: hand off directly to `implement-task`; do not create a plan file.
+   - Bounded: tell the user to invoke `implement-task`; do not create a plan
+     file.
    - Architectural: create `docs/agent-devkit/specs/` if needed, write and
      self-review `YYYY-MM-DD-<slug>-design.md`, then create or update
      `docs/agent-devkit/INDEX.md` with a link to it. Get the user's approval of
-     the written spec, then hand off to `plan-feature`. Approval of the spec
-     authorizes creation of the execution plan, not execution of a high-impact
+     the written spec, then tell the user to invoke `plan-feature`. Approval of
+     the spec authorizes creation of the execution plan, not execution of a high-impact
      plan that does not exist yet. An instruction such as "implement it" given
      before the plan exists does not approve a later `Required: yes` plan gate.
      If the target has no
-     `AGENTS.md` or application source, use `setup-codebase` first so it can
-     create the initial repository contract from the approved spec.
+     `AGENTS.md` or application source, tell the user to invoke
+     `setup-codebase` first so it can create the initial repository contract
+     from the approved spec.
 
 Keep the design proportionate. For a one-line fix with an unambiguous expected
 result, the design may be one or two sentences, but wait for explicit approval
@@ -120,4 +124,5 @@ After writing the spec document, review it with fresh eyes before handing off:
    ways? If so, pick one and make it explicit.
 
 Fix any issues inline. No need to re-review — just fix and move on. Then ask
-the user to review the spec before proceeding to `plan-feature`.
+the user to review the spec and, after approval, tell them to invoke
+`plan-feature`.

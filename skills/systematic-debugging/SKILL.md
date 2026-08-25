@@ -78,8 +78,8 @@ You must complete each phase before proceeding to the next.
 ### Phase 4: Implementation
 
 1. **Establish expected behavior.** Use source, tests, and current wiki pages.
-   If they do not establish the intended behavior, stop and use
-   `brainstorm-feature` to get the user's approval before changing behavior.
+   If they do not establish the intended behavior, stop and tell the user to
+   invoke `brainstorm-feature` to get approval before changing behavior.
 2. **Write a regression test** that reproduces the original symptom.
 3. **Verify the test fails** without the fix (red).
 4. **Apply the smallest root-cause fix.** Reuse the verified working pattern
@@ -87,11 +87,12 @@ You must complete each phase before proceeding to the next.
    sibling callers remain broken.
 5. **Verify the test passes** (green).
 6. **Run the full test suite** to check for regressions.
-7. **REQUIRED SUB-SKILL:** Use `review-and-verify` to review the diff and run
-   fresh verification. Use `document-wiki` after verification only when the
-   fix changes observable behavior or reveals stale wiki documentation. Do not
-   update the wiki when it already correctly describes the intended behavior
-   and the fix only restores code to that behavior.
+7. Call the Skill tool with "review-and-verify" to review the diff and run
+   fresh verification. Tell the user to invoke `document-wiki` after
+   verification only when the fix changes observable behavior or reveals stale
+   wiki documentation. Do not update the wiki when it already correctly
+   describes the intended behavior and the fix only restores code to that
+   behavior.
 8. Do not create commits during debugging. Even when the user requests a
    commit, wait until final `review-and-verify` passes.
 

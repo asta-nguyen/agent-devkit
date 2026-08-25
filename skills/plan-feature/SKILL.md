@@ -13,7 +13,8 @@ pages under `docs/llm/`.
 ## Process
 
 1. Read the approved design, `AGENTS.md`, and related wiki pages. If application
-   source exists, use `read-codebase-context` to inspect affected source,
+   source exists, call the Skill tool with "read-codebase-context" to inspect
+   affected source,
    callers, and tests. Otherwise map planned files and interfaces from the
    approved design; state that callers and tests do not exist yet.
 2. Map out which files will be created or modified and what each one is
@@ -56,13 +57,14 @@ pages under `docs/llm/`.
    For a source-less new project, the first task bootstraps the runtime and
    test command approved in the design before this red-green loop. State the
    exact setup and verification commands. If the approved design does not
-   establish them, return to `brainstorm-feature`; do not invent a toolchain.
+   establish them, tell the user to invoke `brainstorm-feature`; do not invent
+   a toolchain.
 
 5. Put contract/data changes before their callers; put tests beside the
    behavior they verify. Do not add tasks for speculative abstractions.
-6. End every plan with `**REQUIRED SUB-SKILL:** Use review-and-verify`. If the
-   feature is new or changes user-visible behavior, include `document-wiki`
-   after verification.
+6. End every plan with `Call the Skill tool with "review-and-verify".` If the
+   feature is new or changes user-visible behavior, instruct the user to invoke
+   `document-wiki` after verification.
 7. Add this section to every plan:
 
    ```md
@@ -87,16 +89,17 @@ pages under `docs/llm/`.
    otherwise use relative Markdown links. Do not link from `docs/llm/` to
    either artifact.
 9. Do not estimate effort in this skill. When the user explicitly requests an
-   estimate, hand the completed plan to `estimate-feature` before presenting
-   the approval gate; otherwise continue without an estimate. Estimation never
+   estimate, tell the user to invoke `estimate-feature` before presenting the
+   approval gate; otherwise continue without an estimate. Estimation never
    authorizes implementation.
 10. Present the complete plan, requested estimate when present, and approval
    gate. For
    `Required: yes`, stop without editing application code. After the user
    explicitly approves the complete plan, update `Status: pending` to
-   `Status: approved` and hand off to `implement-task`; that approval is the
-   gate, so do not ask again. If an approved plan changes materially, reset its
-   status to `pending` and present it again. For `Required: no`, hand off with
+   `Status: approved` and tell the user to invoke `implement-task`; that
+   approval is the gate, so do not ask again. If an approved plan changes
+   materially, reset its status to `pending` and present it again. For
+   `Required: no`, tell the user to invoke `implement-task` with
    `Status: not-required`.
 11. Do not include commit steps. If the user requests a commit, leave that action
    until after the final `review-and-verify` task passes.

@@ -60,8 +60,9 @@ context belongs to the project: never overwrite or shorten it.
    graph queries. Explain that setup requires Bun and the OpenEZ CLI, creates
    ignored `.openez/` index data, and may take time. Then ask:
    `Do you want to set up OpenEZ for this repo? It is recommended for
-   non-trivial codebases.` If the user agrees, use `setup-openez`; otherwise
-   continue without it. Do not install or run `openez setup` silently.
+   non-trivial codebases.` If the user agrees, tell them to invoke
+   `setup-openez`; otherwise continue without it. Do not install or run
+   `openez setup` silently.
 5. Keep local Obsidian and OpenEZ state out of Git. Create `.gitignore` when it
    is missing, or append only these missing lines without reordering,
    normalizing, or duplicating existing content:

@@ -19,10 +19,10 @@ and memory accelerate discovery; current source code and tests establish facts.
    and tests remain authoritative. Explain that setup requires Bun and the
    OpenEZ CLI, creates ignored `.openez/` index data, and may take time. Ask:
    `Do you want to set up OpenEZ for this repo? It is recommended for
-   non-trivial codebases.` If the user agrees, use `setup-openez` and continue
-   after its index/MCP verification. If the user declines, continue with the
-   direct-source fallback. Never install the CLI, Bun, or an agent MCP
-   configuration silently.
+   non-trivial codebases.` If the user agrees, tell them to invoke
+   `setup-openez` and continue after its index/MCP verification. If the user
+   declines, continue with the direct-source fallback. Never install the CLI,
+   Bun, or an agent MCP configuration silently.
 
 4. When OpenEZ is available, refresh the index with `openez index .` before a
    non-trivial feature plan.
