@@ -419,10 +419,11 @@ document-wiki
    inline).
 2. Identify the Obsidian vault root if `.obsidian/` exists.
 3. Read all existing wiki pages.
-4. Build a domain map from **behavior**, not filenames. Trace each selected
-   feature from its entry point through services, state changes, storage or
-   external adapters, jobs/email/notifications, authorization, errors, and
-   tests.
+4. Build a domain map from **behavior**, not filenames. For each selected
+   feature, check an evidence matrix covering the entry/caller, use case, state
+   changes, side effects, authorization and constraints, error paths, and
+   relevant tests. Trace the feature through every established stage; a file
+   inventory is baseline coverage, not deep documentation.
 5. Create `architecture/overview.md` as the baseline map automatically.
 6. Present a feature inventory:
 
@@ -446,10 +447,15 @@ document-wiki
    ```
 
 7. **WAIT** for the user to select features for deep coverage.
-8. Write pages for selected features. Every page has `## Sources` with real
-   paths.
+8. Write pages for selected features. Deep pages include `## Business rules`,
+   `## Flow`, `## State changes`, `## Side effects`, `## Authorization &
+   constraints`, `## Error paths`, and `## Tests`. Every `## Sources` entry is
+   an exact existing file path; use `Tests: none found` only after searching
+   the repository test tree.
 9. Update `INDEX.md` and append to `LOG.md`.
-10. Verify source paths exist, wikilinks resolve, and `git diff --check` passes.
+10. Verify source paths exist, wikilinks resolve, test claims are supported,
+    and `git diff --check` passes. Mark a feature `[~]` and report the exact
+    gap when any verification fails.
 
 ---
 

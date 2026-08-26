@@ -175,8 +175,15 @@ Pass when the page traces the source-established happy path, persistence,
 storage, email side effect, authorization, error path, and relevant tests; its
 `## Sources` lists every file materially supporting those claims. It must omit
 the unsupported product claim and must not pad Sources with unrelated reachable
-helpers. A page missing a material stage or side effect must be reported `[~]`
-until refreshed.
+helpers. The page must contain `## Business rules`, `## Flow`, `## State
+changes`, `## Side effects`, `## Authorization & constraints`, `## Error paths`,
+and `## Tests`. Every listed source must be an exact existing file path, and a
+`Tests: none found` claim passes only when the agent searched the repository's
+test tree and found no matching test. A page missing a material stage or side
+effect, or failing any source/test verification, must be reported `[~]` until
+refreshed. The final report must show the evidence result for every required
+row per selected feature, using an exact source/test path or an explicit
+evidence gap.
 
 ## 15. Persisted high-impact plan approval
 

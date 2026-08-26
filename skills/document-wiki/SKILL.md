@@ -9,6 +9,14 @@ Create or refresh the target repository's `docs/llm/` from verified source
 code. This is the one-stop wiki workflow: do not hand the user off to the
 other wiki skills.
 
+## Completion contract
+
+An inventory of routes, files, or modules is baseline coverage, not deep
+feature documentation. A selected feature is complete only when its page
+explains current business behavior and its claims are traceable to existing
+source or tests. If evidence is missing or a check fails, mark the feature
+`[~]` and report the gap; never call that page current.
+
 ## Workflow
 
 1. Resolve the target repository from the user's path or the current directory.
@@ -68,9 +76,11 @@ other wiki skills.
    The baseline map is automatic even for an empty wiki; it is an orientation
    page, not permission to document every feature in depth.
 6. Present `[ ]` and `[~]` features grouped by domain as a short selectable
-   list and wait for the user to choose deep coverage. Apply this selection gate
-   even when the wiki was empty. If the user says “all”, select all listed
-   features.
+   list and stop. Do not create or refresh deep feature pages until the user
+   explicitly selects features; a generic request to document the repository
+   is not selection. Apply this gate even when the wiki was empty. If the user
+   says “all”, select all listed features. Record the selected features in the
+   final report.
 7. Group selected behavior into the smallest set of evidence-backed categories.
    Use only categories that have a real page to contain:
 
@@ -87,7 +97,22 @@ other wiki skills.
    related categories instead of duplicating the page. Create a folder only
    when writing its first real page; never create placeholder folders. For
    small repositories, `architecture/`, `decisions/` and `workflows/` may be sufficient.
-   Before documenting each selected feature, trace it end to end:
+   Before documenting each selected feature, build and check this evidence
+   matrix. Do not draft the page while a row is unverified; write `not
+   established by source` and mark the feature `[~]` when the repository does
+   not establish it:
+
+   | Required evidence | What to verify |
+   |---|---|
+   | Entry and caller | Route, command, job, webhook, or API and its inbound caller |
+   | Use case | Service/domain method and important downstream calls |
+   | State | Persistence, status transitions, and returned user-visible result |
+   | Side effects | Storage, external APIs, DB writes, queues, events, email, notifications |
+   | Rules | Authorization, plan/access checks, validation, limits, and invariants |
+   | Errors | Important rejected, missing, retry, and failure paths |
+   | Tests | Matching tests found by searching the repository |
+
+   Then trace it end to end:
 
    ```text
    entry point and inbound caller
@@ -102,15 +127,42 @@ other wiki skills.
    Continue until the source establishes the user-visible outcome and material
    side effects. Do not stop at a controller, but do not list unrelated helpers
    merely because they are reachable. Then create or update the smallest
-   relevant page with:
+   relevant page with these required sections:
+
+   If one page covers multiple selected features, repeat these sections for
+   each feature or split the page. Do not let one generic section stand in for
+   separate feature behavior.
 
    ```md
    # Feature name
 
+   ## Business rules
+
+   Current source- or test-backed invariants. Do not invent product requirements.
+
    ## Flow
 
-   Source-grounded happy path, state changes, external side effects, constraints,
-   and important error paths.
+   Source-grounded happy path.
+
+   ## State changes
+
+   Persisted states and transitions, including the user-visible outcome.
+
+   ## Side effects
+
+   Storage, external services, queues, events, email, or notifications.
+
+   ## Authorization & constraints
+
+   Access checks, validation, limits, and plan restrictions.
+
+   ## Error paths
+
+   Important failures, retries, and not-found or rejection behavior.
+
+   ## Tests
+
+   Relevant test paths, or `Tests: none found` after an explicit repository search.
 
    ## Related
 
@@ -123,7 +175,9 @@ other wiki skills.
    ```
 
    `## Sources` must list every inspected file that materially supports the
-   documented flow; do not pad it with unrelated paths. Keep prose concise.
+   documented flow; do not pad it with unrelated paths. List exact existing
+   file paths only: never use `*`, `**`, or a directory as a source entry. Keep
+   prose concise.
    Never turn a helper, file, or inferred product idea
    into a feature. If evidence is missing, omit the claim or label it an open
    question. Use Obsidian wikilinks (`[[path/to/page|Label]]`) for internal
@@ -131,8 +185,9 @@ other wiki skills.
    use ordinary Markdown links only for external URLs. Add a
    `## Related` section to every non-overview page when a related wiki page
    exists. YAML frontmatter is optional and should not be invented just for
-   formatting. Never invent a test path; if a relevant search finds none, state
-   `Tests: none found` instead.
+   formatting. Before stating `Tests: none found`, search the repository's
+   test tree for the feature's route, service, domain terms, and state names.
+   Never invent a test path.
 8. Update `docs/llm/INDEX.md` with working links and append one structured entry
    to `docs/llm/LOG.md` after the baseline or selected pages change:
 
@@ -151,11 +206,17 @@ other wiki skills.
 
    Update `docs/llm/FEATURES.md` only if that file already exists; do not create
    a second tracking system.
-9. Verify that every new source path exists, every internal wikilink resolves
-   from the vault root, every index link resolves, and `git diff --check` passes. The final report
-   must repeat the domain map, list the baseline and features documented, list
-   verified features skipped, and list unresolved evidence questions. Never
-   report only “pages updated”.
+9. Verify that every listed source path exists as a file, every internal
+   wikilink resolves from the vault root, every index link resolves, every
+   `Tests: none found` claim has a recorded search with no matching result, and
+   `git diff --check` passes. If any check fails, leave the affected feature
+   `[~]` and report the exact failure; do not silently repair the claim or
+   report it as current. The final report must repeat the domain map, feature
+   inventory, selected features, baseline and deep pages documented, verified
+   features skipped, unresolved evidence questions, and verification results.
+   Never report only “pages updated”. For every selected feature, include the
+   evidence matrix result: each row must name its exact source/test path or
+   explicitly say that the repository does not establish it.
 
 Do not modify application code, install dependencies, or invent architecture.
 Do not document proposed specs or implementation plans here; `docs/llm/`
@@ -169,6 +230,9 @@ describes only verified current behavior grounded in source and tests.
 | "I'll update the wiki without reading source" | Source establishes facts. Index accelerates discovery. Read the code. |
 | "The controller shows the whole flow" | Trace downstream services, state changes, external adapters, jobs, and notifications to the user-visible outcome. |
 | "Email or storage is just an implementation detail" | A source-established external side effect or state change is part of the workflow. Document it. |
+| "I listed all related files, so the feature is covered" | A file map does not establish business rules, state, side effects, errors, or tests. Complete the evidence matrix. |
+| "No tests found" | Search the repository test tree first; matching tests must be listed and used as evidence. |
+| "The source path looks plausible" | Verify the exact file exists before adding it to `## Sources`. |
 | "The wiki is empty, so I can document every feature now" | Write the baseline map, then wait for deep-coverage selection. |
 | "The source path exists, so the page is current" | Compare committed and working-tree changes with that page's recorded source commit. |
 | "I'll add a plausible test path" | Document only tests found by evidence; otherwise state none found. |
