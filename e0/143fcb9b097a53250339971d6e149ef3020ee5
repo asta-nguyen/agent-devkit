@@ -1,0 +1,33 @@
+skills/review-and-verify/SKILL.md
+  s_2bf2fc4e97924c::t_0d2dbcec02c4c9 35-38
+  s_2bf2fc4e97924c::t_a80b23dfeae800 39,61,68,105,140
+skills/context-handoff/SKILL.md
+  s_2bf2fc4e97924c::t_06ef1fd23f7c3e 23-26,41,70-73
+skills/plan-feature/SKILL.md
+  s_2bf2fc4e97924c::t_06ef1fd23f7c3e 76-79,105,142-143,158
+  s_2bf2fc4e97924c::t_a80b23dfeae800 106-107
+skills/implement-task/SKILL.md
+  s_2bf2fc4e97924c::t_a80b23dfeae800 89-93
+  s_2bf2fc4e97924c::t_06ef1fd23f7c3e 29-33,59-88,94-96,118-119
+GUIDE.md
+  s_2bf2fc4e97924c::t_06ef1fd23f7c3e 342-343,519-523
+EVALS.md
+  s_2bf2fc4e97924c::t_06ef1fd23f7c3e 239-251
+  s_2bf2fc4e97924c::t_a80b23dfeae800 252-253
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "e0143fcb9b097a53250339971d6e149ef3020ee5",
+  "prompts": {},
+  "sessions": {
+    "s_2bf2fc4e97924c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a03d01-b9b0-73e3-bbc1-8e2bcaa63de7",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
