@@ -26,7 +26,11 @@ description: Use after the user approves a bounded change or an approved feature
    Approval given before the plan existed does not satisfy a required gate.
    Without a plan, require an approved bounded design from `brainstorm-feature`;
    otherwise tell the user to invoke `brainstorm-feature` before editing.
-4. After tracing the real flow, apply this implementation ladder in order and
+4. Read the active plan/spec's `## Decision Log` and any task-linked decision
+   file listed in `docs/agent-devkit/INDEX.md`. Conversation memory is not a
+   durable decision source. If the current conversation contains a newer user
+   answer, persist it through the clarification flow below before using it.
+5. After tracing the real flow, apply this implementation ladder in order and
    stop at the first option that satisfies the approved behavior:
 
    1. Does this need to exist at all? Skip speculative work (YAGNI).
@@ -52,6 +56,44 @@ description: Use after the user approves a bounded change or an approved feature
 5. Do not create commits during implementation. Even when the user requests a
    commit, wait until final `review-and-verify` passes.
 
+## Clarification decisions
+
+When implementation needs a user answer before it can continue:
+
+1. Stop editing and ask one question. After the answer, restate it as
+   `Decision D<n>: <one unambiguous sentence>` before taking another action.
+2. Keep an implementation-only choice in the current session when it changes
+   no observable behavior, requirement, API, schema, security boundary, or
+   scope. Do not create an artifact for it.
+3. Persist every answer that changes observable behavior or an approved
+   requirement:
+   - When a plan or spec exists, append the decision to its `## Decision Log`.
+   - For a bounded task with no plan/spec, create
+     `docs/agent-devkit/decisions/YYYY-MM-DD-<slug>.md` only when the first
+     persistent decision occurs. Link it under `## Decisions` in
+     `docs/agent-devkit/INDEX.md` and link it to the task issue or related
+     artifact when one exists.
+
+   Use this shape:
+
+   ```md
+   ### D<n> — <short title>
+
+   Question: <what was unresolved>
+   Decision: <the user's answer>
+   Impact: <requirements, tasks, interfaces, or tests affected>
+   Confirmed by user: YYYY-MM-DD
+   ```
+
+4. If the answer materially changes an approved design or plan, update the
+   affected artifact and re-evaluate the plan's approval gate. When the new
+   impact requires approval, set `Required: yes`, update `Reason`, set
+   `Status: pending`, and stop for approval. If a bounded task expands beyond
+   its approved design, tell the user to invoke `brainstorm-feature` instead of
+   silently widening scope.
+5. Never store proposed decisions in `docs/llm/`; that wiki describes verified
+   implemented behavior only.
+
 ## After implementation
 
 1. Call the Skill tool with "review-and-verify" to review the diff, run fresh
@@ -73,3 +115,5 @@ description: Use after the user approves a bounded change or an approved feature
 | "I'll verify at the end" | Verify after each non-trivial change. Catch errors early. |
 | "Removing this guard makes the diff smaller" | Smaller is not simpler when it weakens a protected boundary. |
 | "The spec was approved, so the plan must be approved" | A required execution-plan gate is separate and must say `Status: approved`. |
+| "The conversation will remember the user's answer" | Restate it now; persist behavior decisions in the active plan/spec or a task-scoped decision file. |
+| "This clarification is small, so approval still holds" | Material behavior, API, schema, security, or scope changes invalidate the old approval. |

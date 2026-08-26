@@ -339,6 +339,8 @@ docs/
       2026-08-17-bg-jobs-design.md    # approved design
     plans/
       2026-08-17-bg-jobs-plan.md      # execution plan
+    decisions/                         # bounded-task decisions, only when needed
+      2026-08-17-upload-policy.md
     estimates/                         # optional
       2026-08-17-bg-jobs-estimate.md
   llm/                                # source-grounded, verified wiki
@@ -514,6 +516,11 @@ Estimate this plan in hours for a developer using an AI coding agent.
 - **High-impact plans have their own persisted gate.** Approval of a spec does
   not approve an unseen plan. After the complete plan is approved, its status
   changes from `pending` to `approved`; the agent must not ask twice.
+- **User clarifications become explicit decisions.** Implementation-only
+  choices stay in the current session. Observable behavior or requirement
+  changes go into the active plan/spec `## Decision Log`; bounded tasks without
+  one create a task-scoped file under `docs/agent-devkit/decisions/`. Material
+  changes reset required plan approval to `pending`.
 - **Do not ask for a commit** until `review-and-verify` passes. The agent leaves
   the working tree for you to review and commit.
 - **When debugging, do not push the agent to "fix it quickly."**

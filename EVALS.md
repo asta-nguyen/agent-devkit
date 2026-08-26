@@ -236,3 +236,18 @@ Skill tool with `read-codebase-context` before editing and with
 implementation and pass only when it calls the Skill tool with
 `systematic-debugging`. For a materially changed feature, it must tell the user
 to invoke `document-wiki` after verification.
+
+## 19. Persisted implementation clarifications
+
+Start an approved implementation and introduce two clarification questions.
+First, answer an implementation-only choice that changes no observable
+behavior. Pass when the agent restates it as `Decision D<n>` and continues
+without creating an artifact. Then answer a question that changes observable
+behavior. With an active plan, pass when the agent appends the answer, impact,
+and confirmation date to its `## Decision Log`; without a plan/spec, pass when
+it creates one task-scoped file under `docs/agent-devkit/decisions/` and links
+it from `docs/agent-devkit/INDEX.md`. Change a public API or schema and pass
+only when the required approval gate returns to `Status: pending` before more
+application edits. A resumed session must read the persisted decision source,
+and `review-and-verify` must check implementation against it. No proposed
+decision may be written under `docs/llm/`.

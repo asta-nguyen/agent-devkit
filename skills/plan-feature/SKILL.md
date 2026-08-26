@@ -73,6 +73,10 @@ pages under `docs/llm/`.
    Required: yes | no
    Reason: <public API, data schema, dependency, CI, broad file impact, or low-risk scope>
    Status: pending | approved | not-required
+
+   ## Decision Log
+
+   None.
    ```
 
    Set `Required: yes` when the plan changes public APIs, data schemas,
@@ -98,7 +102,9 @@ pages under `docs/llm/`.
    explicitly approves the complete plan, update `Status: pending` to
    `Status: approved` and tell the user to invoke `implement-task`; that
    approval is the gate, so do not ask again. If an approved plan changes
-   materially, reset its status to `pending` and present it again. For
+   materially, append the user-confirmed change to `## Decision Log`, reset its
+   `Required` and `Reason` from the new impact, set required plans to
+   `Status: pending`, and present them again. For
    `Required: no`, tell the user to invoke `implement-task` with
    `Status: not-required`.
 11. Do not include commit steps. If the user requests a commit, leave that action
@@ -133,6 +139,8 @@ After writing the complete plan, review it against the approved design:
 6. **Minimal design** — can any proposed file, abstraction, dependency, or
    configuration be removed or replaced by existing, standard-library, native,
    or already-installed behavior without weakening an approved requirement?
+7. **Decision consistency** — does every persisted decision agree with the
+   tasks and approval status? Material changes must leave the gate pending.
 
 Fix any issues inline. No need to re-review — just fix and move on.
 
@@ -147,6 +155,7 @@ Fix any issues inline. No need to re-review — just fix and move on.
 | "We may need this abstraction later" | Future flexibility without an approved requirement is not a plan task. |
 | "The user already said implement" | Before the plan exists, that approves planning only. A required gate waits for approval of the complete plan. |
 | "I'll leave an approved status after changing the plan" | Material plan changes invalidate approval. Reset the gate to pending. |
+| "The implementing agent can recover decisions from chat" | Persist user-confirmed behavior changes in the plan's Decision Log. |
 
 Plans are execution artifacts, not essays. Prefer the fewest tasks that
 make the sequence and verification unambiguous.

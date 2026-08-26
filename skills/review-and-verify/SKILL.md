@@ -32,6 +32,11 @@ command documented in `AGENTS.md`, manifests, or CI configuration. Targeted
 checks are useful during implementation but do not replace this final gate. If
 no full command is established, report that limitation explicitly.
 
+Before reviewing requirements, read the active spec and plan, including its
+`## Decision Log`, plus any task-linked decision file. A persisted decision is
+requirement evidence, but it does not override a pending approval gate;
+conversation recall alone is not review evidence.
+
 ## Git safety invariants
 
 - Treat existing working-tree changes as user-owned. Inspect `git status
@@ -53,14 +58,14 @@ no full command is established, report that limitation explicitly.
 | Tests pass | Test command output: 0 failures | Previous run, "should pass" |
 | Build succeeds | Build command: exit 0 | Linter passing, logs look good |
 | Bug fixed | Test original symptom: passes | Code changed, assumed fixed |
-| Requirements met | Line-by-line checklist vs spec | Tests passing alone |
+| Requirements met | Line-by-line checklist vs spec, plan, and persisted decisions | Tests passing alone |
 | Wiki updated | Source paths exist, links resolve | "Page edited" |
 
 ## Diff review
 
 Review the diff for:
 
-- **Correctness** — logic matches the approved design
+- **Correctness** — logic matches the approved design and persisted decisions
 - **Stale documentation** — wiki pages or comments that contradict new behavior
 - **Accidental scope** — changes outside the approved plan
 - **Missing error handling** — edge cases, error paths, cleanup
@@ -97,7 +102,7 @@ Status: pass | fail
 Evidence: <commands run and relevant results>
 Blockers: <required fixes, or none>
 Non-blockers: <optional findings, or none>
-Spec gaps: <missing requirements, or none>
+Spec gaps: <missing spec, plan, or persisted-decision requirements, or none>
 ```
 
 Use `fail` when any blocker or spec gap remains. A passing verification command
@@ -132,6 +137,7 @@ full context, violates YAGNI, or conflicts with architectural decisions.
 | "Partial check is enough" | Partial proves nothing |
 | "Just this once" | No exceptions |
 | "Fewer lines must be better" | A smaller diff that weakens behavior or clarity is a regression. |
+| "The decision was only in chat" | Chat recall is not durable review evidence; persist behavior decisions before passing. |
 
 ## Report
 

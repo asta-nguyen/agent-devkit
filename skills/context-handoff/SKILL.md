@@ -20,9 +20,10 @@ Do not create handoffs for short tasks that are already complete.
 
 ## Write the checkpoint
 
-1. Read `AGENTS.md`, then inspect `git status --short`, the relevant diff, and
-   the active spec, plan, wiki page, or test output. Source and fresh command
-   output are authoritative; conversation memory is not.
+1. Read `AGENTS.md`, then inspect `git status --short`, the relevant diff, the
+   active spec/plan `## Decision Log`, any task-linked decision file, and the
+   relevant wiki page or test output. Source and fresh command output are
+   authoritative; conversation memory is not.
 2. Create
    `docs/agent-devkit/handoffs/YYYY-MM-DD-<slug>.md` with this structure:
 
@@ -37,7 +38,7 @@ Do not create handoffs for short tasks that are already complete.
    - Status: <what is complete and what is in progress>
 
    ## Decisions
-   - <approved decisions and constraints, or None>
+   - <D<n> summary and source artifact link, or None>
 
    ## Evidence
    - `<command>` — <result and exit status>
@@ -66,9 +67,10 @@ Do not create handoffs for short tasks that are already complete.
 ## Resume
 
 At the start of the next session, read the newest relevant handoff first. Then
-verify `git status --short`, re-check its claimed source paths and commands, and
-continue from `## Next action`. If the source or working tree disagrees, trust
-the current repository and update the handoff before proceeding.
+read every linked decision source, verify `git status --short`, re-check its
+claimed source paths and commands, and continue from `## Next action`. If the
+source or working tree disagrees, trust the current repository and update the
+handoff before proceeding.
 
 ## Red flags
 
