@@ -251,3 +251,15 @@ only when the required approval gate returns to `Status: pending` before more
 application edits. A resumed session must read the persisted decision source,
 and `review-and-verify` must check implementation against it. No proposed
 decision may be written under `docs/llm/`.
+
+## 20. Documentation impact handoff
+
+Use a repository with a relevant `docs/llm/` page, then fix a bug that changes
+the page's documented behavior. Run `implement-task` through
+`review-and-verify`.
+
+Pass when the final result includes `Wiki impact: yes`, lists the affected wiki
+pages, tells the user to invoke `document-wiki`, and does not claim the wiki is
+already current. For a bug that restores behavior already accurately documented,
+pass only when it reports `Wiki impact: no` with page and source evidence. A
+"bug fix" label alone must never skip the classification.

@@ -76,6 +76,13 @@ For wiki changes, also verify: source paths exist, `## Sources` entries are
 real, internal Obsidian wikilinks resolve, `INDEX.md` links resolve, and no
 placeholder text remains.
 
+Before the final result, classify wiki impact even for a bug fix. If the change
+alters documented behavior or leaves a relevant page incomplete, use `yes` and
+list the pages for a `document-wiki` handoff. Use `no` only after inspecting
+the relevant page and source evidence. Use `not-applicable` when the repository
+does not maintain `docs/llm/`, or `unknown` when the impact cannot be
+established.
+
 ## Complexity pass
 
 Review the diff for behavior-preserving simplifications. Report each finding
@@ -103,6 +110,9 @@ Evidence: <commands run and relevant results>
 Blockers: <required fixes, or none>
 Non-blockers: <optional findings, or none>
 Spec gaps: <missing spec, plan, or persisted-decision requirements, or none>
+Wiki impact: yes | no | not-applicable | unknown
+Wiki pages: <paths, or none>
+Wiki action: <invoke document-wiki / no update needed / limitation>
 ```
 
 Use `fail` when any blocker or spec gap remains. A passing verification command
@@ -138,6 +148,7 @@ full context, violates YAGNI, or conflicts with architectural decisions.
 | "Just this once" | No exceptions |
 | "Fewer lines must be better" | A smaller diff that weakens behavior or clarity is a regression. |
 | "The decision was only in chat" | Chat recall is not durable review evidence; persist behavior decisions before passing. |
+| "It is only a bug fix" | A behavior-changing bug fix still requires a wiki-impact classification. |
 
 ## Report
 

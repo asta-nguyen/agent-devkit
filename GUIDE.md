@@ -527,6 +527,9 @@ Estimate this plan in hours for a developer using an AI coding agent.
   `systematic-debugging` avoids guess-and-check thrashing.
 - **The `docs/llm/` wiki contains verified behavior only.** Proposed specs and
   plans belong in `docs/agent-devkit/`.
+- **Every implementation reports wiki impact.** A behavior-changing bug fix or
+  feature uses `Wiki impact: yes`, lists the affected pages, and hands off to
+  `document-wiki`; `no` requires inspected page and source evidence.
 
 ### For agents (rules embedded in the skills)
 

@@ -102,8 +102,31 @@ When implementation needs a user answer before it can continue:
    the smallest relevant check, and call the Skill tool with
    "review-and-verify" once more. If the second review still fails, stop and
    report the remaining blockers; do not claim completion.
-3. For a new or materially changed feature, tell the user to invoke
-   `document-wiki` after verification to refresh its source-grounded coverage.
+
+## Documentation impact
+
+Before the final response, classify whether the verified wiki needs an update.
+When `docs/llm/` exists, inspect the relevant page and its `## Sources` entries.
+This applies to bug fixes too: a fix that changes user-visible behavior or a
+documented business rule can make the wiki stale.
+
+Use exactly one of these classifications:
+
+- `yes`: a page is stale or incomplete, or new/material behavior needs a page;
+  list the affected pages and tell the user to invoke `document-wiki` after
+  verification.
+- `no`: relevant pages and source paths were inspected and remain accurate;
+  name the evidence in the final response.
+- `not-applicable`: the repository does not maintain a `docs/llm/` wiki.
+- `unknown`: the impact could not be established; state the limitation.
+
+Always include this block in the final response:
+
+```text
+Wiki impact: yes | no | not-applicable | unknown
+Wiki pages: <paths, or none>
+Wiki action: <invoke document-wiki / no update needed / limitation>
+```
 
 ## Red flags
 
@@ -117,3 +140,4 @@ When implementation needs a user answer before it can continue:
 | "The spec was approved, so the plan must be approved" | A required execution-plan gate is separate and must say `Status: approved`. |
 | "The conversation will remember the user's answer" | Restate it now; persist behavior decisions in the active plan/spec or a task-scoped decision file. |
 | "This clarification is small, so approval still holds" | Material behavior, API, schema, security, or scope changes invalidate the old approval. |
+| "It is only a bug fix" | A behavior-changing bug fix still requires a wiki-impact classification. |
