@@ -1,0 +1,26 @@
+EVALS.md
+  s_2bf2fc4e97924c::t_c55da681eee2e7 254-265
+skills/implement-task/SKILL.md
+  s_2bf2fc4e97924c::t_c55da681eee2e7 106-129,143
+  s_2bf2fc4e97924c::t_04f51dc10fbcf0 105
+skills/review-and-verify/SKILL.md
+  s_2bf2fc4e97924c::t_c55da681eee2e7 79-85,113-115,151
+GUIDE.md
+  s_2bf2fc4e97924c::t_c55da681eee2e7 530-532
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "5b61df84424ae5b699df1a4444369c4133da1076",
+  "prompts": {},
+  "sessions": {
+    "s_2bf2fc4e97924c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a03d01-b9b0-73e3-bbc1-8e2bcaa63de7",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
