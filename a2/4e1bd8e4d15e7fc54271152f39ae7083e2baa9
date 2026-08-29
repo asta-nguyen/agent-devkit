@@ -1,0 +1,57 @@
+.agents/skills/writing-skills/SKILL.md
+  s_880e3e5b64ec87::t_d361638ab9897d 51-53,158-164
+  s_880e3e5b64ec87::t_1791b0cfc2529e 140-142
+  s_edafcc433af97e::t_cb9d58f6e829ad 3,9-11
+  s_edafcc433af97e::t_a535d43662b6ab 165-174
+skills/using-devkit/SKILL.md
+  s_edafcc433af97e::t_2eb1f8fb20bab7 2-3,6-7,9-12,14-23,25-26,28-30,49,56-58
+  s_880e3e5b64ec87::t_36ae17a30c7320 27,34-35,38-44
+  s_880e3e5b64ec87::t_b9f1fc02db1e52 8,13,50
+  s_880e3e5b64ec87::t_4184daec957d7b 24
+  s_edafcc433af97e::t_ae431e57391513 31-33,36-37,45-48
+  s_edafcc433af97e::t_89f01eaeada8fd 59
+skills/systematic-debugging/SKILL.md
+  s_880e3e5b64ec87::t_86898e5db8e562 92-93,106-107,129
+  s_edafcc433af97e::t_35f57f49143ca9 146
+  s_edafcc433af97e::t_84d92d76abf8f2 168-169
+  s_edafcc433af97e::t_9b786b502b17b2 80-84,94,96-101,117,121-123,126-128,134-135
+  s_edafcc433af97e::t_923d180319a1d7 147-148
+  s_edafcc433af97e::t_302efeac15478e 108-109,112-113,116,118-119,130-133
+  s_880e3e5b64ec87::t_c73cbe4712563a 85-91,95,102,105,110-111,114-115,120,167
+EVALS.md
+  s_edafcc433af97e::t_17c04a05e00cf5 266-271,279-283,290-292,296-307
+  s_880e3e5b64ec87::t_80848c780ede1d 272,284-286,293
+  s_880e3e5b64ec87::t_dba65c56589e47 273-276,287-289,294-295,308-311
+  s_880e3e5b64ec87::t_86898e5db8e562 277-278
+README.md
+  s_880e3e5b64ec87::t_4184daec957d7b 172-177
+  s_880e3e5b64ec87::t_335bc4522328d1 72,103,117
+GUIDE.md
+  s_880e3e5b64ec87::t_4184daec957d7b 637
+  s_880e3e5b64ec87::t_34ed16bd9fe489 193,623
+  s_880e3e5b64ec87::t_335bc4522328d1 13,111,117,131,392-396
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "a24e1bd8e4d15e7fc54271152f39ae7083e2baa9",
+  "prompts": {},
+  "sessions": {
+    "s_880e3e5b64ec87": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a04d1a-fd1c-7a42-b934-c4f22ee90ddc",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    },
+    "s_edafcc433af97e": {
+      "agent_id": {
+        "tool": "windsurf",
+        "id": "blushing-distance",
+        "model": "unknown"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
