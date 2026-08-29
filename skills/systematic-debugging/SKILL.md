@@ -77,24 +77,62 @@ You must complete each phase before proceeding to the next.
 
 ### Phase 4: Implementation
 
-1. **Establish expected behavior.** Use source, tests, and current wiki pages.
+1. **Classify the bug.** Before any fix or verify plan, classify the bug using
+   the same vocabulary as `brainstorm-feature`:
+
+   - **Spike** — the real question is "is this actually a bug?" or "what is
+     happening?", not "fix it." Output is an answer with reproduction evidence;
+     do not write production code. Report the evidence and stop. If the answer
+     reveals a real fix is needed, re-classify as Bounded or Architectural
+     before proceeding.
+   - **Bounded** — the fix stays within an existing flow and does not change a
+     shared interface, contract, or component boundary. File count alone does
+     not classify the bug. Proceed to step 2.
+   - **Architectural** — the fix changes a shared interface, contract, or
+     component boundary, or spans multiple components. Stop. Tell the user to
+     invoke `brainstorm-feature` to produce a spec, then `plan-feature` for an
+     execution plan, before any fix. Do not patch an architectural bug as if
+     it were bounded; the verify plan in step 3 cannot cover cross-component
+     regression surface that was never spec'd.
+
+   When in doubt between two, take the heavier one. Hidden complexity
+   discovered mid-fix upgrades the path — stop, say so, step up. Nothing
+   downgrades mid-fix.
+
+2. **Establish expected behavior.** Use source, tests, and current wiki pages.
    If they do not establish the intended behavior, stop and tell the user to
    invoke `brainstorm-feature` to get approval before changing behavior.
-2. **Write a regression test** that reproduces the original symptom.
-3. **Verify the test fails** without the fix (red).
-4. **Apply the smallest root-cause fix.** Reuse the verified working pattern
+3. **Write the verify plan.** Before writing a regression test or production
+   fix, list the observable conditions that prove the bug is fixed. State each
+   as a checkable claim:
+   - The original symptom no longer occurs (reproduction steps from Phase 1).
+   - The regression test passes.
+   - Traced callers and relevant existing tests do not regress (name the
+     callers and checks from Phase 1).
+   - Any contract the fix touches still holds (state the contract and how it
+     is checked).
+   - Any caller or contract without automated coverage is named with a direct
+     check or reported as a verification limitation.
+
+   This list is the definition of "fixed" for this bug. Step 9 checks the
+   diff against it; `review-and-verify`'s "Bug fixed" row requires it. Without
+   a written verify plan, "fixed" is a feeling, not a fact — do not proceed to
+   step 4 until it is written.
+4. **Write a regression test** that reproduces the original symptom.
+5. **Verify the test fails** without the fix (red).
+6. **Apply the smallest root-cause fix.** Reuse the verified working pattern
    from Phase 2 when it fits. A smaller-looking symptom patch is not minimal if
    sibling callers remain broken.
-5. **Verify the test passes** (green).
-6. **Run the full test suite** to check for regressions.
-7. Call the Skill tool with "review-and-verify" to review the diff and run
-   fresh verification. Tell the user to invoke `document-wiki` after
-   verification only when the fix changes observable behavior or reveals stale
-   wiki documentation. Do not update the wiki when it already correctly
-   describes the intended behavior and the fix only restores code to that
-   behavior.
-8. Do not create commits during debugging. Even when the user requests a
-   commit, wait until final `review-and-verify` passes.
+7. **Verify the test passes** (green).
+8. **Run the full test suite** to check for regressions.
+9. Call the Skill tool with "review-and-verify" to review the diff against the
+   verify plan from step 3 and run fresh verification. Tell the user to invoke
+   `document-wiki` after verification only when the fix changes observable
+   behavior or reveals stale wiki documentation. Do not update the wiki when it
+   already correctly describes the intended behavior and the fix only restores
+   code to that behavior.
+10. Do not create commits during debugging. Even when the user requests a
+    commit, wait until final `review-and-verify` passes.
 
 ## Red flags — stop and return to Phase 1
 
@@ -105,6 +143,9 @@ If you catch yourself thinking:
 - "Add multiple changes, run tests"
 - "It's probably X, let me fix that"
 - "I don't fully understand but this might work"
+- "I'll know it's fixed when I see it" (no written verify plan)
+- "It's just a bug, no need to classify" (skipping Spike/Bounded/Architectural)
+- "The fix touches one file, so it's bounded" (file count is not the test — interface/contract impact is)
 - Proposing solutions before tracing data flow
 - "One more fix attempt" (when already tried 2+)
 - Each fix reveals a new problem in a different place
@@ -123,6 +164,9 @@ not the implementation.
 | "Just try this first, then investigate" | First fix sets the pattern. Do it right from the start. |
 | "Multiple fixes at once saves time" | Cannot isolate what worked. Causes new bugs. |
 | "I see the problem, let me fix it" | Seeing symptoms is not understanding root cause. |
+| "I'll know it's fixed when I see it" | Without a written verify plan, "fixed" is a feeling. Write the checklist in Phase 4 step 3 before any fix. |
+| "It's just a bug, no need to classify" | Architectural bugs patched as bounded cause cross-component regressions. Classify in Phase 4 step 1 before any fix. |
+| "The fix touches one file, so it's bounded" | File count is not the test. If the fix changes an interface or contract others depend on, it is architectural — hand off to `brainstorm-feature`. |
 | "One more fix attempt" (after 2+ failures) | 3+ failures = architectural problem. Question the pattern. |
 
 ## When process reveals "no root cause"

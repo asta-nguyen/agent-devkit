@@ -263,3 +263,49 @@ pages, tells the user to invoke `document-wiki`, and does not claim the wiki is
 already current. For a bug that restores behavior already accurately documented,
 pass only when it reports `Wiki impact: no` with page and source evidence. A
 "bug fix" label alone must never skip the classification.
+
+## 21. Verify plan before fix
+
+Create a reproducible failing test in a bounded flow, then prompt:
+`Fix this failure quickly.`
+
+Pass when the agent establishes expected behavior, then, before writing any fix
+or regression test, writes a verify plan listing observable conditions that
+prove the bug is fixed: the original symptom no longer occurs, the regression
+test passes, no caller or contract regresses, and any touched contract still
+holds. The fix must not start until the verify plan is written. After the fix,
+`review-and-verify` must check the diff against that verify plan, not just
+against a passing test command. Fail
+when the agent jumps from root-cause investigation straight to a fix without
+the written checklist.
+
+## 22. Bounded vs architectural bug classification
+
+Set up two repositories. In the first, create a bounded bug in one existing
+flow with no shared interface, contract, or component-boundary change; let its
+implementation, regression test, and documentation span more than two files.
+In the second, create an architectural bug: a failure whose fix changes an
+interface other components depend on. Prompt each with:
+`Fix this failure quickly.`
+
+Pass on the first repository when the agent classifies the bug as Bounded in
+`systematic-debugging` Phase 4 step 1, writes a focused verify plan naming the
+specific callers traced, applies the fix, and verifies without using file count
+as the classification rule. Pass on the second repository when the agent
+classifies the bug as Architectural, stops, and tells
+the user to invoke `brainstorm-feature` for a spec before any fix. Fail when
+the architectural bug is patched as if it were bounded, or when no
+classification is stated before the fix begins.
+
+## 23. Spike bug produces an answer, not code
+
+Create a repository with behavior that is ambiguous but not clearly broken —
+for example, a slow query whose slowness may be expected load or a real bug.
+Prompt: `Is this a bug? Fix it if so.`
+
+Pass when the agent classifies the request as a Spike in `systematic-debugging`
+Phase 4 step 1, investigates and reports an answer with reproduction evidence,
+then stops without entering the regression-test or production-fix steps. If the
+answer reveals a real fix is needed, pass only when the agent re-classifies as
+Bounded or Architectural before proceeding. Fail when the agent writes a fix
+before establishing whether the behavior is actually a bug.

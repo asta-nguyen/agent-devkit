@@ -10,7 +10,7 @@
 
 1. [Why agent-devkit?](#1-why-agent-devkit)
 2. [Installation](#2-installation)
-3. [The 11 Skills](#3-the-11-skills)
+3. [The 12 Skills](#3-the-12-skills)
 4. [Standard Workflow — Idea to Production](#4-standard-workflow--idea-to-production)
 5. [Real Examples](#5-real-examples)
 6. [Tips & Best Practices](#6-tips--best-practices)
@@ -108,12 +108,13 @@ never install dependencies or change MCP configuration silently.
 
 ---
 
-## 3. The 11 Skills
+## 3. The 12 Skills
 
 ### Bootstrap & Context
 
 | Skill | When to use | Summary |
 |---|---|---|
+| `using-devkit` | Starting work or deciding which workflow applies | Routes the task to the owning devkit skill; it does not replace that skill's process. |
 | `setup-codebase` | The repo lacks `AGENTS.md`, `CLAUDE.md`, or `docs/llm/` | Reads repository evidence and creates context files. Creates only missing files. |
 | `setup-openez` | The user agrees to use OpenEZ or the index is stale | Installs, indexes, and verifies the OpenEZ MCP connection. |
 | `read-codebase-context` | Before design, planning, or wiki work that needs affected files, callers, and tests | Prefers OpenEZ, asks about setup when missing, reads source directly, and records an impact map. |
@@ -127,7 +128,7 @@ never install dependencies or change MCP configuration silently.
 | `plan-feature` | After design approval and before a non-trivial feature | Turns the design into an ordered execution plan with a persisted approval gate. Each task has Files / Interfaces / Change / Verify. |
 | `estimate-feature` | When a PM or BA explicitly requests an estimate | Estimates an hours range for each plan task with confidence and rationale. Runs only when requested. |
 | `implement-task` | An approved bounded design or an approved architectural plan exists | Traces code, applies the 6-step implementation ladder, verifies each non-trivial change, and flags wiki coverage. |
-| `systematic-debugging` | Any technical issue: bug, test failure, build failure, or performance problem | Four phases: Investigate → Analyze → Hypothesis → Implement. Never fixes before root-cause investigation. |
+| `systematic-debugging` | Any technical issue: bug, test failure, build failure, or performance problem | Investigates root cause, classifies the bug, writes a verify plan, then fixes bounded bugs or hands architectural bugs off for design. |
 | `review-and-verify` | After implementation and before claiming completion | Enforces **NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE**. Reviews the diff, runs checks, and performs a complexity pass. |
 
 ### Wiki Lifecycle
@@ -189,6 +190,7 @@ created only when a real page needs them.
 ### Quick routing
 
 ```text
+using-devkit                          # choose the right workflow skill
 setup-codebase                         # first visit to a repo missing context
 setup-openez                           # setup after the user agrees to use OpenEZ
 read-codebase-context                  # understand code before changing it
@@ -387,6 +389,11 @@ Fix this failure quickly.
 
 **Phase 4 — Implement:**
 
+- Classify the bug as Spike, Bounded, or Architectural. A Spike reports
+  evidence and stops; an Architectural bug hands off to `brainstorm-feature`.
+- For a Bounded bug, establish expected behavior from source, tests, and the
+  current wiki.
+- Write a verify plan before the regression test or production fix.
 - Write a regression test that reproduces the symptom.
 - Verify the test fails (red).
 - Apply the smallest root-cause fix.
@@ -613,7 +620,7 @@ page is marked `[~]` (stale).
 
 ### Q: How many skills are there? Can I add a new one?
 
-There are currently 11 skills. Add a new skill by creating
+There are currently 12 skills. Add a new skill by creating
 `skills/<name>/SKILL.md` with YAML frontmatter (`name`, `description`) and
 step-by-step instructions. Read this repo's `AGENTS.md` for conventions.
 
@@ -627,7 +634,7 @@ step-by-step instructions. Read this repo's `AGENTS.md` for conventions.
 │                                                             │
 │  NEW FEATURE: brainstorm → (plan) → implement → verify      │
 │                                                             │
-│  BUG:         systematic-debugging → review-and-verify      │
+│  BUG:         systematic-debugging → fix or hand off        │
 │                                                             │
 │  DOCUMENT:    document-wiki                                 │
 │                                                             │

@@ -69,6 +69,7 @@ Start a fresh agent session after copying so its skill list is reloaded.
 The shortest routing guide is:
 
 ```text
+using-devkit                          # choose the right workflow skill
 setup-codebase                         # first visit to a repo missing context
 setup-openez                           # recommended semantic index for non-trivial repos
 read-codebase-context                  # understand code before changing it
@@ -99,6 +100,7 @@ the workflow itself.
 
 | Skill | Purpose |
 |---|---|
+| `using-devkit` | Route a task to the correct devkit workflow before editing. |
 | `setup-codebase` | Create missing `AGENTS.md`, `CLAUDE.md`, and `docs/llm/` skeleton. Run once per repo. |
 | `setup-openez` | Install, initialize, index, and verify OpenEZ MCP connection for a repository. |
 | `read-codebase-context` | Query OpenEZ and trace code paths. Used before feature work or wiki generation. |
@@ -112,7 +114,7 @@ the workflow itself.
 | `plan-feature` | Save an approved architectural plan under `docs/agent-devkit/plans/` with bite-sized, verifiable tasks. |
 | `estimate-feature` | Optionally estimate every completed plan task in AI-assisted engineering hours. |
 | `implement-task` | Execute an approved plan: trace code, make the smallest change, verify, then flag wiki coverage. |
-| `systematic-debugging` | Find root cause before fixing. Four phases: investigate → analyze → hypothesize → implement. |
+| `systematic-debugging` | Find root cause, classify the bug, define verification, then fix bounded bugs or hand architectural bugs off for design. |
 | `review-and-verify` | Iron Law: no completion claims without fresh evidence. Diff review, code review reception, red flags. |
 
 ### Wiki lifecycle
@@ -167,9 +169,12 @@ document-wiki             → refresh documentation for the changed feature
 ### 3. Debug a bug
 
 ```
-systematic-debugging      → investigate root cause, fix, regression test
-  ↓
-review-and-verify         → verify fix, check for regressions
+systematic-debugging      → investigate and classify
+  ├─ Spike                → report evidence and stop
+  ├─ Architectural        → brainstorm-feature → plan-feature
+  └─ Bounded              → verify plan → regression test → fix
+                               ↓
+                            review-and-verify
 ```
 
 ### 4. Document an existing app
