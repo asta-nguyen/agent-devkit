@@ -1,6 +1,6 @@
 ---
 name: systematic-debugging
-description: Use for any technical issue — test failures, bugs, unexpected behavior, performance problems, build failures. Especially when under time pressure or previous fixes did not work.
+description: Use when investigating any technical issue, including test failures, bugs, unexpected behavior, performance problems, or build failures, especially under time pressure or after failed fixes.
 ---
 
 # Systematic Debugging
@@ -125,7 +125,8 @@ You must complete each phase before proceeding to the next.
    sibling callers remain broken.
 7. **Verify the test passes** (green).
 8. **Run the full test suite** to check for regressions.
-9. Call the Skill tool with "review-and-verify" to review the diff against the
+9. Call the available Skill entry whose local name is `review-and-verify` to
+   review the diff against the
    verify plan from step 3 and run fresh verification. Tell the user to invoke
    `document-wiki` after verification only when the fix changes observable
    behavior or reveals stale wiki documentation. Do not update the wiki when it

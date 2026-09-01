@@ -33,6 +33,7 @@ When skills request actions, use these OpenCode equivalents:
 Use OpenCode's native \`skill\` tool to list and load skills.`;
 
     bootstrapCache = `<EXTREMELY_IMPORTANT>
+AGENT-DEVKIT:ACTIVE
 The agent-devkit bootstrap is already loaded. Do not load "using-devkit" again.
 
 ${content}
@@ -58,7 +59,7 @@ ${toolMapping}
       const firstUser = output.messages.find((message) => message.info.role === "user");
       if (!firstUser || !firstUser.parts.length) return;
       if (firstUser.parts.some((part) => (
-        part.type === "text" && part.text.includes("EXTREMELY_IMPORTANT")
+        part.type === "text" && part.text.includes("AGENT-DEVKIT:ACTIVE")
       ))) return;
 
       const firstPart = firstUser.parts[0];

@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.4.0] - 2026-09-01
+
+### Added
+
+- Added native packaging for Codex, Claude Code, Cursor, Devin CLI, and
+  OpenCode.
+- Added dependency-free smoke checks for shared plugin bootstrap behavior.
+
+### Fixed
+
+- Emit Cursor's required `additional_context` hook response.
+- Prevent OpenCode bootstrap collisions with other plugins.
+- Resolve cross-skill calls in both namespaced plugins and direct installs.
+
 ## [0.2.0] - 2026-08-25
 
 ### Changed

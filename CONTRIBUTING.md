@@ -1,7 +1,8 @@
 # Contributing to Agent DevKit
 
 Thank you for your interest in contributing! This repo contains prompt-driven
-Markdown skills for coding agents — no scripts, no build system, no dependencies.
+Dependency-free Markdown skills for coding agents, plus small standard-library
+adapters for optional native plugin bootstrap.
 
 ## License
 

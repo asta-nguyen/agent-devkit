@@ -96,6 +96,8 @@ add the Git-backed plugin:
 
 Restart OpenCode after changing the config. The plugin registers the bundled
 skills and injects `using-devkit` into the first user message.
+The current adapter targets OpenCode 1.x; OpenCode V2 will require its separate
+plugin API adapter when V2 becomes the supported release.
 
 For a project that discovers repository-local skills from `.agents/skills`,
 run this from the target project and replace the source path with this clone:
@@ -118,16 +120,10 @@ Install all skills into Claude Code with:
 npx skills add asta-nguyen/agent-devkit -a claude-code
 ```
 
-Install one skill when only a focused capability is needed:
-
-```bash
-npx skills add asta-nguyen/agent-devkit --skill estimate-feature -a claude-code
-```
-
 The public repository is currently `asta-nguyen/agent-devkit`; the shorthand
 `asta/agent-devkit` is not the repository's current GitHub path.
 
-Copy the whole set because the workflow skills reference each other. Treat the
+Install the whole set because the workflow skills reference each other. Treat the
 copies as managed files: do not customize them in the target project. Updating
 overwrites same-named skills, and retired skill folders must be removed manually.
 Start a fresh agent session after copying so its skill list is reloaded.

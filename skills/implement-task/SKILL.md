@@ -1,6 +1,6 @@
 ---
 name: implement-task
-description: Use after the user approves a bounded change or an approved feature plan exists and code changes are ready to begin.
+description: Use when the user has approved a bounded change or feature plan and code changes are ready to begin.
 ---
 
 # Implement Task
@@ -9,9 +9,9 @@ description: Use after the user approves a bounded change or an approved feature
 
 1. Read `AGENTS.md` and, when it exists, `docs/llm/INDEX.md` for project
    conventions and affected wiki pages. A missing wiki must not block work.
-2. If application source exists, call the Skill tool with
-   "read-codebase-context" to trace the relevant code path, or use direct file
-   reads. Understand callers, data flow, and error paths before editing. For a
+2. If application source exists, call the available Skill entry whose local
+   name is `read-codebase-context` to trace the relevant code path, or use
+   direct file reads. Understand callers, data flow, and error paths before editing. For a
    source-less new project, read the
    approved spec and plan, then create the first planned entry point; state that
    callers and existing error paths do not exist yet.
@@ -50,8 +50,8 @@ description: Use after the user approves a bounded change or an approved feature
 1. Reuse local patterns. Keep the diff focused on one logical change.
 2. Make the smallest change that satisfies the task. Do not refactor
    unrelated code.
-3. If you hit a bug or unexpected behavior, call the Skill tool with
-   "systematic-debugging". Do not guess-and-check.
+3. If you hit a bug or unexpected behavior, call the available Skill entry
+   whose local name is `systematic-debugging`. Do not guess-and-check.
 4. Run the smallest relevant check after each non-trivial change.
 5. Do not create commits during implementation. Even when the user requests a
    commit, wait until final `review-and-verify` passes.
@@ -96,12 +96,13 @@ When implementation needs a user answer before it can continue:
 
 ## After implementation
 
-1. Call the Skill tool with "review-and-verify" to review the diff, run fresh
+1. Call the available Skill entry whose local name is `review-and-verify` to
+   review the diff, run fresh
    verification, and confirm no stale documentation.
 2. If the review result is `Status: fail`, fix only the listed blockers, run
-   the smallest relevant check, and call the Skill tool with
-   "review-and-verify" once more. If the second review still fails, stop and
-   report the remaining blockers; do not claim completion.
+   the smallest relevant check, and call the available Skill entry whose local
+   name is `review-and-verify` once more. If the second review still fails, stop
+   and report the remaining blockers; do not claim completion.
 
 ## Documentation impact
 

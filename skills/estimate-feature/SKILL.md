@@ -15,7 +15,8 @@ Never run this optional skill unless the user requests an estimate.
    plan and an approved design exists; otherwise stop and request a plan. Never
    estimate directly from a feature request.
 2. Read `AGENTS.md`, the plan, linked design, relevant wiki, source, and tests.
-   Call the Skill tool with "read-codebase-context" when source exists. If
+   Call the available Skill entry whose local name is `read-codebase-context`
+   when source exists. If
    tasks omit files, behavior, or verification, tell the user to invoke
    `plan-feature`.
 3. State the AI support profile. Assume the coding agent can inspect and edit

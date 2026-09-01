@@ -1,11 +1,18 @@
 ---
 name: using-devkit
-description: Use at the start of every task in a repo with agent-devkit installed, including feature work, bug fixes, reviews, documentation, estimates, or unfamiliar requests. Also use when deciding which devkit skill to run.
+description: Use when starting any task in a repo with agent-devkit installed, including feature work, bug fixes, reviews, documentation, estimates, unfamiliar requests, or choosing another devkit skill.
 ---
 
 # Using Devkit
 
 Choose the owning workflow skill, then follow that skill's instructions.
+
+## Skill names
+
+Skill references use their local name, such as `review-and-verify`. In a
+namespaced plugin host, invoke the available entry with that local name, such
+as `agent-devkit:review-and-verify`; in a direct skills install, invoke the
+bare local name.
 
 ## Priority rule
 

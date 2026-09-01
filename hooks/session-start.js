@@ -9,13 +9,16 @@ const skillPath = path.join(__dirname, "..", "skills", "using-devkit", "SKILL.md
 
 try {
   const additionalContext = fs.readFileSync(skillPath, "utf8");
-  process.stdout.write(JSON.stringify({
-    systemMessage: "AGENT-DEVKIT:ACTIVE",
-    hookSpecificOutput: {
-      hookEventName: "SessionStart",
-      additionalContext,
-    },
-  }));
+  const output = process.env.CURSOR_PLUGIN_ROOT
+    ? { additional_context: additionalContext }
+    : {
+        systemMessage: "AGENT-DEVKIT:ACTIVE",
+        hookSpecificOutput: {
+          hookEventName: "SessionStart",
+          additionalContext,
+        },
+      };
+  process.stdout.write(JSON.stringify(output));
 } catch (error) {
   process.stderr.write(`agent-devkit bootstrap failed: ${error.message}\n`);
   process.exitCode = 1;

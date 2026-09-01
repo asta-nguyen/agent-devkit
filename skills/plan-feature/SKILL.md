@@ -1,6 +1,6 @@
 ---
 name: plan-feature
-description: Use after feature design approval and before coding a non-trivial feature, behavior change, API change, or cross-file implementation.
+description: Use when feature design is approved and coding has not started for a non-trivial feature, behavior change, API change, or cross-file implementation.
 ---
 
 # Plan Feature
@@ -13,7 +13,8 @@ pages under `docs/llm/`.
 ## Process
 
 1. Read the approved design, `AGENTS.md`, and related wiki pages. If application
-   source exists, call the Skill tool with "read-codebase-context" to inspect
+   source exists, call the available Skill entry whose local name is
+   `read-codebase-context` to inspect
    affected source,
    callers, and tests. Otherwise map planned files and interfaces from the
    approved design; state that callers and tests do not exist yet.
@@ -62,7 +63,8 @@ pages under `docs/llm/`.
 
 5. Put contract/data changes before their callers; put tests beside the
    behavior they verify. Do not add tasks for speculative abstractions.
-6. End every plan with `Call the Skill tool with "review-and-verify".` If the
+6. End every plan by calling the available Skill entry whose local name is
+   `review-and-verify`. If the
    feature is new or changes user-visible behavior, instruct the user to invoke
    `document-wiki` after verification.
 7. Add this section to every plan:

@@ -45,9 +45,6 @@ implementation → verification → documentation.
 ```bash
 # Install all skills into Claude Code
 npx skills add asta-nguyen/agent-devkit -a claude-code
-
-# Or install one specific skill
-npx skills add asta-nguyen/agent-devkit --skill estimate-feature -a claude-code
 ```
 
 > **Note:** The GitHub repository is `asta-nguyen/agent-devkit` (not
@@ -600,8 +597,9 @@ complexity.
 
 Skills are Markdown playbooks. Any agent that can read `SKILL.md` from
 `.agents/skills/`, a native plugin/config entry, or the skills CLI can use them.
-They have been tested with Claude Code, Codex, OpenCode, Cursor, and Devin
-through their supported packaging paths.
+Shared bootstrap behavior and packaging metadata have local smoke checks.
+End-to-end installation still depends on the installed Claude Code, Codex,
+OpenCode, Cursor, or Devin client.
 
 ### Q: Is OpenEZ required?
 

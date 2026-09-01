@@ -1,7 +1,10 @@
 {
   "name": "agent-devkit",
-  "version": "0.2.0",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
-  "main": ".opencode/plugins/agent-devkit.js"
+  "main": ".opencode/plugins/agent-devkit.js",
+  "scripts": {
+    "test": "node tests/plugin-smoke.mjs"
+  }
 }

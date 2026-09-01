@@ -21,3 +21,5 @@ opencode debug skill
 ```
 
 The plugin uses OpenCode's native `skill` tool for loading individual skills.
+This adapter targets OpenCode 1.x. OpenCode V2 uses a separate plugin API and
+will need a dedicated adapter when V2 becomes the supported release.
