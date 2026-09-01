@@ -1,5 +1,7 @@
 {
   "name": "agent-devkit",
   "version": "0.2.0",
-  "private": true
+  "private": true,
+  "type": "module",
+  "main": ".opencode/plugins/agent-devkit.js"
 }

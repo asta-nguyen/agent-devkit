@@ -31,6 +31,72 @@ the `skills/<name>/` folder visible to the agent's skill loader, then invoke
 the skill by name or ask for the task it describes. `SKILL.md` is the required
 file; `agents/openai.yaml` only adds Codex/OpenAI UI metadata.
 
+### Harness packaging
+
+This repository is the source tree for developing skills. Keep canonical skill
+files under `skills/`; do not add an installation mirror under
+`.agents/skills/`.
+
+- **Codex:** `.codex-plugin/` and `hooks/hooks.json` provide the optional plugin
+  integration and `SessionStart` bootstrap.
+- **Claude Code:** `.claude-plugin/` points to
+  `hooks/claude-codex-hooks.json` and reuses the same `skills/` and script.
+- **Cursor:** `.cursor-plugin/` points to `hooks/cursor-hooks.json` and reuses
+  the same `skills/` tree and script.
+- **Devin CLI:** `.devin-plugin/` packages the same `skills/` tree as a Devin
+  plugin.
+- **OpenCode:** `.opencode/plugins/agent-devkit.js` registers the canonical
+  `skills/` tree and bootstraps `using-devkit` through OpenCode's plugin API.
+
+The target project, not this source repository, owns its `AGENTS.md` and
+`.agents/skills/` installation files.
+
+This repo also exposes the Codex plugin through the repo-scoped marketplace at
+`.agents/plugins/marketplace.json`. Users can install it directly from GitHub:
+
+```bash
+codex plugin marketplace add asta-nguyen/agent-devkit --ref main
+codex plugin add agent-devkit@agent-devkit
+```
+
+Use `codex plugin marketplace upgrade agent-devkit` after pushing updates, then
+start a new Codex thread to load the new plugin version.
+
+Claude Code users can install the same plugin from the Claude marketplace:
+
+```bash
+claude plugin marketplace add asta-nguyen/agent-devkit
+claude plugin install agent-devkit@agent-devkit
+```
+
+Refresh it after pushing updates with `claude plugin marketplace update
+agent-devkit`, then run `/reload-plugins` in Claude Code.
+
+Cursor users can import the repository through a Cursor team marketplace, or
+test it locally by placing this repository under
+`~/.cursor/plugins/local/agent-devkit` and reloading the Cursor window.
+
+Devin CLI users can install the plugin directly from GitHub:
+
+```bash
+devin plugins install asta-nguyen/agent-devkit
+```
+
+OpenCode uses its own plugin install. In the target project's `opencode.json`,
+add the Git-backed plugin:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    "agent-devkit@git+https://github.com/asta-nguyen/agent-devkit.git"
+  ]
+}
+```
+
+Restart OpenCode after changing the config. The plugin registers the bundled
+skills and injects `using-devkit` into the first user message.
+
 For a project that discovers repository-local skills from `.agents/skills`,
 run this from the target project and replace the source path with this clone:
 
@@ -69,6 +135,7 @@ Start a fresh agent session after copying so its skill list is reloaded.
 The shortest routing guide is:
 
 ```text
+using-devkit                          # choose the right workflow skill
 setup-codebase                         # first visit to a repo missing context
 setup-openez                           # recommended semantic index for non-trivial repos
 read-codebase-context                  # understand code before changing it
@@ -99,6 +166,7 @@ the workflow itself.
 
 | Skill | Purpose |
 |---|---|
+| `using-devkit` | Route a task to the correct devkit workflow before editing. |
 | `setup-codebase` | Create missing `AGENTS.md`, `CLAUDE.md`, and `docs/llm/` skeleton. Run once per repo. |
 | `setup-openez` | Install, initialize, index, and verify OpenEZ MCP connection for a repository. |
 | `read-codebase-context` | Query OpenEZ and trace code paths. Used before feature work or wiki generation. |
@@ -112,7 +180,7 @@ the workflow itself.
 | `plan-feature` | Save an approved architectural plan under `docs/agent-devkit/plans/` with bite-sized, verifiable tasks. |
 | `estimate-feature` | Optionally estimate every completed plan task in AI-assisted engineering hours. |
 | `implement-task` | Execute an approved plan: trace code, make the smallest change, verify, then flag wiki coverage. |
-| `systematic-debugging` | Find root cause before fixing. Four phases: investigate → analyze → hypothesize → implement. |
+| `systematic-debugging` | Find root cause, classify the bug, define verification, then fix bounded bugs or hand architectural bugs off for design. |
 | `review-and-verify` | Iron Law: no completion claims without fresh evidence. Diff review, code review reception, red flags. |
 
 ### Wiki lifecycle
@@ -167,9 +235,12 @@ document-wiki             → refresh documentation for the changed feature
 ### 3. Debug a bug
 
 ```
-systematic-debugging      → investigate root cause, fix, regression test
-  ↓
-review-and-verify         → verify fix, check for regressions
+systematic-debugging      → investigate and classify
+  ├─ Spike                → report evidence and stop
+  ├─ Architectural        → brainstorm-feature → plan-feature
+  └─ Bounded              → verify plan → regression test → fix
+                               ↓
+                            review-and-verify
 ```
 
 ### 4. Document an existing app

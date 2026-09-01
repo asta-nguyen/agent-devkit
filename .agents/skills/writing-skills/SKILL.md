@@ -1,12 +1,14 @@
 ---
 name: writing-skills
-description: Use when creating or editing a skill for AI agents — defining a repeatable workflow, technique, or discipline. Covers structure, discovery optimization, anti-patterns, and quality checks.
+description: Use when creating, editing, or improving a SKILL.md for AI agents. Triggers: "write a skill", "skill template", "skill structure", "skill description", "skill discovery", "SDO", "skill quality", or fixing a skill that agents ignore or mis-trigger.
 ---
 
 # Writing Skills
 
 A skill is a reusable playbook that teaches an agent how to execute a
-repeatable process. Skills are not narratives or one-off solutions.
+repeatable process. Skills are not narratives or one-off solutions. A skill
+succeeds only when the right agent picks it up for the right situation and
+follows it faithfully under pressure.
 
 ## When to create a skill
 
@@ -44,11 +46,11 @@ Step-by-step instructions or before/after comparison.
 ## Quick reference
 Table or bullets for scanning.
 
-## Red flags (if discipline skill)
-Table of rationalizations and reality.
-
 ## Common mistakes
 What goes wrong + fixes.
+
+## Red flags (if discipline skill)
+Table of rationalizations and reality. Keep this section last.
 ```
 
 ## Skill Discovery Optimization (SDO)
@@ -135,6 +137,9 @@ Skills load into agent context. Every token counts.
 - Compress examples to minimal viable illustration
 - Don't explain what's obvious from the command (`--help` exists)
 
+This authoring reference exceeds 500 words because it owns the repository's
+complete structure, discovery, discipline, and quality contract.
+
 ## Quality checklist
 
 Before deploying a skill:
@@ -150,3 +155,20 @@ Before deploying a skill:
 - [ ] No narrative storytelling
 - [ ] Supporting files only for heavy reference or reusable tools
 - [ ] Under 500 words (or justified exception)
+
+## Common mistakes
+
+| Mistake | Fix |
+|---|---|
+| No keywords an agent would search | Add error strings, symptoms, synonyms, and tool names throughout. |
+| Prohibition list for a shape problem | State what the output IS (positive recipe), not just what to avoid. |
+
+## Red flags
+
+| Thought | Reality |
+|---|---|
+| "The description should explain what the skill does" | The description is a trigger filter. Explaining the workflow makes agents follow the shortcut and skip the skill body. |
+| "A longer skill is more helpful" | Skills load into context. Bloat pushes out the user's code. Trim to the minimum that survives pressure. |
+| "I'll add a `unless it makes sense` exemption" | Nuance clauses reopen negotiation under pressure. Express the real exception as a conditional on an observable predicate. |
+| "One example per language is clearer" | Multi-language dilution lowers every example's quality. Pick one excellent example. |
+| "This is obvious, agents will just know" | If it were obvious, the skill wouldn't exist. Make the rule explicit and forbid the workaround. |

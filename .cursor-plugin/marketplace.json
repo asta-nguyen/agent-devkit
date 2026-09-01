@@ -1,0 +1,18 @@
+{
+  "name": "agent-devkit",
+  "owner": {
+    "name": "asta-nguyen"
+  },
+  "metadata": {
+    "description": "Prompt-driven coding workflows for AI coding agents."
+  },
+  "plugins": [
+    {
+      "name": "agent-devkit",
+      "source": "./",
+      "description": "Prompt-driven coding workflows and session bootstrap.",
+      "version": "0.2.0",
+      "category": "Productivity"
+    }
+  ]
+}
