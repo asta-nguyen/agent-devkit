@@ -1,6 +1,6 @@
 ---
 name: using-devkit
-description: Use when starting work in a repo that has the agent-devkit skills installed, or when deciding which devkit skill to run for a task. Triggers: "which skill", "devkit workflow", "skill routing", "what should I run first", "skip the skill", "just a quick fix", or unfamiliarity with the devkit skill set.
+description: Use at the start of every task in a repo with agent-devkit installed, including feature work, bug fixes, reviews, documentation, estimates, or unfamiliar requests. Also use when deciding which devkit skill to run.
 ---
 
 # Using Devkit

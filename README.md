@@ -31,6 +31,72 @@ the `skills/<name>/` folder visible to the agent's skill loader, then invoke
 the skill by name or ask for the task it describes. `SKILL.md` is the required
 file; `agents/openai.yaml` only adds Codex/OpenAI UI metadata.
 
+### Harness packaging
+
+This repository is the source tree for developing skills. Keep canonical skill
+files under `skills/`; do not add an installation mirror under
+`.agents/skills/`.
+
+- **Codex:** `.codex-plugin/` and `hooks/hooks.json` provide the optional plugin
+  integration and `SessionStart` bootstrap.
+- **Claude Code:** `.claude-plugin/` points to
+  `hooks/claude-codex-hooks.json` and reuses the same `skills/` and script.
+- **Cursor:** `.cursor-plugin/` points to `hooks/cursor-hooks.json` and reuses
+  the same `skills/` tree and script.
+- **Devin CLI:** `.devin-plugin/` packages the same `skills/` tree as a Devin
+  plugin.
+- **OpenCode:** `.opencode/plugins/agent-devkit.js` registers the canonical
+  `skills/` tree and bootstraps `using-devkit` through OpenCode's plugin API.
+
+The target project, not this source repository, owns its `AGENTS.md` and
+`.agents/skills/` installation files.
+
+This repo also exposes the Codex plugin through the repo-scoped marketplace at
+`.agents/plugins/marketplace.json`. Users can install it directly from GitHub:
+
+```bash
+codex plugin marketplace add asta-nguyen/agent-devkit --ref main
+codex plugin add agent-devkit@agent-devkit
+```
+
+Use `codex plugin marketplace upgrade agent-devkit` after pushing updates, then
+start a new Codex thread to load the new plugin version.
+
+Claude Code users can install the same plugin from the Claude marketplace:
+
+```bash
+claude plugin marketplace add asta-nguyen/agent-devkit
+claude plugin install agent-devkit@agent-devkit
+```
+
+Refresh it after pushing updates with `claude plugin marketplace update
+agent-devkit`, then run `/reload-plugins` in Claude Code.
+
+Cursor users can import the repository through a Cursor team marketplace, or
+test it locally by placing this repository under
+`~/.cursor/plugins/local/agent-devkit` and reloading the Cursor window.
+
+Devin CLI users can install the plugin directly from GitHub:
+
+```bash
+devin plugins install asta-nguyen/agent-devkit
+```
+
+OpenCode uses its own plugin install. In the target project's `opencode.json`,
+add the Git-backed plugin:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    "agent-devkit@git+https://github.com/asta-nguyen/agent-devkit.git"
+  ]
+}
+```
+
+Restart OpenCode after changing the config. The plugin registers the bundled
+skills and injects `using-devkit` into the first user message.
+
 For a project that discovers repository-local skills from `.agents/skills`,
 run this from the target project and replace the source path with this clone:
 

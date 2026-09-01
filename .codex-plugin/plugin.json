@@ -1,0 +1,18 @@
+{
+  "name": "agent-devkit",
+  "version": "0.2.0",
+  "description": "Prompt-driven coding workflows and session bootstrap.",
+  "author": {
+    "name": "asta-nguyen"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "agent-devkit",
+    "shortDescription": "Coding workflow skills",
+    "longDescription": "Prompt-driven coding workflows with a session bootstrap.",
+    "developerName": "agent-devkit",
+    "category": "Productivity",
+    "capabilities": ["Write"],
+    "defaultPrompt": ["Use agent-devkit to route this task before editing."]
+  }
+}

@@ -53,7 +53,24 @@ npx skills add asta-nguyen/agent-devkit --skill estimate-feature -a claude-code
 > **Note:** The GitHub repository is `asta-nguyen/agent-devkit` (not
 > `asta/agent-devkit`).
 
-### Option 2: Manual copy (for projects that discover `.agents/skills`)
+### Option 2: Native plugin/config packaging
+
+This repository includes native packaging for the supported clients:
+
+- **Codex:** install with `codex plugin marketplace add` and
+  `codex plugin add`.
+- **Claude Code:** install with `claude plugin marketplace add` and
+  `claude plugin install`.
+- **Cursor:** import `.cursor-plugin/marketplace.json` through a team
+  marketplace, or test locally from `~/.cursor/plugins/local/`.
+- **Devin CLI:** install with `devin plugins install`.
+- **OpenCode:** add the Git-backed plugin to the target project's
+  `opencode.json`; `.opencode/plugins/agent-devkit.js` registers the canonical
+  `skills/` tree and bootstraps `using-devkit`.
+
+Each client reuses the canonical Markdown skills under `skills/`.
+
+### Option 3: Manual copy (for projects that discover `.agents/skills`)
 
 ```bash
 # From the target project directory:
@@ -62,7 +79,7 @@ cp -R /path/to/agent-devkit/skills/. .agents/skills/
 find .agents/skills -name SKILL.md -print
 ```
 
-### Option 3: OpenEZ (recommended for non-trivial repositories)
+### Option 4: OpenEZ (recommended for non-trivial repositories)
 
 OpenEZ is a local code index that provides semantic search, graph traversal,
 and caller analysis through MCP. It helps agents find symbols, callers,
@@ -582,8 +599,9 @@ complexity.
 ### Q: Which agents can use these skills?
 
 Skills are Markdown playbooks. Any agent that can read `SKILL.md` from
-`.agents/skills/` or through the skills CLI can use them. They have been tested
-with Claude Code; Codex and OpenCode can also use them through `.agents/skills/`.
+`.agents/skills/`, a native plugin/config entry, or the skills CLI can use them.
+They have been tested with Claude Code, Codex, OpenCode, Cursor, and Devin
+through their supported packaging paths.
 
 ### Q: Is OpenEZ required?
 
