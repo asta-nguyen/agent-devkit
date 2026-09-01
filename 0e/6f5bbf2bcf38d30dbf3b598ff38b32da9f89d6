@@ -1,0 +1,74 @@
+.opencode/plugins/agent-devkit.js
+  s_880e3e5b64ec87::t_98b9ecb327ace4 36,62
+skills/estimate-feature/SKILL.md
+  s_880e3e5b64ec87::t_0709f8a111e9a6 18-19
+.devin-plugin/plugin.json
+  s_880e3e5b64ec87::t_0709f8a111e9a6 3
+.codex-plugin/plugin.json
+  s_880e3e5b64ec87::t_0709f8a111e9a6 3
+.opencode/INSTALL.md
+  s_880e3e5b64ec87::t_0709f8a111e9a6 24-25
+README.md
+  s_880e3e5b64ec87::t_0709f8a111e9a6 99-100,126
+.claude-plugin/marketplace.json
+  s_880e3e5b64ec87::t_0709f8a111e9a6 12
+.cursor-plugin/marketplace.json
+  s_880e3e5b64ec87::t_0709f8a111e9a6 14
+.cursor-plugin/plugin.json
+  s_880e3e5b64ec87::t_0709f8a111e9a6 3
+skills/read-codebase-context/SKILL.md
+  s_880e3e5b64ec87::t_0709f8a111e9a6 3
+skills/systematic-debugging/SKILL.md
+  s_880e3e5b64ec87::t_0709f8a111e9a6 3,128-129
+tests/plugin-smoke.mjs
+  s_880e3e5b64ec87::t_10e561afb46760 3,39-47,49
+  s_880e3e5b64ec87::t_ec87dbee9b4145 4-5,8,11-12,18,48,54,56
+  s_880e3e5b64ec87::t_750a3841d90979 50-53,55
+  s_880e3e5b64ec87::t_1c8642c5e5f1ec 1-2,6-7,9-10,13-17,19-38,57-58
+hooks/session-start.js
+  s_880e3e5b64ec87::t_98b9ecb327ace4 12-14,21
+  s_880e3e5b64ec87::t_10e561afb46760 15-20
+skills/plan-feature/SKILL.md
+  s_880e3e5b64ec87::t_0709f8a111e9a6 3,16-17,66-67
+package.json
+  s_880e3e5b64ec87::t_1c8642c5e5f1ec 6-9
+  s_880e3e5b64ec87::t_0709f8a111e9a6 3
+skills/using-devkit/SKILL.md
+  s_880e3e5b64ec87::t_0709f8a111e9a6 3,10-15
+  s_a8652eb37d150a::t_50bd609e63ee0f 16
+skills/implement-task/SKILL.md
+  s_880e3e5b64ec87::t_0709f8a111e9a6 3,12,53-54,99-100,103
+  s_880e3e5b64ec87::t_10e561afb46760 13-14,104-105
+.claude-plugin/plugin.json
+  s_880e3e5b64ec87::t_0709f8a111e9a6 3
+GUIDE.md
+  s_880e3e5b64ec87::t_0709f8a111e9a6 600-602
+CHANGELOG.md
+  s_880e3e5b64ec87::t_0709f8a111e9a6 3-16
+CONTRIBUTING.md
+  s_880e3e5b64ec87::t_0709f8a111e9a6 4-5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "0e6f5bbf2bcf38d30dbf3b598ff38b32da9f89d6",
+  "prompts": {},
+  "sessions": {
+    "s_880e3e5b64ec87": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a04d1a-fd1c-7a42-b934-c4f22ee90ddc",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    },
+    "s_a8652eb37d150a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a05b4a-9531-7d42-97af-5f0bf7ed94d2",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
