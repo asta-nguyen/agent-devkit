@@ -1,0 +1,70 @@
+.cursor-plugin/plugin.json
+  s_880e3e5b64ec87::t_52a0a9456e7c6d 1-2,4-5,7,10
+  s_880e3e5b64ec87::t_7cb0efcd6b25d0 3,6,8
+  s_880e3e5b64ec87::t_0fbe6c557289a9 9
+.codex-plugin/plugin.json
+  s_880e3e5b64ec87::t_7cb0efcd6b25d0 3,6
+  s_880e3e5b64ec87::t_25f7a3d9261071 1-2,4-5,7-14,17-18
+  s_880e3e5b64ec87::t_3d974f7fe4a89d 15-16
+hooks/hooks.json
+  s_880e3e5b64ec87::t_0fbe6c557289a9 3,5-13
+  s_880e3e5b64ec87::t_962b3c7e890c57 1-2,4,14-17
+.claude-plugin/marketplace.json
+  s_880e3e5b64ec87::t_7cb0efcd6b25d0 5,12
+  s_880e3e5b64ec87::t_f6fa08efdfbb18 1-2,4,6-11,13-16
+  s_880e3e5b64ec87::t_0a0756013f531f 3
+.claude-plugin/plugin.json
+  s_880e3e5b64ec87::t_f6fa08efdfbb18 1-2,4-5,7-10
+  s_880e3e5b64ec87::t_7cb0efcd6b25d0 3,6
+.cursor-plugin/marketplace.json
+  s_880e3e5b64ec87::t_52a0a9456e7c6d 1-3,5-13,15-18
+  s_880e3e5b64ec87::t_7cb0efcd6b25d0 4,14
+.agents/plugins/marketplace.json
+  s_880e3e5b64ec87::t_9b1cbb8e44d52b 1-20
+skills/using-devkit/SKILL.md
+  s_880e3e5b64ec87::t_25f7a3d9261071 3
+GUIDE.md
+  s_880e3e5b64ec87::t_c976101148ddba 56-66,70-72,602-604
+  s_880e3e5b64ec87::t_cd9e8ee36971b3 73,82
+  s_880e3e5b64ec87::t_a48feeb8389c00 67-69
+.opencode/INSTALL.md
+  s_880e3e5b64ec87::t_a48feeb8389c00 1-23
+hooks/session-start.js
+  s_880e3e5b64ec87::t_25f7a3d9261071 1-2,6,8-22
+  s_880e3e5b64ec87::t_14e6f5f7a73032 3-5,7
+.devin-plugin/plugin.json
+  s_880e3e5b64ec87::t_52a0a9456e7c6d 1-2,4-5,7-9
+  s_880e3e5b64ec87::t_7cb0efcd6b25d0 3,6
+README.md
+  s_880e3e5b64ec87::t_25f7a3d9261071 35,39,50,53
+  s_880e3e5b64ec87::t_ae0edf41c81949 34,36-38,51-52
+  s_880e3e5b64ec87::t_52a0a9456e7c6d 46-47,74-84
+  s_880e3e5b64ec87::t_90e8ead52a84cb 40-45
+  s_880e3e5b64ec87::t_9b1cbb8e44d52b 54-63,99
+  s_880e3e5b64ec87::t_f6fa08efdfbb18 64-73
+  s_880e3e5b64ec87::t_a48feeb8389c00 48-49,85-98
+hooks/cursor-hooks.json
+  s_880e3e5b64ec87::t_0fbe6c557289a9 1-11
+package.json
+  s_880e3e5b64ec87::t_a48feeb8389c00 4-6
+.opencode/plugins/agent-devkit.js
+  s_880e3e5b64ec87::t_a48feeb8389c00 1-72
+hooks/claude-codex-hooks.json
+  s_880e3e5b64ec87::t_25f7a3d9261071 1-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "688a6f51806cf12c520f53e7e300d1c199859bf4",
+  "prompts": {},
+  "sessions": {
+    "s_880e3e5b64ec87": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a04d1a-fd1c-7a42-b934-c4f22ee90ddc",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
