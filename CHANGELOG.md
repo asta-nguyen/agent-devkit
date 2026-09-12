@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.1] - 2026-09-12
+
+### Changed
+
+- Deepened `brainstorm-feature` clarification with an adaptive decision tree,
+  recommended answers with trade-offs, and follow-up handling for vague or
+  contradictory decisions.
+
+### Documentation
+
+- Added acceptance scenario 24 for deep feature clarification.
+
 ## [0.4.0] - 2026-09-01
 
 ### Added
