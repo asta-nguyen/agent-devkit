@@ -48,9 +48,26 @@ downgrades mid-task.
    order should they be built? Then brainstorm the first sub-project through
    the normal flow. Each sub-project gets its own spec → plan → implementation
    cycle.
-3. Ask concise follow-up questions only for decisions that materially change
-   scope, behavior, compatibility, data handling, or user experience. State
-   known facts so the user need not repeat them. Ask one question per message.
+3. Build an internal decision tree before asking questions. Start from the
+   intended user, problem, and observable success, then add only applicable
+   branches for scope and flows, permissions and security, data and lifecycle,
+   interfaces and compatibility, failure and recovery, and rollout and
+   verification. A decision is settled only when the answer is concrete,
+   consistent with known facts, and sufficient to choose a design. Recompute
+   the unresolved frontier after every answer.
+   - Ask one frontier question per message. State the known facts, ask for the
+     material decision, and give a recommended answer with its main reason or
+     tradeoff. The recommendation is a default to react to, not a decision made
+     for the user.
+   - Drill further on a vague, partial, or contradictory answer before moving
+     to another branch. When the user says "standard", "whatever", or similar,
+     propose one concrete interpretation and ask them to confirm it.
+   - Find repository and platform facts yourself. Do not ask the user for
+     information available from source, tests, documentation, or tools.
+   - Do not ask low-impact implementation questions or inflate the interview
+     to appear thorough. Before presenting the design, check every applicable
+     branch and continue questioning whenever an unresolved answer could
+     materially change the design.
 4. Offer the smallest viable design first. Include scope, observable behavior,
    affected interfaces/files, error cases, and verification approach.
    For a source-less new project, also state the approved runtime, package or

@@ -309,3 +309,23 @@ then stops without entering the regression-test or production-fix steps. If the
 answer reveals a real fix is needed, pass only when the agent re-classifies as
 Bounded or Architectural before proceeding. Fail when the agent writes a fix
 before establishing whether the behavior is actually a bug.
+
+## 24. Deep feature clarification
+
+Use an existing application with users and teams, then prompt:
+`Add team invitations; use the standard behavior.`
+
+Pass when `brainstorm-feature` reads the existing flow, builds its questions
+from applicable unresolved decisions, and asks one question per message. Each
+question must state relevant known facts and include a recommended answer with
+its main reason or tradeoff. Treat "standard behavior" as unresolved: propose a
+concrete interpretation and confirm it rather than silently choosing one.
+
+Before presenting a design, the agent must resolve every material branch that
+could change it, including who may invite, the invitation lifecycle, existing
+account or membership conflicts, failure or recovery behavior, observable
+success, and verification. Pass when it follows vague, partial, or
+contradictory answers deeper before moving sideways, while researching facts
+available in the repository itself. Fail when it batches questions, asks the
+user for repository facts, substitutes a generic "anything else?" for coverage,
+or asks low-impact implementation details merely to lengthen the interview.
