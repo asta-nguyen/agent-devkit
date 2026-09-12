@@ -1,0 +1,47 @@
+RELEASE_DESCRIPTION.md
+  s_df5f73877f7161::t_5591329ab689e0 1
+  s_df5f73877f7161::t_d2f328dbbada39 3-17,21-24
+  s_880e3e5b64ec87::t_0d2339d185ea64 2,18-20
+tests/plugin-smoke.mjs
+  s_df5f73877f7161::t_935b3535f1c174 48,54,56
+.codex-plugin/plugin.json
+  s_df5f73877f7161::t_935b3535f1c174 3
+package.json
+  s_df5f73877f7161::t_935b3535f1c174 3
+.claude-plugin/marketplace.json
+  s_df5f73877f7161::t_935b3535f1c174 12
+.devin-plugin/plugin.json
+  s_df5f73877f7161::t_935b3535f1c174 3
+.cursor-plugin/marketplace.json
+  s_df5f73877f7161::t_935b3535f1c174 14
+.cursor-plugin/plugin.json
+  s_df5f73877f7161::t_935b3535f1c174 3
+.claude-plugin/plugin.json
+  s_df5f73877f7161::t_935b3535f1c174 3
+CHANGELOG.md
+  s_df5f73877f7161::t_935b3535f1c174 3-14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "87044d7eb55af6ed0e8fee505c52bdd0212c2e01",
+  "prompts": {},
+  "sessions": {
+    "s_880e3e5b64ec87": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a04d1a-fd1c-7a42-b934-c4f22ee90ddc",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    },
+    "s_df5f73877f7161": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a094a4-2444-7f11-b263-586655e8a045",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
