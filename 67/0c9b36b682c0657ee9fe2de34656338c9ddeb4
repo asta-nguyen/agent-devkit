@@ -1,0 +1,21 @@
+EVALS.md
+  s_df5f73877f7161::t_50593f1519724a 312-331
+skills/brainstorm-feature/SKILL.md
+  s_df5f73877f7161::t_bdf7271b82c439 51-70
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "670c9b36b682c0657ee9fe2de34656338c9ddeb4",
+  "prompts": {},
+  "sessions": {
+    "s_df5f73877f7161": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a094a4-2444-7f11-b263-586655e8a045",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
