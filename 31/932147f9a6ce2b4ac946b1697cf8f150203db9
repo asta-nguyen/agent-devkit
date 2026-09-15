@@ -1,0 +1,23 @@
+README.md
+  s_7a39cca42b3768::t_06ebe75d21496e 3-4
+  s_7a39cca42b3768::t_39d2999c75ee30 5-23,28-31
+README.vi.md
+  s_7a39cca42b3768::t_06ebe75d21496e 1-4,7,25-27,31-254
+  s_7a39cca42b3768::t_39d2999c75ee30 5-6,8-24,28-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "31932147f9a6ce2b4ac946b1697cf8f150203db9",
+  "prompts": {},
+  "sessions": {
+    "s_7a39cca42b3768": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0a31e-a2ea-7e70-bd10-fda3126c9384",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
