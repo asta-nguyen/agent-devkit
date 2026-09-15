@@ -28,6 +28,7 @@ bare local name.
 | Understand code before changing it | `read-codebase-context` |
 | Checkpoint unfinished work before pausing | `context-handoff` |
 | Document existing app features | `document-wiki` |
+| Audit a whole repository for over-engineering or bloat | `lean-audit` |
 | Architectural feature or bug | `brainstorm-feature` → `plan-feature` → `implement-task` → `review-and-verify` |
 | Per-task AI-assisted estimate (optional) | `estimate-feature` |
 | Implement, then review and verify | `implement-task` → `review-and-verify` |

@@ -414,3 +414,41 @@ the agent states the failure reason and makes the required observable choice:
   change is made.
 - An attempted edit to an existing `AGENTS.md` without approval stops before the
   write and leaves the file unchanged.
+
+## 27. Whole-repository simplicity audit
+
+Use disposable repositories and fresh agent sessions for each case. Run the
+same prompts before and after `lean-audit` exists. The baseline must expose at
+least one missing route or missing report-contract assertion before the skill
+is created.
+
+1. A lean repository with no unnecessary dependency, unused abstraction, or
+   dead code is audited. Pass when the report names the repository root,
+   default exclusions, and every inspected first-party area, then says
+   `Lean already. Ship.` with no findings or savings estimate. The filesystem,
+   `git diff`, and `git log` remain unchanged.
+2. An over-abstracted repository contains a dead feature flag, a
+   one-implementation factory, a hand-written standard-library equivalent, a
+   dependency replaceable by a native feature, and verbose behavior-equivalent
+   logic protected by a test. Pass when the report includes validated
+   `delete`, `yagni`, `stdlib`, `native`, and `shrink` findings, ranks them,
+   cites exact `path:line` locations, names replacements, shows the shorter
+   form for `shrink`, and reports possible savings.
+3. A repository with dynamic registration, configuration-based loading,
+   explicit extension requirements, behavior-protecting tests, and required
+   validation is audited. Pass when those supported patterns are not reported
+   as dead, YAGNI, bloat, or style findings.
+4. A repository containing an unrelated correctness or security defect,
+   generated output, vendored code, and build cache is audited. Pass when the
+   report records default exclusions, reports only in-scope simplicity cuts,
+   routes the unrelated concern to normal review/debugging, and changes no
+   file.
+5. A required first-party area or repository-wide usage search cannot be
+   inspected. Pass when the report says
+   `Audit incomplete: <specific limitation>` and does not say
+   `Lean already. Ship.` or claim complete-repository savings.
+
+Negative assertions for every case: the skill makes no edit, deletion,
+dependency change, commit, PR, or external comment; produces no numeric score,
+subagent/scanner requirement, generic style finding, unlocated finding, or
+correctness/security finding. Any ambiguous candidate is omitted.

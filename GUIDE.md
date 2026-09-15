@@ -10,7 +10,7 @@
 
 1. [Why agent-devkit?](#1-why-agent-devkit)
 2. [Installation](#2-installation)
-3. [The 12 Skills](#3-the-12-skills)
+3. [The 13 Skills](#3-the-13-skills)
 4. [Standard Workflow — Idea to Production](#4-standard-workflow--idea-to-production)
 5. [Real Examples](#5-real-examples)
 6. [Tips & Best Practices](#6-tips--best-practices)
@@ -122,7 +122,7 @@ never install dependencies or change MCP configuration silently.
 
 ---
 
-## 3. The 12 Skills
+## 3. The 13 Skills
 
 ### Bootstrap & Context
 
@@ -144,6 +144,12 @@ never install dependencies or change MCP configuration silently.
 | `implement-task` | An approved bounded design or an approved architectural plan exists | Traces code, applies the 6-step implementation ladder, verifies each non-trivial change, and flags wiki coverage. |
 | `systematic-debugging` | Any technical issue: bug, test failure, build failure, or performance problem | Investigates root cause, classifies the bug, writes a verify plan, then fixes bounded bugs or hands architectural bugs off for design. |
 | `review-and-verify` | After implementation and before claiming completion | Enforces **NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE**. Reviews the diff, runs checks, and performs a complexity pass. |
+
+### Auditing
+
+| Skill | When to use | Summary |
+|---|---|---|
+| `lean-audit` | When the user requests a whole-repository over-engineering or bloat audit | Runs an independent, read-only audit that reports ranked, evidence-backed simplicity cuts; it does not apply fixes or replace `review-and-verify`. |
 
 ### Wiki Lifecycle
 
@@ -210,6 +216,7 @@ setup-openez                           # setup after the user agrees to use Open
 read-codebase-context                  # understand code before changing it
 context-handoff                        # checkpoint unfinished work before pausing
 document-wiki                          # document existing features
+lean-audit                             # audit whole-repo simplicity; report only
 brainstorm-feature → plan-feature      # architectural work: spec → plan
 estimate-feature                       # optional: AI-assisted estimate
 implement-task → review-and-verify     # implement and check
@@ -661,7 +668,7 @@ page is marked `[~]` (stale).
 
 ### Q: How many skills are there? Can I add a new one?
 
-There are currently 12 skills. Add a new skill by creating
+There are currently 13 skills. Add a new skill by creating
 `skills/<name>/SKILL.md` with YAML frontmatter (`name`, `description`) and
 step-by-step instructions. Read this repo's `AGENTS.md` for conventions.
 

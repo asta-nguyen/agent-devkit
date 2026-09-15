@@ -137,6 +137,7 @@ setup-openez                           # recommended semantic index for non-triv
 read-codebase-context                  # understand code before changing it
 context-handoff                        # checkpoint unfinished work before pausing
 document-wiki                          # document existing app features
+lean-audit                             # audit whole-repo simplicity; report only
 brainstorm-feature → plan-feature      # architectural work: save spec then plan
 estimate-feature                       # optional per-task AI-assisted estimate
 implement-task → review-and-verify     # review, fix blockers once, review again
@@ -178,6 +179,12 @@ the workflow itself.
 | `implement-task` | Execute an approved plan: trace code, make the smallest change, verify, then flag wiki coverage. |
 | `systematic-debugging` | Find root cause, classify the bug, define verification, then fix bounded bugs or hand architectural bugs off for design. |
 | `review-and-verify` | Iron Law: no completion claims without fresh evidence. Diff review, code review reception, red flags. |
+
+### Auditing
+
+| Skill | Purpose |
+|---|---|
+| `lean-audit` | Audit a whole repository for over-engineering and bloat; report validated simplicity cuts without applying fixes. |
 
 ### Wiki lifecycle
 

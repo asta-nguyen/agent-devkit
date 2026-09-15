@@ -45,14 +45,14 @@ const versionFiles = [
   ".devin-plugin/plugin.json",
 ];
 for (const file of versionFiles) {
-  assert.equal(JSON.parse(fs.readFileSync(path.join(repoRoot, file), "utf8")).version, "0.4.2", file);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(repoRoot, file), "utf8")).version, "0.4.3", file);
 }
 for (const file of [
   ".claude-plugin/marketplace.json",
   ".cursor-plugin/marketplace.json",
 ]) {
-  assert.equal(JSON.parse(fs.readFileSync(path.join(repoRoot, file), "utf8")).plugins[0].version, "0.4.2", file);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(repoRoot, file), "utf8")).plugins[0].version, "0.4.3", file);
 }
-assert.match(fs.readFileSync(path.join(repoRoot, "CHANGELOG.md"), "utf8"), /^## \[0\.4\.2\] - 2026-09-15/m);
+assert.match(fs.readFileSync(path.join(repoRoot, "CHANGELOG.md"), "utf8"), /^## \[0\.4\.3\] - 2026-09-15/m);
 
 console.log("plugin smoke checks passed");

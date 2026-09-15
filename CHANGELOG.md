@@ -2,16 +2,30 @@
 
 ## [Unreleased]
 
+## [0.4.3] - 2026-09-15
+
 ### Changed
 
 - Capture missing repository conventions from declared configuration and
   repeated code, with explicit approval, provenance, and one-source storage.
 - Enforce matching conventions during implementation and review, including
   scoped precedence and `path:line` evidence for violations.
+- Add `lean-audit`, a standalone read-only whole-repository simplicity audit
+  with ranked, evidence-backed `delete`, `stdlib`, `native`, `yagni`, and
+  `shrink` findings.
+- Carry approved global constraints and edge cases from brainstorming through
+  plans, implementation, and verification.
+- Allow session-only technical rulings for reversible, behavior-equivalent
+  implementation details while preserving approval gates for consequential
+  decisions.
+- Require precise review evidence and a failing `cannot verify` verdict when
+  required evidence is unavailable.
 
 ### Documentation
 
+- Added acceptance scenario 25 for workflow state and review evidence.
 - Added acceptance scenario 26 for convention capture and enforcement.
+- Added acceptance scenario 27 for whole-repository simplicity audits.
 
 ## [0.4.2] - 2026-09-15
 

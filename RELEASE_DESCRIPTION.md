@@ -1,7 +1,7 @@
-# agent-devkit 0.4.2
+# agent-devkit 0.4.3
 
-This release makes workflow state and review evidence explicit across
-brainstorming, planning, implementation, and verification.
+This release makes repository conventions, workflow state, review evidence,
+and whole-repository simplicity audits explicit across the coding workflow.
 
 ## Changes
 
@@ -14,10 +14,15 @@ brainstorming, planning, implementation, and verification.
 - Calibrates spec and plan self-review against behavior, scope, correctness,
   and execution rather than stylistic preferences.
 - Adds recommendation-depth and adaptive edge-case coverage to brainstorming.
-- Adds `EVALS.md` scenario 25 for workflow state and review evidence.
+- Captures repository conventions from local evidence with approval,
+  provenance, and scoped enforcement.
+- Adds standalone `lean-audit` for report-only, evidence-backed simplicity
+  findings.
+- Adds `EVALS.md` scenarios 25, 26, and 27 for the workflow improvements.
 
 ## Verification
 
 - `npm test` passed with the plugin smoke checks.
 - `git diff --check` passed.
-- Scenario 25 passed in fresh sessions against a disposable repository.
+- Scenarios 25, 26, and 27 passed in fresh sessions against disposable
+  repositories.
