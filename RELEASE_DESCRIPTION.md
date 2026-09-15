@@ -1,24 +1,23 @@
-# agent-devkit 0.4.1
+# agent-devkit 0.4.2
 
-This release improves how `brainstorm-feature` clarifies ambiguous work before
-design and implementation.
+This release makes workflow state and review evidence explicit across
+brainstorming, planning, implementation, and verification.
 
 ## Changes
 
-- Builds an internal decision tree from the intended user, problem, success
-  criteria, scope, permissions, data lifecycle, interfaces, failure recovery,
-  rollout, and verification needs.
-- Asks one material question at a time, with known facts and a recommended
-  answer plus its main trade-off.
-- Follows vague, partial, or contradictory answers with a concrete
-  clarification instead of silently choosing an interpretation.
-- Avoids asking for repository facts or low-impact implementation details that
-  the agent can discover or that do not affect the design.
-- Adds `EVALS.md` scenario 24 for deep feature clarification.
+- Carries exact cross-task rules into plans through `## Global Constraints`.
+- Maps approved edge cases to implementation tasks and concrete verification.
+- Allows session-only `Ruling R<n>` decisions for reversible,
+  behavior-equivalent implementation details.
+- Requires review findings to cite `path:line` and reports unverifiable
+  requirements as failing `cannot verify` spec gaps.
+- Calibrates spec and plan self-review against behavior, scope, correctness,
+  and execution rather than stylistic preferences.
+- Adds recommendation-depth and adaptive edge-case coverage to brainstorming.
+- Adds `EVALS.md` scenario 25 for workflow state and review evidence.
 
 ## Verification
 
 - `npm test` passed with the plugin smoke checks.
 - `git diff --check` passed.
-- The updated skill was exercised against a disposable repository and produced
-  a concrete recommendation before asking for confirmation.
+- Scenario 25 passed in fresh sessions against a disposable repository.
