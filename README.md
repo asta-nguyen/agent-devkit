@@ -1,22 +1,34 @@
 # agent-devkit
 
-Minimal prompt-driven workflow for giving coding agents a stable repository
-contract and a refreshable LLM-facing codebase wiki.
+[Tiếng Việt](README.vi.md)
+
+Evidence-first, spec-driven workflow toolkit for coding agents — with semantic
+code retrieval, token-aware context flow, and hard review gates.
+
+Turn a vague request into a traceable change:
+
+```text
+retrieve context → capture decisions → write spec/plan → implement → verify
+```
+
+## Core capabilities
+
+| Capability | What it gives the agent |
+|---|---|
+| Semantic / RAG-style code retrieval | Optional OpenEZ semantic search, graph traversal, and caller analysis; direct source remains authoritative. |
+| Spec- and plan-driven delivery | Approved designs, `Global Constraints`, edge-case coverage, and explicit implementation gates. |
+| Token-aware context management | Focused source retrieval, compact handoffs, and evidence instead of dumping the whole repository into context. |
+| Evidence-first verification | Fresh tests/checks, precise `path:line` findings, and failing `cannot verify` gaps when proof is missing. |
+| Convention capture and enforcement | Repository-specific rules with provenance, approval, scoped precedence, and review evidence. |
+| Whole-repository lean audit | Report-only `delete`, `stdlib`, `native`, `yagni`, and `shrink` findings with no auto-fix. |
 
 ## What it does
 
 Coding agents need accurate, up-to-date context to work effectively. This
-project provides a set of prompt-driven skills (Markdown playbooks) that:
-
-1. **Bootstrap** a repository with agent-readable context files (`AGENTS.md`,
-   `CLAUDE.md`, `docs/llm/` skeleton) by following the `setup-codebase` skill.
-2. **Index** the codebase with OpenEZ so agents can trace callers, dependencies,
-   and behavior without guessing.
-3. **Plan and implement** features through a structured brainstorm → plan →
-   implement → verify pipeline.
-4. **Debug** systematically — find root cause before fixing.
-5. **Maintain** an LLM-facing wiki under `docs/llm/` that stays grounded in real
-   source code — never fabricated.
+project provides portable Markdown skills for bootstrapping repository context,
+retrieving code relationships, designing and planning changes, implementing
+with local conventions, debugging root causes, verifying fresh evidence, and
+maintaining a source-grounded LLM wiki.
 
 ## Skills
 
