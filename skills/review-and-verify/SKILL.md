@@ -72,6 +72,20 @@ Review the diff for:
 - **Protected boundaries** — trust-boundary validation, security,
   accessibility, and data-loss prevention remain intact
 
+Compare implementation and fresh evidence with every approved edge case in the
+spec and plan. Report every blocker, non-blocker, spec gap, and complexity
+finding with `path:line` when relevant source exists, the observed problem, and
+why it matters. A bare filename is not actionable evidence.
+
+When required behavior cannot be established from the diff, source, tests, or
+fresh command output, record it under `Spec gaps` as:
+
+```text
+cannot verify <requirement> — needs <specific evidence or command>
+```
+
+An unverifiable required behavior keeps the review status at `fail`.
+
 For wiki changes, also verify: source paths exist, `## Sources` entries are
 real, internal Obsidian wikilinks resolve, `INDEX.md` links resolve, and no
 placeholder text remains.
@@ -148,6 +162,7 @@ full context, violates YAGNI, or conflicts with architectural decisions.
 | "Just this once" | No exceptions |
 | "Fewer lines must be better" | A smaller diff that weakens behavior or clarity is a regression. |
 | "The decision was only in chat" | Chat recall is not durable review evidence; persist behavior decisions before passing. |
+| "The requirement probably works" | If current evidence cannot establish it, report `cannot verify` under `Spec gaps` and fail. |
 | "It is only a bug fix" | A behavior-changing bug fix still requires a wiki-impact classification. |
 
 ## Report

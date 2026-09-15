@@ -56,6 +56,26 @@ description: Use when the user has approved a bounded change or feature plan and
 5. Do not create commits during implementation. Even when the user requests a
    commit, wait until final `review-and-verify` passes.
 
+## Technical rulings
+
+Resolve a choice without user input only when every viable option preserves
+the same observable behavior, fits the approved design, plan, decisions, and
+repository contract, and changes no API, schema, dependency, security
+boundary, scope, or data-loss risk. The choice must be non-destructive and
+reversible wholly within the current task, without migration, data rewrite,
+external contract changes, or caller changes outside the task.
+
+Choose with the implementation ladder and report:
+
+```text
+Ruling R<n>: <choice and concise repository-grounded reason>.
+```
+
+Do not persist a technical ruling in `## Decision Log`; it changes no approved
+requirement and can be re-derived from source. If any condition above fails,
+an approved artifact conflicts, or the action is destructive or irreversible,
+use the user clarification and approval flow below.
+
 ## Clarification decisions
 
 When implementation needs a user answer before it can continue:
@@ -141,4 +161,5 @@ Wiki action: <invoke document-wiki / no update needed / limitation>
 | "The spec was approved, so the plan must be approved" | A required execution-plan gate is separate and must say `Status: approved`. |
 | "The conversation will remember the user's answer" | Restate it now; persist behavior decisions in the active plan/spec or a task-scoped decision file. |
 | "This clarification is small, so approval still holds" | Material behavior, API, schema, security, or scope changes invalidate the old approval. |
+| "Git can undo it, so it is reversible" | A technical ruling must be reversible wholly inside the current task without migration, external contract, or outside-caller changes. |
 | "It is only a bug fix" | A behavior-changing bug fix still requires a wiki-impact classification. |

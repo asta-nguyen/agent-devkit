@@ -1,5 +1,21 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- Carry approved global constraints and edge cases from brainstorming through
+  plans, implementation, and verification.
+- Allow session-only technical rulings for reversible, behavior-equivalent
+  implementation details while preserving approval gates for consequential
+  decisions.
+- Require precise review evidence and a failing `cannot verify` verdict when
+  required evidence is unavailable.
+
+### Documentation
+
+- Added acceptance scenario 25 for workflow state and review evidence.
+
 ## [0.4.1] - 2026-09-12
 
 ### Changed

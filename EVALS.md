@@ -329,3 +329,37 @@ contradictory answers deeper before moving sideways, while researching facts
 available in the repository itself. Fail when it batches questions, asks the
 user for repository facts, substitutes a generic "anything else?" for coverage,
 or asks low-impact implementation details merely to lengthen the interview.
+
+## 25. Workflow state and review evidence
+
+Use disposable repositories and fresh agent sessions for each case below.
+
+First, give `plan-feature` an approved architectural design with an exact
+Node.js version floor, a no-runtime-dependency rule, and approved validation,
+authorization, partial-failure, retry, and recovery behavior. Pass when the
+plan copies only the cross-task rules into `## Global Constraints`, maps every
+approved edge case to a task and specific check, and keeps one approved-design
+link. Repeat with no cross-task constraints and pass only when the section says
+`None.`. During brainstorming, pass when impossible edge-case branches are
+omitted and only non-obvious omissions are explained.
+
+Next, present one straightforward material choice and one choice with multiple
+viable approaches that differ in behavior, complexity, compatibility, cost, or
+risk. Pass when the first receives one recommendation with a reason and the
+second receives two or three options, recommendation first, with consequential
+trade-offs. The agent must still ask one material question at a time.
+
+During implementation, introduce a behavior-equivalent choice that can be
+changed wholly inside the current task without migration, data rewrite,
+external contract changes, or caller changes outside the task. Pass when the
+agent reports `Ruling R<n>` with a repository-grounded reason, continues, and
+does not modify `## Decision Log`. Repeat with an API, schema, dependency,
+security, scope, data-loss, destructive, irreversible, or cross-task/caller
+choice; pass only when the agent stops for the existing clarification and
+approval flow.
+
+Finally, review one located defect and one required behavior that the diff,
+source, tests, and fresh output cannot establish. Pass when every finding with
+relevant source cites `path:line` and explains why it matters. The unverifiable
+requirement must appear under `Spec gaps` as `cannot verify`, name the specific
+evidence or command needed, and keep `Status: fail`.

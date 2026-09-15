@@ -18,6 +18,8 @@ pages under `docs/llm/`.
    affected source,
    callers, and tests. Otherwise map planned files and interfaces from the
    approved design; state that callers and tests do not exist yet.
+   Extract only exact constraints from the approved design that bind more than
+   one task. Do not infer constraints from convention or preference.
 2. Map out which files will be created or modified and what each one is
    responsible for. Design units with clear boundaries. Follow existing
    patterns; do not unilaterally restructure. Before accepting a proposed unit,
@@ -48,6 +50,12 @@ pages under `docs/llm/`.
 
    For cross-file work, also list `Files inspected, no change` so the plan
    distinguishes evidence from guesses.
+
+   Map every approved edge case to a task and specific verification. If
+   planning exposes an unresolved case that would change observable behavior,
+   scope, an interface, a schema, or a protected boundary, tell the user to
+   invoke `brainstorm-feature`; do not invent the behavior. Leave only
+   behavior-equivalent implementation details for `implement-task` rulings.
 
 4. **Bite-sized steps within each task.** Each step is one action:
    - Write the failing test
@@ -87,8 +95,11 @@ pages under `docs/llm/`.
    Approval of the design/spec, including an instruction to implement given
    before this plan existed, never changes a required gate from `pending`.
 8. Save the complete plan at the required path. Include `## Approved design`
-   with a link to the exact approved design. Add that plan link to the design's
-   `## Execution` section, then add both artifacts to
+   with a link to the exact approved design, immediately followed by
+   `## Global Constraints`. Copy only exact cross-task constraints from the
+   design; write `None.` when there are none. Do not add a second design/spec
+   pointer. Add that plan link to the design's `## Execution` section, then add
+   both artifacts to
    `docs/agent-devkit/INDEX.md` (`## Designs` and `## Plans`). When an Obsidian
    vault exists, targets are relative to its root (for a `docs/` vault:
    `[[agent-devkit/specs/...|Design]]` and `[[agent-devkit/plans/...|Plan]]`);
@@ -128,6 +139,10 @@ plan failures — never write them:
 
 After writing the complete plan, review it against the approved design:
 
+Flag and fix only issues that could change approved behavior, scope, plan
+correctness, or execution. Do not block on wording preferences, stylistic
+polish, or uneven detail that does not create ambiguity.
+
 1. **Spec coverage** — can you point to a task that implements each
    requirement from the design? List any gaps.
 2. **Placeholder scan** — search for any pattern from the "No placeholders"
@@ -143,6 +158,12 @@ After writing the complete plan, review it against the approved design:
    or already-installed behavior without weakening an approved requirement?
 7. **Decision consistency** — does every persisted decision agree with the
    tasks and approval status? Material changes must leave the gate pending.
+8. **Global constraints** — is each entry copied from the approved design,
+   applicable across tasks, and consistent with every task? Is `None.` used
+   when the design has no cross-task constraint?
+9. **Edge-case coverage** — does every approved edge case map to a task and a
+   specific verification? Did unresolved behavior route back to
+   `brainstorm-feature` instead of being invented during planning?
 
 Fix any issues inline. No need to re-review — just fix and move on.
 
@@ -158,6 +179,8 @@ Fix any issues inline. No need to re-review — just fix and move on.
 | "The user already said implement" | Before the plan exists, that approves planning only. A required gate waits for approval of the complete plan. |
 | "I'll leave an approved status after changing the plan" | Material plan changes invalidate approval. Reset the gate to pending. |
 | "The implementing agent can recover decisions from chat" | Persist user-confirmed behavior changes in the plan's Decision Log. |
+| "The executor can re-derive global constraints" | Copy exact cross-task constraints into the plan; repeated derivation invites drift. |
+| "Implementation can decide the missing edge behavior" | Observable behavior returns to `brainstorm-feature`; implementation rulings preserve behavior. |
 
 Plans are execution artifacts, not essays. Prefer the fewest tasks that
 make the sequence and verification unambiguous.

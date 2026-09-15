@@ -321,8 +321,10 @@ Add a background job subsystem with persistent retries.
    - "Which job queue: Redis, database, or in-memory?"
    - "Retry policy: exponential backoff or fixed interval?"
    - "Do we need a job monitoring dashboard?"
-3. Present a design covering scope, architecture, interfaces, error cases, and
-   verification.
+3. Scan only applicable edge-case branches, explain non-obvious omissions, and
+   present a design covering scope, architecture, interfaces, error cases, and
+   verification. Recommend one clear solution when the choice is
+   straightforward; present two or three options only when trade-offs matter.
 4. After design approval, write the spec at
    `docs/agent-devkit/specs/2026-08-17-bg-jobs-design.md`.
 5. Self-review the spec for placeholders, consistency, scope, and ambiguity.
@@ -331,6 +333,8 @@ Add a background job subsystem with persistent retries.
    first.
 8. Tell the user to invoke `plan-feature`, which writes
    `docs/agent-devkit/plans/2026-08-17-bg-jobs-plan.md` with ordered tasks.
+   The plan copies approved cross-task rules into `## Global Constraints` and
+   maps each approved edge case to a task and verification check.
 9. Run `estimate-feature` before plan approval only if the user requested an
    estimate; an estimate never authorizes implementation.
 10. Because the plan changes public APIs, schemas, dependencies, CI, or a broad
@@ -339,9 +343,12 @@ Add a background job subsystem with persistent retries.
    execution plan that did not yet exist.
 11. After approval, update the plan to `Status: approved`.
 12. After approval, tell the user to invoke `implement-task` for each plan
-    task.
+    task. It may record a session-only `Ruling R<n>` for a reversible,
+    behavior-equivalent implementation detail; consequential choices still
+    require user clarification or approval.
 13. `implement-task` calls `review-and-verify` for diff review, tests, and the
-    complexity pass.
+    complexity pass. Findings cite `path:line`; unverifiable requirements fail
+    under `Spec gaps` as `cannot verify` with the missing evidence named.
 14. After verification, tell the user to invoke `document-wiki` to refresh the
     wiki for the new feature.
 
@@ -542,6 +549,12 @@ Estimate this plan in hours for a developer using an AI coding agent.
   changes go into the active plan/spec `## Decision Log`; bounded tasks without
   one create a task-scoped file under `docs/agent-devkit/decisions/`. Material
   changes reset required plan approval to `pending`.
+- **Plans carry approved constraints forward.** `## Global Constraints` copies
+  cross-task rules from the approved design, or says `None.`; approved edge
+  cases map to concrete tasks and checks.
+- **Low-impact ambiguity does not stall implementation.** The agent may record
+  a session-only technical ruling only when every viable choice is reversible
+  within the current task and preserves observable behavior.
 - **Do not ask for a commit** until `review-and-verify` passes. The agent leaves
   the working tree for you to review and commit.
 - **When debugging, do not push the agent to "fix it quickly."**
@@ -559,6 +572,8 @@ Estimate this plan in hours for a developer using an AI coding agent.
 - **Iron Law (`systematic-debugging`):** NO FIXES WITHOUT ROOT CAUSE
   INVESTIGATION FIRST.
 - **Every claim needs a source path.** Filenames alone are not evidence.
+- **Every review finding needs precise evidence.** Cite `path:line` when source
+  exists; otherwise report `cannot verify` and name the evidence still needed.
 - **Existing context belongs to the project.** Do not overwrite it without asking.
 - **Minimal change:** the smallest clear diff that satisfies approved behavior;
   do not refactor unrelated code.

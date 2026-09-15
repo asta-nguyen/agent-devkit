@@ -59,6 +59,17 @@ downgrades mid-task.
      material decision, and give a recommended answer with its main reason or
      tradeoff. The recommendation is a default to react to, not a decision made
      for the user.
+   - For a straightforward decision with one clearly preferable path, present
+     only that recommendation and its reason. When viable approaches materially
+     differ in behavior, complexity, compatibility, cost, or risk, present two
+     or three options, recommendation first, and explain the consequential
+     trade-offs. Do not manufacture alternatives for an obvious choice.
+   - Treat a failure or edge-case branch as applicable when current source or
+     proposed behavior can introduce that risk. Resolve applicable invalid
+     input, authorization, duplicate or concurrent operations, partial failure,
+     retry and recovery, lifecycle, external-system failure, and compatibility
+     or migration behavior. Omit impossible branches; explain an omission only
+     when its reason is not obvious from the repository or approved design.
    - Drill further on a vague, partial, or contradictory answer before moving
      to another branch. When the user says "standard", "whatever", or similar,
      propose one concrete interpretation and ask them to confirm it.
@@ -128,6 +139,10 @@ relative Markdown link. The design must include `## Related context` with links
 only to existing `docs/llm/` pages read during brainstorming; write `None` when
 there was no verified wiki context. Never add a link from `docs/llm/` back to a
 design.
+
+Flag and fix only issues that could change approved behavior, scope, plan
+correctness, or execution. Do not block on wording preferences, stylistic
+polish, or uneven detail that does not create ambiguity.
 
 After writing the spec document, review it with fresh eyes before handing off:
 
