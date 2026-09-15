@@ -1,5 +1,18 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- Capture missing repository conventions from declared configuration and
+  repeated code, with explicit approval, provenance, and one-source storage.
+- Enforce matching conventions during implementation and review, including
+  scoped precedence and `path:line` evidence for violations.
+
+### Documentation
+
+- Added acceptance scenario 26 for convention capture and enforcement.
+
 ## [0.4.2] - 2026-09-15
 
 ### Changed

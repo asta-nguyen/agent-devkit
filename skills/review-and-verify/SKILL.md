@@ -71,6 +71,11 @@ Review the diff for:
 - **Missing error handling** — edge cases, error paths, cleanup
 - **Protected boundaries** — trust-boundary validation, security,
   accessibility, and data-loss prevention remain intact
+- **Conventions** — changed code follows the recorded rules in `AGENTS.md` or
+  `CONVENTIONS.md` whose scope matches the changed files; the most specific
+  matching scope wins. Cite `path:line` for a violation and why it matters.
+  When no conventions are recorded, report this item as `not-applicable` and do
+  not fail the review.
 
 Compare implementation and fresh evidence with every approved edge case in the
 spec and plan. Report every blocker, non-blocker, spec gap, and complexity
@@ -164,6 +169,7 @@ full context, violates YAGNI, or conflicts with architectural decisions.
 | "The decision was only in chat" | Chat recall is not durable review evidence; persist behavior decisions before passing. |
 | "The requirement probably works" | If current evidence cannot establish it, report `cannot verify` under `Spec gaps` and fail. |
 | "It is only a bug fix" | A behavior-changing bug fix still requires a wiki-impact classification. |
+| "It is only style" | A deviation from a matching recorded convention is a review finding; cite the changed `path:line` and why it matters. |
 
 ## Report
 

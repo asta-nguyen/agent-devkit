@@ -9,6 +9,10 @@ description: Use when the user has approved a bounded change or feature plan and
 
 1. Read `AGENTS.md` and, when it exists, `docs/llm/INDEX.md` for project
    conventions and affected wiki pages. A missing wiki must not block work.
+   If `AGENTS.md` contains `Read CONVENTIONS.md before editing.`, read the
+   root `CONVENTIONS.md` too. Apply only rules whose scopes match the changed
+   files, with the most specific matching scope winning; route same-scope
+   conflicts through user clarification.
 2. If application source exists, call the available Skill entry whose local
    name is `read-codebase-context` to trace the relevant code path, or use
    direct file reads. Understand callers, data flow, and error paths before editing. For a

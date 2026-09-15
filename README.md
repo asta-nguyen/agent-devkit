@@ -163,7 +163,7 @@ the workflow itself.
 | Skill | Purpose |
 |---|---|
 | `using-devkit` | Route a task to the correct devkit workflow before editing. |
-| `setup-codebase` | Create missing `AGENTS.md`, `CLAUDE.md`, and `docs/llm/` skeleton. Run once per repo. |
+| `setup-codebase` | Create missing context files and capture missing repository conventions; safe to rerun when conventions are absent. |
 | `setup-openez` | Install, initialize, index, and verify OpenEZ MCP connection for a repository. |
 | `read-codebase-context` | Query OpenEZ and trace code paths. Used before feature work or wiki generation. |
 | `context-handoff` | Save a compact evidence checkpoint when a session must pause or is approaching its context limit. |

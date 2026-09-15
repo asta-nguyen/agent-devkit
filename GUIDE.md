@@ -129,7 +129,7 @@ never install dependencies or change MCP configuration silently.
 | Skill | When to use | Summary |
 |---|---|---|
 | `using-devkit` | Starting work or deciding which workflow applies | Routes the task to the owning devkit skill; it does not replace that skill's process. |
-| `setup-codebase` | The repo lacks `AGENTS.md`, `CLAUDE.md`, or `docs/llm/` | Reads repository evidence and creates context files. Creates only missing files. |
+| `setup-codebase` | The repo lacks context files or recorded repository conventions | Reads repository evidence, creates missing context files, and captures missing conventions only after user approval. |
 | `setup-openez` | The user agrees to use OpenEZ or the index is stale | Installs, indexes, and verifies the OpenEZ MCP connection. |
 | `read-codebase-context` | Before design, planning, or wiki work that needs affected files, callers, and tests | Prefers OpenEZ, asks about setup when missing, reads source directly, and records an impact map. |
 | `context-handoff` | A session must pause or is approaching its context limit | Saves a compact, source-grounded checkpoint under `docs/agent-devkit/handoffs/` for the next session. |
@@ -527,13 +527,20 @@ Estimate this plan in hours for a developer using an AI coding agent.
 
 ### For team leads and PMs
 
-- **Run `setup-codebase` first** when onboarding a repo into the agent workflow.
+- **Run `setup-codebase` first** when onboarding a repo, and rerun it when
+  repository-specific conventions are not recorded.
 - **Copy all skills** because they chain together. Do not copy individual
   skills unless you know exactly what you need.
 - **Restart the agent session** after installing skills so the skill list reloads.
 - **Do not customize skill files** in the target project. Updates overwrite them.
 - **OpenEZ is optional but valuable** for large repositories; semantic search is
   much faster and more useful for callers than plain grep.
+- **Convention capture is code-first.** `setup-codebase` checks declared
+  configuration, then repeated code, then web or general practice only when
+  the repository has no signal; proposed lines require your approval.
+- **Keep one convention source of truth.** `AGENTS.md` is the default; root
+  `CONVENTIONS.md` is reserved for more than 40 non-empty rule lines or
+  area-scoped rules and is linked by one mandatory pointer.
 
 ### For developers
 
@@ -564,6 +571,9 @@ Estimate this plan in hours for a developer using an AI coding agent.
 - **Every implementation reports wiki impact.** A behavior-changing bug fix or
   feature uses `Wiki impact: yes`, lists the affected pages, and hands off to
   `document-wiki`; `no` requires inspected page and source evidence.
+- **Review checks recorded conventions.** Matching scopes use the most specific
+  rule; violations cite `path:line`, while repositories without conventions
+  report `not-applicable`.
 
 ### For agents (rules embedded in the skills)
 

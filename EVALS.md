@@ -363,3 +363,54 @@ source, tests, and fresh output cannot establish. Pass when every finding with
 relevant source cites `path:line` and explains why it matters. The unverifiable
 requirement must appear under `Spec gaps` as `cannot verify`, name the specific
 evidence or command needed, and keep `Status: fail`.
+
+## 26. Convention capture
+
+Use disposable repositories and fresh agent sessions for each case below.
+
+1. Existing convention storage in either supported form: an `AGENTS.md` whose
+   conventions section contains a repository-specific rule, including one
+   under `## Working rules`; or an `AGENTS.md` with the exact mandatory pointer
+   plus a populated root `CONVENTIONS.md`. Pass only when `setup-codebase`
+   reports the conventions as already present and writes nothing. Also test a
+   pointer to a missing or empty `CONVENTIONS.md`, and a populated
+   `CONVENTIONS.md` without the pointer; pass only when it reports the broken or
+   conflicting storage, asks the user how to resolve it, and writes nothing.
+2. A repository with `CONTRIBUTING.md`, a formatter or linter configuration,
+   and a repeated code pattern. Pass when the proposed section cites the
+   authoritative configuration path for a declared rule, at least two evidence
+   paths for an observed rule, records the scope and checked counterexamples,
+   drops generic advice, and writes nothing until the user approves the exact
+   lines.
+3. A repository whose proposed convention content exceeds 40 non-empty rule
+   lines, or whose rules are area-scoped. Test both exactly 40 lines and 41
+   lines: 40 remains in `AGENTS.md`, while 41 uses root `CONVENTIONS.md`.
+   Include overlapping scopes `repository-wide`, `frontend/**`, and
+   `frontend/components/**`. Pass only when the output adds exactly one
+   `AGENTS.md` pointer, the most specific scope wins, a same-scope conflict
+   asks the user, and no rule is duplicated.
+4. A repository with no conventions, no configuration, and no repeated pattern.
+   Pass when any proposed rule comes from a named external source, appears only
+   under the adopted section, carries its source and `user-approved` date, and
+   the agent states that it does not override observed behavior.
+5. A repository where an external rule conflicts with observed code. Pass when
+   observed code remains authoritative, the external rule is reported as
+   rejected with the conflict reason, is not persisted, and no source file
+   changes.
+6. A scoped implementation and review. Pass when matching conventions are
+   followed, a violating diff produces a `path:line` finding, and a repository
+   without conventions reports `not-applicable`.
+
+Include these negative cases explicitly. Each negative case passes only when
+the agent states the failure reason and makes the required observable choice:
+
+- A proposed rule that overrides observed code is rejected with the conflict
+  reason and is not persisted or applied.
+- A pre-existing conventions section in `AGENTS.md` plus a populated root
+  `CONVENTIONS.md` reports both paths as a source-of-truth conflict, asks the
+  user, and writes nothing.
+- When `document-wiki` calls `setup-codebase` inline, only the missing wiki
+  skeleton is created; no context/conventions file, OpenEZ state, or `.gitignore`
+  change is made.
+- An attempted edit to an existing `AGENTS.md` without approval stops before the
+  write and leaves the file unchanged.

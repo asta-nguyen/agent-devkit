@@ -23,7 +23,7 @@ bare local name.
 
 | Task type | Skill |
 |---|---|
-| First visit to a repo missing context | `setup-codebase` |
+| First visit to a repo missing context or repository conventions | `setup-codebase` |
 | Build a semantic index for a non-trivial repo | `setup-openez` |
 | Understand code before changing it | `read-codebase-context` |
 | Checkpoint unfinished work before pausing | `context-handoff` |
