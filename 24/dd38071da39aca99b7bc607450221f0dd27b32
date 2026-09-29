@@ -1,0 +1,165 @@
+skills/setup-codebase/SKILL.md
+  s_7a2a49d59abdae::t_b4386440b61bc2 63-65
+  s_7a2a49d59abdae::t_4f4098fc5ddeab 132-138
+  s_7a2a49d59abdae::t_5da230c69b52d2 62
+  s_7a2a49d59abdae::t_9e8361964aeb75 60,68-69
+  s_7a2a49d59abdae::t_9cfbd13b219d60 61,66-67
+.cursor-plugin/plugin.json
+  s_7a2a49d59abdae::t_9a3d46c89644c0 3
+PILOT.md
+  s_7a2a49d59abdae::t_ca95a6743997f2 1,3-4,8,10-15,19,21,23,25-27,29-31,35,37,39-47,49,52-60,63-73,78,80,82,85,88,92-96,98,100-101,103,105-107,109,111-114,116,118,120,122-124,126-129,133,137,139-145,147-150,152,154,156-159,161,163,165,167-170,172-173,175,177-182,186,188,191,193-195,201-209,211-212,214-220,224,226-227,229-230,232-233,235-236,240,242-245,251,257,265,267,270,273,276,282,284-285,287-292,294,296,298,300,302,306-310,312,314,316-318,320,322-326,328,330-332,336,340,342-344,346-347,349-352,354-356
+  s_7a2a49d59abdae::t_9dd320aa1fcd91 61
+  s_7a2a49d59abdae::t_cf45303fbf0c8e 295
+  s_7a2a49d59abdae::t_ab202e20aaf8dd 348
+  s_7a2a49d59abdae::t_f51ed8a5274427 62
+skills/systematic-debugging/SKILL.md
+  s_7a4ac54b6d6aa9::t_9f852a4430cf28 105,109,121-126,130-133,138-141
+skills/estimate-feature/SKILL.md
+  s_7a2a49d59abdae::t_f338806a33014a 35-36
+  s_7a2a49d59abdae::t_6b7ac8bcdbf83a 33-34,37-38,44
+skills/brainstorm-feature/SKILL.md
+  s_7a2a49d59abdae::t_3c3ba89140ee28 142-145
+  s_7a2a49d59abdae::t_cbd7617b71712e 35-36
+  s_7a2a49d59abdae::t_f2ee688aaa254b 99-101
+  s_7a2a49d59abdae::t_2bf70525869b2f 32-34
+  s_7a4ac54b6d6aa9::t_fee9ae756c5e67 88-91
+AGENTS.md
+  s_7a2a49d59abdae::t_a7021364c09ece 21-22
+  s_7a2a49d59abdae::t_419a876bea2fa5 19-20,25-27
+  s_7a2a49d59abdae::t_271d947301fe33 23-24
+skills/plan-feature/SKILL.md
+  s_7a4ac54b6d6aa9::t_fee9ae756c5e67 64-70,73-76
+  s_7a2a49d59abdae::t_f376c39a86ca9a 12-14
+  s_7a2a49d59abdae::t_6dc8d5583c5f9b 9-11,15
+package.json
+  s_7a2a49d59abdae::t_013c81920caa24 3
+tests/plugin-smoke.mjs
+  s_7a2a49d59abdae::t_f5c525560cd2a7 48,54
+skills/context-handoff/SKILL.md
+  s_7a2a49d59abdae::t_24cfa2759098a9 27-29
+  s_7a2a49d59abdae::t_3e1ddb7b13cbed 30-31
+skills/implement-task/SKILL.md
+  s_7a4ac54b6d6aa9::t_88c0701b5754b9 144
+  s_7a4ac54b6d6aa9::t_cc8d6e67736377 145-148
+  s_7a2a49d59abdae::t_e3a7a5455e895f 95-98
+  s_7a2a49d59abdae::t_69204f3e9631c3 99-100
+skills/review-and-verify/SKILL.md
+  s_7a4ac54b6d6aa9::t_cc8d6e67736377 165,168
+  s_7a4ac54b6d6aa9::t_9f852a4430cf28 14-15,22-25,60,103-105
+EVALS.md
+  s_7a4ac54b6d6aa9::t_14dbc05c119fbe 527-534
+  s_7a2a49d59abdae::t_427a115db25b29 91-107
+  s_7a2a49d59abdae::t_d48d613b949fe8 477-501
+  s_7a2a49d59abdae::t_4eaf3732b9edb6 79-86
+  s_7a4ac54b6d6aa9::t_24f0762b015bc2 30,255-258,281-284,293,295,298-300
+  s_7a2a49d59abdae::t_3097151eadce3d 118-122
+  s_7a2a49d59abdae::t_cf2fdcfb84de5a 197-204
+  s_7a2a49d59abdae::t_28b66b048ece03 62-63,75-76,90
+  s_7a4ac54b6d6aa9::t_88c0701b5754b9 31-32
+  s_7a2a49d59abdae::t_5b22dac102c641 505-518
+  s_7a2a49d59abdae::t_5683a20e63d95b 69-71
+  s_7a4ac54b6d6aa9::t_67e6a3b5e5d283 109-117
+  s_7a2a49d59abdae::t_3e8d095642e55a 519-522
+  s_7a2a49d59abdae::t_4ab8f523e73e28 502-504,523-526
+  s_7a2a49d59abdae::t_0e65f082c638f9 36-37,39-49
+  s_7a4ac54b6d6aa9::t_5290e9f79d7e72 108
+.codex-plugin/plugin.json
+  s_7a2a49d59abdae::t_8b96723d351742 3
+.devin-plugin/plugin.json
+  s_7a2a49d59abdae::t_39604364aa514e 3
+README.vi.md
+  s_7a4ac54b6d6aa9::t_ac3880e1faa6af 241
+  s_7a2a49d59abdae::t_d8303322cc997f 149
+  s_7a2a49d59abdae::t_081af66e4c97a6 209
+  s_7a4ac54b6d6aa9::t_5c07821529cec7 171-174,185
+skills/document-wiki/SKILL.md
+  s_7a2a49d59abdae::t_43014786d91bff 269-270
+  s_7a4ac54b6d6aa9::t_5a19ac2271d768 53-59
+  s_7a2a49d59abdae::t_b27fc049164362 63,95
+  s_7a2a49d59abdae::t_5fc7b1e8375c83 266
+  s_7a2a49d59abdae::t_5e8516d46b34d5 238-248
+  s_7a2a49d59abdae::t_d61d7417a20848 73-74
+  s_7a2a49d59abdae::t_3b06e17a3a8ea1 137-142
+  s_7a2a49d59abdae::t_a897d6cca6bf20 100-106
+  s_7a2a49d59abdae::t_07cbe190c7084e 110-111,114-119
+  s_7a2a49d59abdae::t_27a4ac49623490 24
+  s_7a2a49d59abdae::t_8ec8c29ab92ff9 64-72,75-83,96-98
+  s_7a4ac54b6d6aa9::t_87c7fe98011300 30-36
+  s_7a2a49d59abdae::t_dc16354363c4d9 25-29
+  s_7a2a49d59abdae::t_d781763184c7ea 16-17
+  s_7a2a49d59abdae::t_ee688b92bef681 43-50
+  s_7a2a49d59abdae::t_95ef5b0abf6d55 18-20
+  s_7a4ac54b6d6aa9::t_096bd356d06d6d 60-61
+  s_7a2a49d59abdae::t_288c8127883a42 92
+  s_7a2a49d59abdae::t_03acb23f921268 112-113
+  s_7a2a49d59abdae::t_48a3da9458cc2c 3
+  s_7a2a49d59abdae::t_c14ade1246aff2 230-232
+.cursor-plugin/marketplace.json
+  s_7a2a49d59abdae::t_42396eab8558dc 14
+CHANGELOG.md
+  s_7a2a49d59abdae::t_f336b31b129571 5-25
+.claude-plugin/marketplace.json
+  s_7a2a49d59abdae::t_a0b30b28f6474b 12
+GUIDE.md
+  s_7a4ac54b6d6aa9::t_e6812613dd2336 451-455
+  s_7a2a49d59abdae::t_16eb734d5be844 482
+  s_7a4ac54b6d6aa9::t_67e6a3b5e5d283 126,655-658
+  s_7a2a49d59abdae::t_9e99da2e6c9dbc 690
+  s_7a2a49d59abdae::t_d15ec045a88bd5 500-502
+  s_7a2a49d59abdae::t_b0c891bf1ce07b 79
+  s_7a2a49d59abdae::t_f6ceaad4c4d5a7 581-584
+  s_7a2a49d59abdae::t_a8defff8d5ba14 579-580,585-586
+  s_7a2a49d59abdae::t_d53659996fa7e8 496-497
+  s_7a2a49d59abdae::t_4c5fef91df4b7b 243-244
+  s_7a2a49d59abdae::t_0f0c6b2d5a5cbc 659-660
+  s_7a2a49d59abdae::t_559ccb2fc1b374 498-499
+  s_7a2a49d59abdae::t_a2158077908a85 692-697
+  s_7a4ac54b6d6aa9::t_88c0701b5754b9 423-424
+  s_7a4ac54b6d6aa9::t_ac3880e1faa6af 247-249,416-418,420-422,594-597,661-668
+  s_7a2a49d59abdae::t_f58c183a64063f 449-450,457
+  s_7a2a49d59abdae::t_65fae538f34c42 483-484,487-490
+  s_7a2a49d59abdae::t_e79cde012e1e63 97-106
+  s_7a2a49d59abdae::t_eede5f44dd74cf 150
+README.md
+  s_7a2a49d59abdae::t_ac37d5028b30bf 206
+  s_7a4ac54b6d6aa9::t_ac3880e1faa6af 257
+  s_7a2a49d59abdae::t_54bef73991c2b6 148
+  s_7a2a49d59abdae::t_253abda3320384 268
+  s_7a4ac54b6d6aa9::t_5c07821529cec7 169-170,182
+  s_7a4ac54b6d6aa9::t_096bd356d06d6d 171-173
+.claude-plugin/plugin.json
+  s_7a2a49d59abdae::t_60f3816a1b8c75 3
+skills/read-codebase-context/SKILL.md
+  s_7a2a49d59abdae::t_99e90275c12a4c 23-29
+  s_7a4ac54b6d6aa9::t_0ca01a2d25b01e 17-20
+  s_7a4ac54b6d6aa9::t_5a19ac2271d768 8-9,14-16,21-22,30,45,51-53,57,65,67
+skills/using-devkit/SKILL.md
+  s_7a2a49d59abdae::t_9e4cc239c967c2 41-43,46-50
+  s_7a2a49d59abdae::t_5ca4b028b4f101 22-24,30
+  s_7a2a49d59abdae::t_05c45cd9ee1eed 36,45
+  s_7a2a49d59abdae::t_daaa74714ee511 25-29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "24dd38071da39aca99b7bc607450221f0dd27b32",
+  "prompts": {},
+  "sessions": {
+    "s_7a2a49d59abdae": {
+      "agent_id": {
+        "tool": "windsurf",
+        "id": "flash-gorgonzola",
+        "model": "unknown"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    },
+    "s_7a4ac54b6d6aa9": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0e8ba-d59a-7be1-b57c-eaa41600ad23",
+        "model": "gpt-6-sol"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
