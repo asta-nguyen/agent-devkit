@@ -1,0 +1,23 @@
+PILOT.md
+  s_7a2a49d59abdae::t_38ad25394d7398 252-256,259-263
+RELEASE_DESCRIPTION.md
+  s_7a2a49d59abdae::t_3d31ae4c30b244 1,3-5,9-23
+tests/plugin-smoke.mjs
+  s_7a2a49d59abdae::t_627a43f82fdafb 40-41,50,56,58-65
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "d9a9879f029c89f742d21c0b02e4175faac15941",
+  "prompts": {},
+  "sessions": {
+    "s_7a2a49d59abdae": {
+      "agent_id": {
+        "tool": "windsurf",
+        "id": "flash-gorgonzola",
+        "model": "unknown"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
