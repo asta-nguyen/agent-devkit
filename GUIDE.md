@@ -76,7 +76,7 @@ cp -R /path/to/agent-devkit/skills/. .agents/skills/
 find .agents/skills -name SKILL.md -print
 ```
 
-### Option 4: OpenEZ (recommended for non-trivial repositories)
+### Option 4: OpenEZ (optional semantic index)
 
 OpenEZ is a local code index that provides semantic search, graph traversal,
 and caller analysis through MCP. It helps agents find symbols, callers,
@@ -94,24 +94,16 @@ openez setup codex    # or claude / opencode
 
 After setup, **restart the agent** so MCP tools are loaded.
 
-OpenEZ is **optional but recommended** for non-trivial repositories. When
-running `setup-codebase` or `read-codebase-context`, if OpenEZ is not detected,
-the agent explains the benefits and cost, then asks whether to run
-`setup-openez`:
-
-```text
-OpenEZ was not detected.
-It helps the agent find symbols and trace callers/dependencies faster.
-Setup requires Bun + the OpenEZ CLI and creates a local `.openez/` index.
-
-Do you want to set up OpenEZ for this repository?
-Recommendation: Yes for non-trivial repositories.
-```
-
-If the user chooses **Yes**, the agent tells them to invoke `setup-openez`,
-which indexes the repository and verifies MCP. If the user chooses **No**,
-skills use `rg` and direct file reads; the workflow is not blocked. Skills
-never install dependencies or change MCP configuration silently.
+OpenEZ is optional when a task needs semantic search or complex cross-module
+relationships and the workspace index is healthy; repository line count is not
+a reason to set it up. `read-codebase-context` and `document-wiki` use scoped
+`rg` for known paths or text, FFF MCP for approximate filenames or repeated
+search when connected, and OpenEZ for semantic or cross-module questions. They
+read source directly and fall back to direct search when a tool fails or the
+index is unhealthy. `setup-codebase` continues with direct source reads. The
+agent may mention `setup-openez` when needed relationships remain unclear after
+direct search; it never installs dependencies or changes MCP configuration
+silently.
 
 ### After installation
 
@@ -131,7 +123,7 @@ never install dependencies or change MCP configuration silently.
 | `using-devkit` | Starting work or deciding which workflow applies | Routes the task to the owning devkit skill; it does not replace that skill's process. |
 | `setup-codebase` | The repo lacks context files or recorded repository conventions | Reads repository evidence, creates missing context files, and captures missing conventions only after user approval. |
 | `setup-openez` | The user agrees to use OpenEZ or the index is stale | Installs, indexes, and verifies the OpenEZ MCP connection. |
-| `read-codebase-context` | Before design, planning, or wiki work that needs affected files, callers, and tests | Prefers OpenEZ, asks about setup when missing, reads source directly, and records an impact map. |
+| `read-codebase-context` | Before design, planning, or wiki work that needs affected files, callers, and tests | Chooses `rg` for exact search, FFF for approximate/repeated search, and healthy OpenEZ for semantic/graph questions; then records an impact map. |
 | `context-handoff` | A session must pause or is approaching its context limit | Saves a compact, source-grounded checkpoint under `docs/agent-devkit/handoffs/` for the next session. |
 
 ### Feature Development
@@ -155,7 +147,7 @@ never install dependencies or change MCP configuration silently.
 
 | Skill | When to use | Summary |
 |---|---|---|
-| `document-wiki` | The repo has no LLM wiki, only a skeleton, or missing/stale feature docs | Builds a domain map from source, creates the baseline overview, waits for feature selection, and writes deep pages. Every claim needs a source path. |
+| `document-wiki` | The repo has no LLM wiki, only a skeleton, or missing, unverified, or source-contradictory feature docs | Builds a domain map from source, creates the baseline overview, waits for feature selection, and writes deep pages. Every claim needs a source path. |
 
 Deep pages use only categories established by evidence: `architecture/` for
 system structure, `domains/` for state and business rules, `workflows/` for
@@ -248,11 +240,13 @@ setup-codebase
    - `AGENTS.md` `## Documentation` — `docs/llm/INDEX.md` entry point and
      wiki-first rules for behavior and workflow questions
    - `CLAUDE.md` — a short pointer to `AGENTS.md`
-   - `docs/llm/` skeleton — `AGENTS.md`, `INDEX.md`, and `LOG.md`
+   - `docs/llm/` skeleton — `AGENTS.md` and `INDEX.md`; preserve legacy
+     `LOG.md` files without reading or updating them
 4. Append missing `.gitignore` rules for Obsidian and OpenEZ without untracking
    already-tracked files.
-5. If OpenEZ is missing, explain the benefit and cost, then ask whether to run
-   `setup-openez`. Never install it silently.
+5. If OpenEZ is missing, use direct source search. Mention optional
+   `setup-openez` only when cross-module tracing remains difficult; never
+   install it silently.
 6. Report created, updated, kept, tracked artifacts, and evidence paths.
 
 **Sample result:**
@@ -263,7 +257,6 @@ Created:
   - CLAUDE.md
   - docs/llm/AGENTS.md
   - docs/llm/INDEX.md
-  - docs/llm/LOG.md
 
 Updated:
   - .gitignore (appended .openez/ and Obsidian rules)
@@ -376,7 +369,6 @@ docs/
   llm/                                # source-grounded, verified wiki
     AGENTS.md
     INDEX.md
-    LOG.md
     architecture/
       overview.md
     operations/
@@ -421,13 +413,15 @@ Fix this failure quickly.
   evidence and stops; an Architectural bug hands off to `brainstorm-feature`.
 - For a Bounded bug, establish expected behavior from source, tests, and the
   current wiki.
-- Write a verify plan before the regression test or production fix.
-- Write a regression test that reproduces the symptom.
-- Verify the test fails (red).
+- Write a verify plan before the regression check or production fix.
+- Reproduce the symptom with an existing test or another repeatable check.
+- Verify the check fails before the fix.
 - Apply the smallest root-cause fix.
-- Verify the test passes (green).
-- Run the full test suite.
-- Run `review-and-verify`, then `document-wiki` if behavior changed.
+- Verify the same check passes after the fix.
+- Run relevant existing tests and checks; do not set up a test runner solely
+  for this fix.
+- Run `review-and-verify`. Refresh any existing wiki page that contradicts the
+  fix before claiming completion; hand off missing new coverage to `document-wiki`.
 
 **Red flags — stop and return to Phase 1:**
 
@@ -452,10 +446,15 @@ document-wiki
 
 **The agent will:**
 
-1. Read `AGENTS.md` and check `docs/llm/` (if missing, run `setup-codebase`
-   inline).
+1. Read root `AGENTS.md` and, if the wiki exists, `docs/llm/AGENTS.md`. If
+   either conflicts with current-source verification or requires LOG/snapshot
+   freshness, report the exact path and line. For such a conflict, continue
+   without asking again when the user already chose the current-source/no-log
+   workflow for this task; preserve the old instructions and report that they
+   need an update. Without that decision, stop for user resolution. If the wiki
+   is missing after this preflight, run `setup-codebase` inline.
 2. Identify the Obsidian vault root if `.obsidian/` exists.
-3. Read all existing wiki pages.
+3. Read existing wiki content pages; do not open or use a legacy `LOG.md`.
 4. Build a domain map from **behavior**, not filenames. For each selected
    feature, check an evidence matrix covering the entry/caller, use case, state
    changes, side effects, authorization and constraints, error paths, and
@@ -480,19 +479,27 @@ document-wiki
    [~] Password reset — user requests a password reset
        Entry: POST /api/auth/reset
        Sources: src/auth/reset.ts
-       Wiki: docs/llm/workflows/password-reset.md (stale — source changed)
+       Wiki: docs/llm/workflows/password-reset.md
+       Reason: verification limit — Reset-token behavior has not been verified
+               against current source/tests this run.
    ```
 
-7. **WAIT** for the user to select features for deep coverage.
+7. **WAIT** for the user to select undocumented `[ ]` features and `[~]` pages
+   classified as confirmed content gaps for refresh. Keep verification-limit
+   `[~]` pages in the report, but do not offer them for rewriting; continue
+   feasible checks and report the exact missing evidence if blocked.
 8. Write pages for selected features. Deep pages include `## Business rules`,
    `## Flow`, `## State changes`, `## Side effects`, `## Authorization &
    constraints`, `## Error paths`, and `## Tests`. Every `## Sources` entry is
    an exact existing file path; use `Tests: none found` only after searching
    the repository test tree.
-9. Update `INDEX.md` and append to `LOG.md`.
-10. Verify source paths exist, wikilinks resolve, test claims are supported,
-    and `git diff --check` passes. Mark a feature `[~]` and report the exact
-    gap when any verification fails.
+9. Update `INDEX.md`; do not read or write `LOG.md`, and preserve any legacy
+   log file unchanged.
+10. Read current source/test files and compare page claims in this run; verify
+    source paths exist, wikilinks resolve, test claims are supported, and
+    `git diff --check` passes. Mark `[x]` only after sufficient checks. For
+    `[~]`, label the reason `verification limit` or `confirmed content gap`;
+    only confirmed gaps are offered for refresh.
 
 ---
 
@@ -569,6 +576,14 @@ Estimate this plan in hours for a developer using an AI coding agent.
 - **Low-impact ambiguity does not stall implementation.** The agent may record
   a session-only technical ruling only when every viable choice is reversible
   within the current task and preserves observable behavior.
+- **Use the team's normal Git workflow:** one task branch/PR per task; worktrees
+  are optional. Existing commit and push approval rules still apply.
+- **Include issue IDs in new process-artifact names** when provided: use
+  `YYYY-MM-DD-<issue-id>-<slug>` before any existing type suffix for specs,
+  plans, decisions, estimates, and handoffs. Without an ID, keep the existing
+  format; never invent an ID or rename an existing file.
+- **Resolve shared-index conflicts by keeping every task's links** in
+  `docs/agent-devkit/INDEX.md` and `docs/llm/INDEX.md`, then verify every target.
 - **Do not ask for a commit** until `review-and-verify` passes. The agent leaves
   the working tree for you to review and commit.
 - **When debugging, do not push the agent to "fix it quickly."**
@@ -576,8 +591,10 @@ Estimate this plan in hours for a developer using an AI coding agent.
 - **The `docs/llm/` wiki contains verified behavior only.** Proposed specs and
   plans belong in `docs/agent-devkit/`.
 - **Every implementation reports wiki impact.** A behavior-changing bug fix or
-  feature uses `Wiki impact: yes`, lists the affected pages, and hands off to
-  `document-wiki`; `no` requires inspected page and source evidence.
+  feature uses `Wiki impact: yes` and lists affected pages. An existing page
+  that contradicts the change blocks completion until `document-wiki`
+  refreshes it; missing coverage is a handoff. `no` requires inspected page
+  and source evidence.
 - **Review checks recorded conventions.** Matching scopes use the most specific
   rule; violations cite `path:line`, while repositories without conventions
   report `not-applicable`.
@@ -635,10 +652,20 @@ OpenCode, Cursor, or Devin client.
 
 ### Q: Is OpenEZ required?
 
-**No.** OpenEZ is optional but recommended for non-trivial repositories. When
-it is missing, the skills explain its value and setup cost, ask whether the
-user wants to set it up, and fall back to `rg` plus direct source reads if the
-user declines or the environment cannot support it.
+**No.** Use scoped `rg` for known paths/text, FFF MCP for approximate filenames
+or repeated searches when connected, and OpenEZ for semantic or cross-module
+questions when the workspace index is healthy. Read source directly and fall
+back when a tool fails. FFF setup is never required; mention optional OpenEZ
+setup only when direct search cannot establish a needed semantic or cross-module
+relationship. Do not recommend it based on repository size.
+
+### Q: Are unit tests required?
+
+**No.** Every non-trivial change needs a meaningful verification check. Use
+existing tests when they cover the behavior; projects without tests can use a
+repeatable CLI, self-check, or recorded manual procedure. The workflow does
+not require adding a unit-test runner. If required behavior cannot be
+verified, report `cannot verify` instead of claiming completion.
 
 ### Q: Can skill files be edited for a specific project?
 
@@ -660,11 +687,14 @@ It commits only when the user explicitly asks, and only after
 | Never links to specs or plans | Links to wiki pages read as context |
 | Owned by `document-wiki` | Owned by `brainstorm-feature`, `plan-feature`, and `estimate-feature` |
 
-### Q: How do I know whether the wiki is stale?
+### Q: How do I know whether wiki coverage is current?
 
-`document-wiki` checks each page's `## Sources` and compares its recorded source
-commit with `git diff <commit> -- <source paths>`. If a source changed, the
-page is marked `[~]` (stale).
+`document-wiki` reads current source and relevant tests, then checks the page's
+material claims. It marks `[x]` only after sufficient verification in that run.
+A `[~]` reason is either a `verification limit` (checks incomplete or evidence
+inaccessible; not a refresh candidate) or a `confirmed content gap` (completed
+checks prove an omission or contradiction; a refresh candidate). A source
+change alone does not make an accurate page stale.
 
 ### Q: How many skills are there? Can I add a new one?
 

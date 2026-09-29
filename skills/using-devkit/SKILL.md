@@ -19,20 +19,35 @@ bare local name.
 **Read context before changing code.** Run `read-codebase-context` (or
 `setup-codebase` on a first visit) before any edit.
 
+## Team Git workflow
+
+Use the team's one-branch/PR-per-task workflow; worktrees are optional. Keep
+repository and user commit/push approval rules. Use issue IDs present in the
+task or a linked artifact, including its filename; never infer one. When
+resolving conflicts in `docs/agent-devkit/INDEX.md` or `docs/llm/INDEX.md`,
+preserve links from every task and verify every target after the merge. Do not
+add locks or coordination tools.
+
 ## Routing map
 
 | Task type | Skill |
 |---|---|
 | First visit to a repo missing context or repository conventions | `setup-codebase` |
-| Build a semantic index for a non-trivial repo | `setup-openez` |
+| Set up or refresh OpenEZ when needed and approved | `setup-openez` |
 | Understand code before changing it | `read-codebase-context` |
 | Checkpoint unfinished work before pausing | `context-handoff` |
 | Document existing app features | `document-wiki` |
 | Audit a whole repository for over-engineering or bloat | `lean-audit` |
-| Architectural feature or bug | `brainstorm-feature` → `plan-feature` → `implement-task` → `review-and-verify` |
+| Small feature in an existing flow | `brainstorm-feature` → `implement-task` → `review-and-verify` |
+| Architectural feature | `brainstorm-feature` → `plan-feature` → `implement-task` → `review-and-verify` |
+| Bug or possible bug | `systematic-debugging` |
 | Per-task AI-assisted estimate (optional) | `estimate-feature` |
-| Implement, then review and verify | `implement-task` → `review-and-verify` |
-| Bounded or spike bug | `systematic-debugging` |
+| Implement an already approved design or plan | `implement-task` → `review-and-verify` |
+
+A bounded feature uses a short chat design and approval, with no spec or plan
+file. Architectural work uses an approved spec before planning and follows any
+required plan approval gate. Bounded bug fixes are verified after debugging;
+architectural bugs hand off to the spec/plan route.
 
 Run skills in the listed order when a task spans several. The arrow (`→`)
 marks a required handoff: the left skill's output feeds the right one.

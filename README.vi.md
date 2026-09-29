@@ -146,7 +146,7 @@ session mới để skill list được reload.
 ```text
 using-devkit                          # chọn workflow skill phù hợp
 setup-codebase                         # lần đầu vào repo thiếu context
-setup-openez                           # semantic index cho repo non-trivial
+setup-openez                           # setup/refresh tùy chọn khi cần và được duyệt
 read-codebase-context                  # hiểu code trước khi thay đổi
 context-handoff                        # checkpoint khi phải tạm dừng
 document-wiki                          # document feature hiện có
@@ -168,8 +168,10 @@ openez index <repo-path>
 openez setup codex                  # hoặc claude / opencode
 ```
 
-Skills có thể ưu tiên OpenEZ khi có, nhưng luôn phải có fallback đọc source
-trực tiếp. Plugin là tùy chọn; shared `SKILL.md` folder đã đủ cho workflow.
+Skills dùng `rg` khi tìm chính xác, FFF đã kết nối khi tìm gần đúng hoặc nhiều
+lượt, và OpenEZ cho câu hỏi ngữ nghĩa/quan hệ code khi index khỏe. Luôn xác
+nhận bằng source hiện tại. Plugin là tùy chọn; shared `SKILL.md` folder đã đủ
+cho workflow.
 
 ## Các skill
 
@@ -180,7 +182,7 @@ trực tiếp. Plugin là tùy chọn; shared `SKILL.md` folder đã đủ cho w
 | `using-devkit` | Route task đến workflow devkit phù hợp trước khi edit. |
 | `setup-codebase` | Tạo context file còn thiếu và capture convention của repository. |
 | `setup-openez` | Cài, index và verify kết nối OpenEZ MCP. |
-| `read-codebase-context` | Query OpenEZ và trace code path trước feature hoặc wiki work. |
+| `read-codebase-context` | Chọn công cụ tìm phù hợp rồi trace code path trước feature hoặc wiki work. |
 | `context-handoff` | Lưu checkpoint ngắn gọn khi session cần pause. |
 
 ### Phát triển feature
@@ -204,7 +206,7 @@ trực tiếp. Plugin là tùy chọn; shared `SKILL.md` folder đã đủ cho w
 
 | Skill | Mục đích |
 |---|---|
-| `document-wiki` | Xây domain baseline từ source, sau đó chọn feature docs thiếu hoặc stale. |
+| `document-wiki` | Xây domain baseline từ source, sau đó chọn feature chưa có trang hoặc có content gap đã xác minh. |
 
 Deep pages chỉ dùng category có evidence: `architecture/` cho system structure,
 `domains/` cho state và business rules, `workflows/` cho user/operator flow,
@@ -236,7 +238,7 @@ USER COMMITS
 systematic-debugging → điều tra và phân loại
   ├─ Spike           → report evidence rồi dừng
   ├─ Architectural   → brainstorm-feature → plan-feature
-  └─ Bounded         → verify plan → regression test → fix
+  └─ Bounded         → verify plan → regression check → fix
                           ↓
                        review-and-verify
 ```

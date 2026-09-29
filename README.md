@@ -145,7 +145,7 @@ The shortest routing guide is:
 ```text
 using-devkit                          # choose the right workflow skill
 setup-codebase                         # first visit to a repo missing context
-setup-openez                           # recommended semantic index for non-trivial repos
+setup-openez                           # optional setup/refresh when needed and approved
 read-codebase-context                  # understand code before changing it
 context-handoff                        # checkpoint unfinished work before pausing
 document-wiki                          # document existing app features
@@ -166,10 +166,11 @@ openez index <repo-path>
 openez setup codex                  # or claude / opencode
 ```
 
-Skills may prefer OpenEZ MCP tools when present, but must keep a direct-source
-fallback. A plugin is optional: use one when you want to distribute a skill,
-MCP server, and optional UI together; a shared `SKILL.md` folder is enough for
-the workflow itself.
+Skills use `rg` for exact search, connected FFF for approximate or repeated
+search, and OpenEZ for semantic or graph questions when its index is healthy.
+They verify findings in current source. A plugin is optional: use one when you
+want to distribute a skill, MCP server, and optional UI together; a shared
+`SKILL.md` folder is enough for the workflow itself.
 
 ### Bootstrap & context
 
@@ -178,7 +179,7 @@ the workflow itself.
 | `using-devkit` | Route a task to the correct devkit workflow before editing. |
 | `setup-codebase` | Create missing context files and capture missing repository conventions; safe to rerun when conventions are absent. |
 | `setup-openez` | Install, initialize, index, and verify OpenEZ MCP connection for a repository. |
-| `read-codebase-context` | Query OpenEZ and trace code paths. Used before feature work or wiki generation. |
+| `read-codebase-context` | Choose search by the question and trace code paths before feature work or wiki generation. |
 | `context-handoff` | Save a compact evidence checkpoint when a session must pause or is approaching its context limit. |
 
 ### Feature development
@@ -202,7 +203,7 @@ the workflow itself.
 
 | Skill | Purpose |
 |---|---|
-| `document-wiki` | Build a source-grounded domain baseline, then let the user choose missing or stale feature coverage. |
+| `document-wiki` | Build a source-grounded domain baseline, then let the user choose undocumented features or confirmed content gaps. |
 
 Deep pages use evidence-backed folders only when needed: `architecture/` for
 system structure, `domains/` for state and business rules, `workflows/` for
@@ -253,7 +254,7 @@ document-wiki             → refresh documentation for the changed feature
 systematic-debugging      → investigate and classify
   ├─ Spike                → report evidence and stop
   ├─ Architectural        → brainstorm-feature → plan-feature
-  └─ Bounded              → verify plan → regression test → fix
+  └─ Bounded              → verify plan → regression check → fix
                                ↓
                             review-and-verify
 ```
@@ -264,7 +265,7 @@ systematic-debugging      → investigate and classify
 setup-codebase             → create the missing wiki skeleton
   ↓
 document-wiki              → create or refresh the domain baseline map;
-                              then choose missing/stale feature coverage
+                              then choose undocumented features or confirmed gaps
 ```
 
 ## License

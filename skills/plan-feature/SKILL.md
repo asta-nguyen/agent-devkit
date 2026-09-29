@@ -6,9 +6,13 @@ description: Use when feature design is approved and coding has not started for 
 # Plan Feature
 
 Turn an approved design into a short execution plan before editing code. Save
-the plan at `docs/agent-devkit/plans/YYYY-MM-DD-<slug>-plan.md`, creating the
-folder only when writing the plan. Plans are process artifacts, never wiki
-pages under `docs/llm/`.
+the plan at
+`docs/agent-devkit/plans/YYYY-MM-DD-<issue-id>-<slug>-plan.md` when the task has
+an issue ID, or use the existing `YYYY-MM-DD-<slug>-plan.md` form otherwise.
+Use only an ID stated in the task or present in a linked artifact, including
+its filename; do not rename existing files. Create the folder only when writing
+the plan. Plans are process
+artifacts, never wiki pages under `docs/llm/`.
 
 ## Process
 
@@ -57,17 +61,19 @@ pages under `docs/llm/`.
    invoke `brainstorm-feature`; do not invent the behavior. Leave only
    behavior-equivalent implementation details for `implement-task` rulings.
 
-4. **Bite-sized steps within each task.** Each step is one action:
-   - Write the failing test
-   - Run it to verify it fails
-   - Write the minimal implementation
-   - Run the tests to verify they pass
+4. Give each task only the steps needed for its change and a meaningful
+   `Verify` check. Use an existing test runner and a failing test when that
+   test protects changed behavior. If the project has no tests, use a
+   repeatable check available in the project; do not add a unit-test runner
+   solely to satisfy the plan. Record the expected result. If no check can
+   establish a required behavior, mark it `cannot verify` instead of claiming
+   coverage.
 
    For a source-less new project, the first task bootstraps the runtime and
-   test command approved in the design before this red-green loop. State the
-   exact setup and verification commands. If the approved design does not
-   establish them, tell the user to invoke `brainstorm-feature`; do not invent
-   a toolchain.
+   first entry point approved in the design. State its verification procedure.
+   If the design does not establish the runtime, build tool, first entry point,
+   or verification approach, tell the user to invoke `brainstorm-feature`;
+   do not invent a toolchain.
 
 5. Put contract/data changes before their callers; put tests beside the
    behavior they verify. Do not add tasks for speculative abstractions.

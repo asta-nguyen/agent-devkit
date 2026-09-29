@@ -92,9 +92,12 @@ When implementation needs a user answer before it can continue:
 3. Persist every answer that changes observable behavior or an approved
    requirement:
    - When a plan or spec exists, append the decision to its `## Decision Log`.
-   - For a bounded task with no plan/spec, create
-     `docs/agent-devkit/decisions/YYYY-MM-DD-<slug>.md` only when the first
-     persistent decision occurs. Link it under `## Decisions` in
+   - For a bounded task with no plan/spec, create a decision file only when
+     the first persistent decision occurs. Use
+     `docs/agent-devkit/decisions/YYYY-MM-DD-<issue-id>-<slug>.md` when an issue
+     ID is present, or the existing `YYYY-MM-DD-<slug>.md` form otherwise. Use
+     only an ID stated in the task or present in a linked artifact, including
+     its filename; do not rename existing files. Link it under `## Decisions` in
      `docs/agent-devkit/INDEX.md` and link it to the task issue or related
      artifact when one exists.
 
@@ -138,8 +141,11 @@ documented business rule can make the wiki stale.
 Use exactly one of these classifications:
 
 - `yes`: a page is stale or incomplete, or new/material behavior needs a page;
-  list the affected pages and tell the user to invoke `document-wiki` after
-  verification.
+  list the affected pages. For missing coverage, tell the user to invoke
+  `document-wiki` after verification. If an existing page contradicts the
+  changed behavior, treat it as a blocker and do not claim completion until it
+  is refreshed and the final review passes. Missing coverage for new behavior
+  can remain a documented handoff.
 - `no`: relevant pages and source paths were inspected and remain accurate;
   name the evidence in the final response.
 - `not-applicable`: the repository does not maintain a `docs/llm/` wiki.

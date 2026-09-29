@@ -29,8 +29,11 @@ out loud so the user can override it:
 - **Architectural** — new projects, new subsystems, changes that restructure
   how components fit together or alter interfaces others depend on. Follow the
   full process: questions, approaches, sectioned design, a written spec at
-  `docs/agent-devkit/specs/YYYY-MM-DD-<slug>-design.md`, then tell the user to
-  invoke `plan-feature`.
+  `docs/agent-devkit/specs/YYYY-MM-DD-<issue-id>-<slug>-design.md` when the task
+  has an issue ID, or the existing `YYYY-MM-DD-<slug>-design.md` form otherwise;
+  then tell the user to invoke `plan-feature`. Use only an issue ID stated in
+  the task or present in a linked artifact, including its filename; do not
+  rename existing files.
 
 When in doubt between two paths, take the heavier one. Hidden complexity
 discovered mid-task upgrades the path — stop, say so, and step up. Nothing
@@ -82,8 +85,10 @@ downgrades mid-task.
 4. Offer the smallest viable design first. Include scope, observable behavior,
    affected interfaces/files, error cases, and verification approach.
    For a source-less new project, also state the approved runtime, package or
-   build tool, test command, and first entry point. If these are undecided,
-   continue clarifying before presenting the design for approval.
+   build tool, first entry point, and how the first behavior will be verified.
+   Do not require a unit-test runner without a concrete need. If the runtime,
+   build tool, or first entry point is undecided, continue clarifying before
+   presenting the design for approval.
 5. Present the design in short sections and ask for approval before planning.
    Do not write production code while material decisions remain unresolved.
 6. After approval, follow the selected path:
@@ -91,8 +96,9 @@ downgrades mid-task.
    - Bounded: tell the user to invoke `implement-task`; do not create a plan
      file.
    - Architectural: create `docs/agent-devkit/specs/` if needed, write and
-     self-review `YYYY-MM-DD-<slug>-design.md`, then create or update
-     `docs/agent-devkit/INDEX.md` with a link to it. Get the user's approval of
+     self-review `YYYY-MM-DD-<issue-id>-<slug>-design.md` when an issue ID is
+     present, or `YYYY-MM-DD-<slug>-design.md` otherwise. Then create or update
+     `docs/agent-devkit/INDEX.md` with a link to the exact file. Get the user's approval of
      the written spec, then tell the user to invoke `plan-feature`. Approval of
      the spec authorizes creation of the execution plan, not execution of a high-impact
      plan that does not exist yet. An instruction such as "implement it" given
@@ -133,9 +139,10 @@ a wiki page: never place a proposed design in `docs/llm/`.
 
 Use `docs/agent-devkit/INDEX.md` as the process-artifact index. Link every
 design from its `## Designs` section. When an Obsidian vault exists, targets
-are relative to its root (for a `docs/` vault:
-`[[agent-devkit/specs/YYYY-MM-DD-<slug>-design|Design]]`). Otherwise use a
-relative Markdown link. The design must include `## Related context` with links
+are relative to its root (for a `docs/` vault, for example:
+`[[agent-devkit/specs/YYYY-MM-DD-<issue-id>-<slug>-design|Design]]`, omitting
+`<issue-id>-` when unavailable). Otherwise use a relative Markdown link. The
+design must include `## Related context` with links
 only to existing `docs/llm/` pages read during brainstorming; write `None` when
 there was no verified wiki context. Never add a link from `docs/llm/` back to a
 design.

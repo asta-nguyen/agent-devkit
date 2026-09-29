@@ -30,13 +30,18 @@ Never run this optional skill unless the user requests an estimate.
    integrations, test cost, and unresolved dependencies. Never apply a generic
    "AI is N% faster" discount. Mark a task `Blocked: spike required` when an
    unknown prevents a defensible range; do not hide uncertainty in a buffer.
-5. Save `docs/agent-devkit/estimates/YYYY-MM-DD-<slug>-estimate.md` using:
+5. Save a new estimate at
+   `docs/agent-devkit/estimates/YYYY-MM-DD-<issue-id>-<slug>-estimate.md` when
+   the task or linked plan (including its filename) has an issue ID; otherwise
+   use the existing
+   `YYYY-MM-DD-<slug>-estimate.md` form. Use only the exact issue ID provided,
+   do not rename existing estimates, and link to the exact plan filename. Use:
 
    ```md
    # Feature Estimate
 
    ## Plan
-   - [[agent-devkit/plans/YYYY-MM-DD-<slug>-plan|Implementation plan]]
+   - <link to the exact plan file>
 
    ## AI support profile
    <included effort and exclusions>

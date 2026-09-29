@@ -57,10 +57,16 @@ report the paths, ask the user how to resolve it, and return without writing.
      ```
    - `CLAUDE.md`: a short repository-specific pointer to `AGENTS.md`; include
      extra instructions only when local evidence establishes them.
-   - `docs/llm/`: always create the wiki skeleton (`AGENTS.md`, `INDEX.md`, and
-     `LOG.md`). Create `architecture/`, `workflows/`, or `decisions/` only when
-     `document-wiki` has a real page to place there; do not add placeholder
-     pages just to preserve empty directories.
+   - `docs/llm/`: create the wiki skeleton with `AGENTS.md` and `INDEX.md`.
+     The generated `AGENTS.md` must match `document-wiki`'s current-source
+     verification rules, distinguish verification limits from confirmed
+     content gaps, and state that any existing log is legacy, not read or
+     written and not used for freshness. Do not create `LOG.md`. If a legacy
+     `LOG.md` already exists,
+     preserve it byte-for-byte without reading or updating it. Create
+     `architecture/`,
+     `workflows/`, or `decisions/` only when `document-wiki` has a real page to
+     place there; do not add placeholder pages just to preserve empty directories.
 
    Every claim must have a repository source. If evidence is insufficient,
    state an open question instead of inventing a rule.
@@ -123,18 +129,13 @@ report the paths, ask the user how to resolve it, and return without writing.
    or update either file only after approval; preserve all other existing
    content byte-for-byte.
 5. Check whether OpenEZ is available (`openez` command or MCP server). If it is
-   available, note it in `AGENTS.md` under a `## Code intelligence` section:
-   mention that agents should prefer OpenEZ MCP tools (`code_query`,
-   `code_context`, `graph_neighbors`) for semantic code questions, with direct
-   file reads as fallback. If it is not available, explain that OpenEZ is an
-   optional local code index that helps agents find symbols, callers,
-   dependencies, and cross-module flows faster through semantic search and
-   graph queries. Explain that setup requires Bun and the OpenEZ CLI, creates
-   ignored `.openez/` index data, and may take time. Then ask:
-   `Do you want to set up OpenEZ for this repo? It is recommended for
-   non-trivial codebases.` If the user agrees, tell them to invoke
-   `setup-openez`; otherwise continue without it. Do not install or run
-   `openez setup` silently.
+   available, note it in `AGENTS.md` under a `## Code intelligence` section as
+   an optional path for semantic or cross-module questions when the workspace
+   index is healthy; direct source reads remain authoritative. If it is not
+   available, continue without it. Mention optional `setup-openez` only when
+   direct search cannot establish a needed semantic or cross-module relationship.
+   Do not recommend it by repository size, or install or run `openez setup`
+   silently.
 6. Keep local Obsidian and OpenEZ state out of Git. Create `.gitignore` when it
    is missing, or append only these missing lines without reordering,
    normalizing, or duplicating existing content:
@@ -171,7 +172,6 @@ report the paths, ask the user how to resolve it, and return without writing.
 | `CLAUDE.md` | Missing | Pointer to `AGENTS.md` + repo-specific instructions |
 | `docs/llm/AGENTS.md` | Missing | Wiki evidence and maintenance rules |
 | `docs/llm/INDEX.md` | Missing | Navigable entry point |
-| `docs/llm/LOG.md` | Missing | Append-only change log |
 | `docs/llm/architecture/overview.md` | Baseline map | Source-grounded repository orientation |
 | `docs/llm/{architecture,domains,workflows,integrations,operations,decisions}/` | A real page needs the folder | Evidence-backed wiki categories; create only when needed |
 | `.gitignore` | Setup | Add only missing local Obsidian and OpenEZ rules |

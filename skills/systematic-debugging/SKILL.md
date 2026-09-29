@@ -102,11 +102,11 @@ You must complete each phase before proceeding to the next.
 2. **Establish expected behavior.** Use source, tests, and current wiki pages.
    If they do not establish the intended behavior, stop and tell the user to
    invoke `brainstorm-feature` to get approval before changing behavior.
-3. **Write the verify plan.** Before writing a regression test or production
+3. **Write the verify plan.** Before writing a regression check or production
    fix, list the observable conditions that prove the bug is fixed. State each
    as a checkable claim:
    - The original symptom no longer occurs (reproduction steps from Phase 1).
-   - The regression test passes.
+   - A repeatable check of the original symptom passes.
    - Traced callers and relevant existing tests do not regress (name the
      callers and checks from Phase 1).
    - Any contract the fix touches still holds (state the contract and how it
@@ -118,20 +118,27 @@ You must complete each phase before proceeding to the next.
    diff against it; `review-and-verify`'s "Bug fixed" row requires it. Without
    a written verify plan, "fixed" is a feeling, not a fact — do not proceed to
    step 4 until it is written.
-4. **Write a regression test** that reproduces the original symptom.
-5. **Verify the test fails** without the fix (red).
+4. **Choose a repeatable regression check** that reproduces the original
+   symptom. Use an existing test runner when it gives a meaningful test. When
+   none exists, use an available CLI, self-check, or recorded manual procedure
+   with an expected result. Do not set up a unit-test runner solely for this
+   fix.
+5. **Verify the check fails** without the fix.
 6. **Apply the smallest root-cause fix.** Reuse the verified working pattern
    from Phase 2 when it fits. A smaller-looking symptom patch is not minimal if
    sibling callers remain broken.
-7. **Verify the test passes** (green).
-8. **Run the full test suite** to check for regressions.
+7. **Verify the same check passes** with the fix.
+8. **Run relevant existing tests and checks** for regressions. The final
+   `review-and-verify` gate runs repository-mandated full commands when they
+   exist; do not invent a test suite.
 9. Call the available Skill entry whose local name is `review-and-verify` to
    review the diff against the
    verify plan from step 3 and run fresh verification. Tell the user to invoke
    `document-wiki` after verification only when the fix changes observable
-   behavior or reveals stale wiki documentation. Do not update the wiki when it
-   already correctly describes the intended behavior and the fix only restores
-   code to that behavior.
+   behavior or reveals stale wiki documentation. An existing page that
+   contradicts the fix remains a blocker until refreshed. Do not update the
+   wiki when it already correctly describes the intended behavior and the fix
+   only restores code to that behavior.
 10. Do not create commits during debugging. Even when the user requests a
     commit, wait until final `review-and-verify` passes.
 

@@ -24,8 +24,11 @@ Do not create handoffs for short tasks that are already complete.
    active spec/plan `## Decision Log`, any task-linked decision file, and the
    relevant wiki page or test output. Source and fresh command output are
    authoritative; conversation memory is not.
-2. Create
-   `docs/agent-devkit/handoffs/YYYY-MM-DD-<slug>.md` with this structure:
+2. Create a handoff at
+   `docs/agent-devkit/handoffs/YYYY-MM-DD-<issue-id>-<slug>.md` when the task
+   has an issue ID, or use the existing `YYYY-MM-DD-<slug>.md` form otherwise.
+   Use only an ID stated in the task or present in a linked artifact, including
+   its filename; do not rename existing files. Use this structure:
 
    ```md
    # Handoff: <task>

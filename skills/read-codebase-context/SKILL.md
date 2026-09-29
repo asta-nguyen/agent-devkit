@@ -5,32 +5,29 @@ description: Use when preparing to change or plan code in an unfamiliar reposito
 
 # Read Codebase Context
 
-Use OpenEZ to locate context, then read the returned source directly. The index
-and memory accelerate discovery; current source code and tests establish facts.
+Choose search by the question, then read the returned source directly. Current
+source code and tests establish facts.
 
 1. If `docs/llm/AGENTS.md` and `docs/llm/INDEX.md` exist, read both and open the
    relevant linked wiki page for the requested behavior or flow. If no relevant
    page exists, state that the wiki has no verified coverage and continue.
-2. Check whether `openez` is available and run `openez status .`.
-3. Treat OpenEZ as the preferred path for semantic discovery. If OpenEZ or its
-   local workspace index is missing, explain that it is an optional local code
-   index that helps agents find symbols, callers, dependencies, and
-   cross-module flows faster through semantic search and graph queries; source
-   and tests remain authoritative. Explain that setup requires Bun and the
-   OpenEZ CLI, creates ignored `.openez/` index data, and may take time. Ask:
-   `Do you want to set up OpenEZ for this repo? It is recommended for
-   non-trivial codebases.` If the user agrees, tell them to invoke
-   `setup-openez` and continue after its index/MCP verification. If the user
-   declines, continue with the direct-source fallback. Never install the CLI,
-   Bun, or an agent MCP configuration silently.
-
-4. When OpenEZ is available, refresh the index with `openez index .` before a
-   non-trivial feature plan.
-5. When OpenEZ is available, query the requested behavior with `code_query` or
-   `code_context`; traverse
-   callers/callees with `graph_neighbors` when the flow crosses modules. Use
-   `memory_recall` only for previously recorded decisions or patterns.
-6. Read the entry point, returned implementation(s), direct callers, and
+2. For a known path, symbol, or exact string, use scoped `rg` (`rg --files` for
+   paths). For an approximate filename or repeated path/content searches, use
+   FFF MCP (`find_files` / `grep`) when already connected; otherwise use `rg`.
+3. For semantic questions or cross-module caller tracing, use OpenEZ MCP when
+   connected. Check this workspace with `list_workspaces`, then call
+   `code_query` or `code_context` only when its index is ready; use
+   `graph_neighbors` to traverse relationships. If OpenEZ is unavailable,
+   reports an error, stalls, or returns irrelevant results, continue with FFF
+   or `rg` and direct reads instead of retrying it repeatedly.
+4. Use OpenEZ only when the task needs semantic or cross-module search and the
+   workspace index is healthy. If a stale index can be refreshed with the
+   available CLI, refresh it only when that search is needed. If OpenEZ is
+   unavailable or unhealthy and direct search cannot establish a required
+   relationship, offer `setup-openez` as an optional next step. Never recommend
+   setup by repository size, or install/configure search tools silently. Use
+   `memory_recall` only for recorded decisions or patterns.
+5. Read the entry point, returned implementation(s), direct callers, and
    downstream callees until the source establishes persistence and external
    boundaries. Inspect state changes, storage/external adapters, jobs, events,
    email/notifications, authorization, error paths, and relevant tests. Record
@@ -45,19 +42,19 @@ and memory accelerate discovery; current source code and tests establish facts.
    Verification: <tests/checks to run>
    ```
 
-7. If OpenEZ cannot be installed or queried, use `rg` and direct file reads,
-   state the fallback, and continue. Never fabricate a file impact list from
-   index results or memory alone.
+6. Never fabricate a file impact list from index results or memory alone.
 
 ## Quick reference
 
 | Need | Tool |
 |---|---|
-| Semantic code search | `code_query` |
+| Exact path/text/symbol | scoped `rg` / `rg --files` |
+| Approximate file or repeated search | FFF `find_files` / `grep` when connected |
+| Semantic code search (healthy index) | OpenEZ `code_query` |
 | Symbol context (callers/callees) | `code_context` |
 | Graph traversal across modules | `graph_neighbors` |
 | Past decisions or patterns | `memory_recall` |
-| Fallback (no OpenEZ) | `rg` + direct file reads |
+| Unavailable or failed search tool | `rg` + direct file reads |
 
 ## Red flags
 
@@ -65,9 +62,9 @@ and memory accelerate discovery; current source code and tests establish facts.
 |---|---|
 | "I'll skip tracing callers, it's a small change" | Small changes break callers you did not read. |
 | "The controller is enough context" | Trace callees through persistence and external side effects before claiming the flow is understood. |
-| "The index is probably current" | Stale index returns wrong callers. Run `openez index .` if unsure. |
+| "The index is probably current" | Check workspace status and read current source. Refresh before a non-trivial plan when OpenEZ is needed. |
 | "I'll fabricate the impact list from memory" | Memory is not evidence. Read the actual source. |
-| "I don't need OpenEZ, I'll just grep" | Grep finds strings, not call graphs. Use OpenEZ when available. |
+| "OpenEZ is installed, so every search starts there" | Exact searches are simpler with `rg`; use OpenEZ for semantic and graph questions when its index is healthy. |
 
 The local `.openez/` directory is derived index data. Keep it out of source
 documentation and version control unless the target repository explicitly

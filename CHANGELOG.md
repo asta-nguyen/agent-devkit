@@ -2,6 +2,27 @@
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-09-29
+
+### Changed
+
+- Base wiki freshness on current source and tests verified in the current run,
+  distinguish verification limits from confirmed content gaps, and keep legacy
+  log files out of the freshness workflow.
+- Stop wiki work when existing agent instructions conflict with the current-source
+  and no-log contract, and ask the user to resolve the conflict.
+- Clarify bounded bug, small feature, and architectural workflows, including
+  repeatable non-test-runner verification and approval gates.
+- Add team Git, issue-linked artifact naming, and shared-index conflict guidance;
+  make OpenEZ use depend on search needs and index health rather than repository size.
+
+### Documentation
+
+- Update acceptance scenarios for wiki verification, instruction conflicts,
+  issue-linked artifacts, shared-index conflicts, and pilot measurements.
+- Update the pilot guide with explicit routes, active-time measurements, wiki
+  reading counts, documentation conflicts, and user-wait separation.
+
 ## [0.4.3] - 2026-09-15
 
 ### Changed

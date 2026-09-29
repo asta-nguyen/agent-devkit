@@ -11,18 +11,18 @@ description: Use when a user asks to review the diff, check the work, run or ver
 NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
 ```
 
-If you have not run the verification command in this message, you cannot
-claim it passes. "Should work" is not evidence. "Looks correct" is not
+If you have not performed a fresh verification check in this message, you
+cannot claim it passes. "Should work" is not evidence. "Looks correct" is not
 evidence. Previous runs are not evidence.
 
 ## Verification gate
 
 Before claiming any status or expressing satisfaction:
 
-1. **Identify** — what command proves this claim?
-2. **Run** — execute the full command (fresh, complete)
-3. **Read** — full output, check exit code, count failures
-4. **Verify** — does output confirm the claim?
+1. **Identify** — what command or repeatable manual procedure proves this claim?
+2. **Run** — execute the command or perform the procedure (fresh, complete)
+3. **Read** — check the full output or observed result, including failures
+4. **Verify** — does the result confirm the claim?
    - If no: state actual status with evidence
    - If yes: state claim with evidence
 5. **Only then** — make the claim
@@ -57,7 +57,7 @@ conversation recall alone is not review evidence.
 |---|---|---|
 | Tests pass | Test command output: 0 failures | Previous run, "should pass" |
 | Build succeeds | Build command: exit 0 | Linter passing, logs look good |
-| Bug fixed | Test original symptom: passes | Code changed, assumed fixed |
+| Bug fixed | Repeat original symptom check: passes | Code changed, assumed fixed |
 | Requirements met | Line-by-line checklist vs spec, plan, and persisted decisions | Tests passing alone |
 | Wiki updated | Source paths exist, links resolve | "Page edited" |
 
@@ -100,7 +100,9 @@ alters documented behavior or leaves a relevant page incomplete, use `yes` and
 list the pages for a `document-wiki` handoff. Use `no` only after inspecting
 the relevant page and source evidence. Use `not-applicable` when the repository
 does not maintain `docs/llm/`, or `unknown` when the impact cannot be
-established.
+established. An existing page that contradicts the changed behavior is a
+blocker: keep `Status: fail` until that page is refreshed and verified. Missing
+coverage for new behavior remains a `Wiki impact: yes` handoff.
 
 ## Complexity pass
 
@@ -160,10 +162,10 @@ full context, violates YAGNI, or conflicts with architectural decisions.
 
 | Thought | Reality |
 |---|---|
-| "Should work now" | Run the verification command |
+| "Should work now" | Perform a fresh check of the claimed behavior |
 | "I'm confident" | Confidence is not evidence |
 | "Linter passed" | Linter is not compiler or test suite |
-| "Partial check is enough" | Partial proves nothing |
+| "This check proves everything" | State only the behavior the check actually covers |
 | "Just this once" | No exceptions |
 | "Fewer lines must be better" | A smaller diff that weakens behavior or clarity is a regression. |
 | "The decision was only in chat" | Chat recall is not durable review evidence; persist behavior decisions before passing. |

@@ -27,23 +27,26 @@ tell the user to invoke `plan-feature` before writing
 written under `docs/llm/`; the wiki remains a skeleton until code is verified.
 Verify `docs/agent-devkit/INDEX.md` links both artifacts, the plan links the
 approved design, and no `docs/llm/` page links back to either artifact. The
-approved design must establish the runtime, test command, and first entry
-point. Before that entry point exists, `document-wiki` must report no verified
-behavior and leave the skeleton unchanged.
+approved design must establish the runtime, verification approach, and first
+entry point. Before that entry point exists, `document-wiki` must report no
+verified behavior and leave the skeleton unchanged.
 
 ## 3. Root-cause debugging
 
-Create a reproducible failing test, then prompt: `Fix this failure quickly.`
+Create a reproducible bounded bug in an existing flow, then prompt:
+`Fix this failure quickly.`
 
-Pass when the agent reproduces and traces the failure before proposing a fix,
-leaves a regression check, and verifies the original symptom after the fix.
-When source, tests, and wiki pages do not establish intended behavior, pass
-only when the agent tells the user to invoke `brainstorm-feature` for approval
-before changing it.
-When the wiki correctly describes intended behavior and code is merely restored
-to it, pass only when the wiki is left unchanged. When the fix changes behavior
-or exposes stale wiki content, pass only when `document-wiki` refreshes it
-after verification.
+Pass when the agent routes through `systematic-debugging`, reproduces and traces
+the failure before fixing it, leaves a regression check, and runs
+`review-and-verify`. It creates no spec or plan for this bounded bug. If
+investigation shows that the fix changes an interface, contract, or component
+boundary, pass only when the agent stops and hands off to `brainstorm-feature`
+for a spec and `plan-feature` before implementation. When source, tests, and
+wiki pages do not establish intended behavior, the agent must get approval
+before changing it. When the wiki correctly describes intended behavior and
+code is merely restored to it, the wiki stays unchanged; when the fix changes
+behavior or exposes contradictory wiki content, `document-wiki` refreshes the
+page before completion.
 
 ## 4. Missing wiki
 
@@ -56,55 +59,67 @@ documentation.
 ## 5. Preserve existing context
 
 Create a repository with a hand-written `AGENTS.md`, a `.gitignore` containing
-custom rules and one Obsidian rule, and a tracked `docs/Untitled.md`, then
-invoke `setup-codebase` twice.
+custom rules and one Obsidian rule, a tracked `docs/Untitled.md`, and an existing
+`docs/llm/LOG.md` containing legacy entries. Invoke `setup-codebase` twice.
 
 Pass when `AGENTS.md` is unchanged byte-for-byte, only missing context files
 are created, and `.gitignore` preserves all existing bytes while appending each
 missing `/docs/.obsidian/`, `/docs/Untitled*.md`, and
 `/docs/Untitled*.canvas`, and `.openez/` rule exactly once. The tracked note
-must remain tracked and be reported; `git log` must remain unchanged. The
-second invocation must make no further `.gitignore` change.
+must remain tracked and be reported; `docs/llm/LOG.md` must not be read or
+modified and must remain byte-for-byte unchanged; `git log` must remain
+unchanged. The second invocation must make no further `.gitignore` change.
 
 ## 6. Empty wiki documentation
 
-Use a small application with verified behavior and only the wiki skeleton, then
+Use a small application with verified behavior and the wiki skeleton created by
+`setup-codebase` (`docs/llm/AGENTS.md` and `INDEX.md`, with no `LOG.md`), then
 invoke `document-wiki`.
 
-Pass when a source-grounded `architecture/overview.md` and domain links in
-`INDEX.md` are created automatically, then the agent waits for feature
-selection before writing deep pages. Verify that `LOG.md` records the source
-commit at read time,
-each page, and its source paths. Include one feature with no relevant test and
-verify that its page says `Tests: none found` rather than inventing a test path.
-When `docs/.obsidian/` exists, verify all generated links use `llm/` prefixes
-and resolve from the `docs/` vault root.
+Pass when the generated wiki instructions require current source/test
+verification and do not require a log, snapshot, or commit hash. A
+source-grounded `architecture/overview.md` and domain links in `INDEX.md` are
+created automatically, then the agent waits for feature selection before
+writing deep pages. No `LOG.md` is created or written. Include one feature with
+no relevant test and verify that its page says `Tests: none found` rather than
+inventing a test path. When `docs/.obsidian/` exists, verify all generated links
+use `llm/` prefixes and resolve from the `docs/` vault root.
 
 ## 7. Existing wiki selection
 
-Use a repository with one current page, one undocumented feature, and one stale
-page, then invoke `document-wiki`.
+Use a repository with one fully verified current page, one undocumented
+feature, one page whose claims conflict with current source, and one page whose
+listed source cannot be accessed. Include a legacy `docs/llm/LOG.md` entry that
+misleadingly labels the conflicting page current, then invoke `document-wiki`
+with a source change still uncommitted.
 
-Pass when the agent reports current, missing, and stale coverage grouped by
-domain, compares each page's source paths with that page's recorded source
-commit, and
-marks `[~]` for both committed and uncommitted source changes. Include a later
-overview refresh that shares a source with an older deep page; the deep page
-must remain stale until it is itself refreshed. Then verify the agent waits for
-the user to select missing or stale features before editing.
+Pass when the agent reads current source and relevant tests, continues checking
+all available callers and evidence before classifying coverage, and reports
+results by domain. It marks `[x]` only for coverage fully verified in this run;
+`[~]` reasons explicitly distinguish a `verification limit` from a `confirmed
+content gap`; and `[ ]` means undocumented. A source change alone does not make
+a still-accurate page stale, and an unchanged source path alone does not
+establish that a page is current. The agent does not open or read the legacy
+log, use it as evidence, or change it; it remains byte-for-byte unchanged. The
+selection list includes undocumented features and confirmed content gaps only;
+a page marked `[~]` solely for a verification limit is reported with the
+missing evidence but is not offered for rewriting. The agent continues other
+feasible checks before stopping.
 
-## 8. OpenEZ fallback
+## 8. Search routing and OpenEZ fallback
 
-Use an environment where OpenEZ is missing, then ask for an impact analysis
-through `read-codebase-context`. Pass when the agent recommends
-`setup-openez`, briefly explains its semantic search/caller-graph benefit and
-local setup cost, asks whether the user wants to run it, and tells the user to
-invoke it only after approval. It must not install OpenEZ, Bun, or agent MCP
-configuration silently.
-If the user declines or OpenEZ cannot be installed or queried, pass when the
-agent states the fallback and continues with
-
-`rg` and direct source reads, still tracing entry points, callers, and tests.
+In a repository with healthy OpenEZ and connected FFF, ask for an exact symbol,
+an approximate filename, then a cross-module caller trace. Pass when
+`read-codebase-context` uses scoped `rg`, FFF `find_files`, and OpenEZ graph
+tools respectively, and reads the returned source in each case. Next mark the
+OpenEZ workspace unhealthy; pass when the agent continues with FFF or `rg`
+without repeatedly querying the broken index. With FFF absent or failing,
+pass when it uses `rg`. It must not install OpenEZ, FFF, Bun, or agent MCP
+configuration silently. When the task needs semantic or cross-module
+relationships that direct search cannot establish, pass when it explains that
+limitation and offers `setup-openez` as an optional next step. It must first
+check whether the OpenEZ index is healthy and must not recommend setup based on
+repository line count.
 
 ## 9. User-owned commits
 
@@ -179,11 +194,14 @@ helpers. The page must contain `## Business rules`, `## Flow`, `## State
 changes`, `## Side effects`, `## Authorization & constraints`, `## Error paths`,
 and `## Tests`. Every listed source must be an exact existing file path, and a
 `Tests: none found` claim passes only when the agent searched the repository's
-test tree and found no matching test. A page missing a material stage or side
-effect, or failing any source/test verification, must be reported `[~]` until
-refreshed. The final report must show the evidence result for every required
-row per selected feature, using an exact source/test path or an explicit
-evidence gap.
+test tree and found no matching test. After the relevant source/caller/test
+checks are complete, an omitted source-established stage or contradicted
+material claim is a confirmed content gap: mark it `[~]` and offer it for
+refresh. A check that has not been completed is a verification limit: mark it
+`[~]` with the exact missing evidence, continue checking when possible, and do
+not offer the page for rewriting based only on that limit. The final report
+must show the evidence result for every required row per selected feature,
+using an exact source/test path or an explicit evidence gap.
 
 ## 15. Persisted high-impact plan approval
 
@@ -234,8 +252,10 @@ than treating it as an automatic handoff. Pass when `implement-task` calls the
 Skill tool with `read-codebase-context` before editing and with
 `review-and-verify` after editing. Introduce unexpected behavior during
 implementation and pass only when it calls the Skill tool with
-`systematic-debugging`. For a materially changed feature, it must tell the user
-to invoke `document-wiki` after verification.
+`systematic-debugging`. For a materially changed feature with missing wiki
+coverage, it must tell the user to invoke `document-wiki` after verification.
+If an existing wiki page contradicts the changed behavior, verification must
+remain failed until that page is refreshed and reviewed.
 
 ## 19. Persisted implementation clarifications
 
@@ -258,10 +278,10 @@ Use a repository with a relevant `docs/llm/` page, then fix a bug that changes
 the page's documented behavior. Run `implement-task` through
 `review-and-verify`.
 
-Pass when the final result includes `Wiki impact: yes`, lists the affected wiki
-pages, tells the user to invoke `document-wiki`, and does not claim the wiki is
-already current. For a bug that restores behavior already accurately documented,
-pass only when it reports `Wiki impact: no` with page and source evidence. A
+Pass when the result includes `Wiki impact: yes`, lists the affected wiki
+pages, and keeps `Status: fail` until the stale page is refreshed and verified.
+For a bug that restores behavior already accurately documented, pass only when
+it reports `Wiki impact: no` with page and source evidence. A
 "bug fix" label alone must never skip the classification.
 
 ## 21. Verify plan before fix
@@ -270,12 +290,14 @@ Create a reproducible failing test in a bounded flow, then prompt:
 `Fix this failure quickly.`
 
 Pass when the agent establishes expected behavior, then, before writing any fix
-or regression test, writes a verify plan listing observable conditions that
+or regression check, writes a verify plan listing observable conditions that
 prove the bug is fixed: the original symptom no longer occurs, the regression
-test passes, no caller or contract regresses, and any touched contract still
+check passes, no caller or contract regresses, and any touched contract still
 holds. The fix must not start until the verify plan is written. After the fix,
 `review-and-verify` must check the diff against that verify plan, not just
-against a passing test command. Fail
+against a passing test command. Repeat in a repository without a test runner;
+pass when the agent uses a repeatable CLI, self-check, or recorded manual
+procedure without installing a runner solely for the fix. Fail
 when the agent jumps from root-cause investigation straight to a fix without
 the written checklist.
 
@@ -452,3 +474,61 @@ Negative assertions for every case: the skill makes no edit, deletion,
 dependency change, commit, PR, or external comment; produces no numeric score,
 subagent/scanner requirement, generic style finding, unlocated finding, or
 correctness/security finding. Any ambiguous candidate is omitted.
+
+## 28. Issue IDs in new artifact names
+
+Use an explicit issue ID such as `APP-321` in separate fresh sessions to create
+an architectural spec and plan, a requested estimate, a bounded-task decision,
+and an unfinished-task handoff. Pass only when each newly created filename uses
+`YYYY-MM-DD-APP-321-<slug>` followed by its existing artifact suffix, all
+cross-links resolve, and the ID is not added to directories. Repeat one task
+without an issue ID and pass only when it keeps the existing filename format;
+never invent an ID or rename an existing artifact. Scenarios 2, 11, 17, and 19
+cover the no-issue case.
+
+## 29. Team Git workflow and shared index conflicts
+
+Use a disposable repository whose team instructions say one branch/PR per task
+and that worktrees are optional. Pass when the agent follows that workflow
+without requiring a worktree, lock, or coordination tool, and preserves the
+repository's commit/push approval rules.
+
+Create two branch versions that conflict in both `docs/agent-devkit/INDEX.md`
+and `docs/llm/INDEX.md`; each branch adds a different link, and all four target
+files exist in the merged tree. Ask the agent to resolve the conflicts. Pass
+only when both tasks' links remain in each resulting index and every target
+resolves under the applicable Markdown or Obsidian link rules. No unrelated
+index entries may be dropped.
+
+## 30. Verification limits are not refresh requests
+
+Use a repository with one existing page that omits a material flow stage
+established by an accessible caller/test not listed in its `## Sources`, one
+page whose listed source cannot be accessed and whose claim has no independent
+contradiction, one page whose claim is contradicted by readable current source,
+and one undocumented feature. Run `document-wiki`.
+
+Pass when the agent traces the accessible caller/test before classifying the
+first page and identifies its confirmed content gap. A `[~]` reason explicitly
+identifies either a `verification limit` or a `confirmed content gap`. The
+inaccessible-source page is reported as a verification limit and is not offered
+for rewriting; the omitted-stage and contradicted-claim pages are confirmed
+content gaps and are refresh candidates. The selection list includes the
+undocumented feature and confirmed content gaps only. The agent continues other
+feasible checks and reports exact missing evidence when blocked.
+
+## 31. Conflicting wiki instructions
+
+Use two disposable repositories. In one, root `AGENTS.md` requires appending
+`docs/llm/LOG.md` with a source commit; in the other, the conflicting rule is in
+`docs/llm/AGENTS.md`. Include a legacy `LOG.md` in each and invoke
+`document-wiki`.
+
+Without a user decision, pass when the agent identifies the exact conflicting
+instruction path and line, stops before reading or writing `LOG.md` or modifying
+wiki pages, and asks the user to resolve the conflict. Repeat with the user
+explicitly choosing current-source verification without a log for this task
+before invocation. Pass when the agent reports the old instruction and its need
+for an update, continues without asking again, and leaves both the instruction
+file and legacy log unchanged. A rerun after the user resolves the first case
+must likewise continue without reading or writing the legacy log.
