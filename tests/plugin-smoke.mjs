@@ -37,6 +37,8 @@ assert.equal(output.messages[0].parts.length, 2);
 await plugin["experimental.chat.messages.transform"]({}, output);
 assert.equal(output.messages[0].parts.length, 2);
 
+const releaseVersion = JSON.parse(fs.readFileSync(path.join(repoRoot, "package.json"), "utf8")).version;
+const escapedReleaseVersion = releaseVersion.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const versionFiles = [
   "package.json",
   ".codex-plugin/plugin.json",
@@ -45,14 +47,21 @@ const versionFiles = [
   ".devin-plugin/plugin.json",
 ];
 for (const file of versionFiles) {
-  assert.equal(JSON.parse(fs.readFileSync(path.join(repoRoot, file), "utf8")).version, "0.5.0", file);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(repoRoot, file), "utf8")).version, releaseVersion, file);
 }
 for (const file of [
   ".claude-plugin/marketplace.json",
   ".cursor-plugin/marketplace.json",
 ]) {
-  assert.equal(JSON.parse(fs.readFileSync(path.join(repoRoot, file), "utf8")).plugins[0].version, "0.5.0", file);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(repoRoot, file), "utf8")).plugins[0].version, releaseVersion, file);
 }
-assert.match(fs.readFileSync(path.join(repoRoot, "CHANGELOG.md"), "utf8"), /^## \[0\.4\.3\] - 2026-09-15/m);
+assert.match(
+  fs.readFileSync(path.join(repoRoot, "CHANGELOG.md"), "utf8"),
+  new RegExp(`^## \\[${escapedReleaseVersion}\\] - \\d{4}-\\d{2}-\\d{2}$`, "m"),
+);
+assert.match(
+  fs.readFileSync(path.join(repoRoot, "RELEASE_DESCRIPTION.md"), "utf8"),
+  new RegExp(`^# agent-devkit ${escapedReleaseVersion}$`, "m"),
+);
 
 console.log("plugin smoke checks passed");

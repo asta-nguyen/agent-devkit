@@ -249,16 +249,18 @@ Wiki workload (aggregate from task logs; enter N/A if no tasks used the wiki):
 ## D. Skill ranking
 
 12. Most useful skills (choose up to 3):
-    [ ] setup-codebase     [ ] setup-openez       [ ] read-codebase-context
-    [ ] brainstorm-feature [ ] plan-feature       [ ] estimate-feature
-    [ ] implement-task     [ ] systematic-debugging
-    [ ] review-and-verify  [ ] document-wiki
+    [ ] using-devkit          [ ] setup-codebase      [ ] setup-openez
+    [ ] read-codebase-context [ ] context-handoff     [ ] brainstorm-feature
+    [ ] plan-feature          [ ] estimate-feature    [ ] implement-task
+    [ ] systematic-debugging  [ ] review-and-verify   [ ] lean-audit
+    [ ] document-wiki
 
 13. Least useful skills (choose 1–2):
-    [ ] setup-codebase     [ ] setup-openez       [ ] read-codebase-context
-    [ ] brainstorm-feature [ ] plan-feature       [ ] estimate-feature
-    [ ] implement-task     [ ] systematic-debugging
-    [ ] review-and-verify  [ ] document-wiki
+    [ ] using-devkit          [ ] setup-codebase      [ ] setup-openez
+    [ ] read-codebase-context [ ] context-handoff     [ ] brainstorm-feature
+    [ ] plan-feature          [ ] estimate-feature    [ ] implement-task
+    [ ] systematic-debugging  [ ] review-and-verify   [ ] lean-audit
+    [ ] document-wiki
 
 ---
 
