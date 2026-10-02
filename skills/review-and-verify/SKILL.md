@@ -114,8 +114,11 @@ cannot verify <requirement> — needs <specific evidence or command>
 An unverifiable required behavior keeps the review status at `fail`.
 
 For wiki changes, also verify: source paths exist, `## Sources` entries are
-real, internal Obsidian wikilinks resolve, `INDEX.md` links resolve, and no
-placeholder text remains.
+real, internal relative Markdown links resolve from their containing files,
+`INDEX.md` links resolve, and no placeholder text remains. Also scan
+`docs/llm/` for legacy `[[...]]` links. If a task updates the wiki, completion
+requires the full `document-wiki` migration; report missing or ambiguous
+targets, and fail the wiki check while any legacy wikilink remains.
 
 Before the final result, classify wiki impact even for a bug fix. If the change
 alters documented behavior or leaves a relevant page incomplete, use `yes` and

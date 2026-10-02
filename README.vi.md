@@ -259,7 +259,7 @@ FFF không bắt buộc. Không có FFF, các skill dùng `rg` và vẫn đạt 
 |---|---|
 | `using-devkit` | Route task đến workflow devkit phù hợp trước khi edit. |
 | `setup-codebase` | Tạo context file còn thiếu và capture convention của repository. |
-| `setup-openez` | Hỏi trước khi cài CLI, thêm hướng dẫn vào `AGENTS.md` có sẵn hoặc wiring client; verify MCP sau khi restart. |
+| `setup-openez` | Hỏi trước khi cài CLI, thêm hướng dẫn vào `AGENTS.md` có sẵn hoặc wiring client; báo riêng trạng thái CLI index và MCP, ghi rõ MCP chưa xác minh nếu tools không load. |
 | `read-codebase-context` | Chọn công cụ tìm phù hợp rồi trace code path trước feature hoặc wiki work. |
 | `context-handoff` | Lưu checkpoint ngắn gọn khi session cần pause. |
 
@@ -267,7 +267,7 @@ FFF không bắt buộc. Không có FFF, các skill dùng `rg` và vẫn đạt 
 
 | Skill | Mục đích |
 |---|---|
-| `brainstorm-feature` | Phân loại spike/bounded/architectural, làm rõ scope và xin approval. |
+| `brainstorm-feature` | Phân loại scope, làm rõ và xin design approval; Spike đi tới điều tra, Bounded tới implement, Architectural qua plan. |
 | `plan-feature` | Lưu execution plan đã được approve với task nhỏ và verify được. |
 | `estimate-feature` | Estimate từng task khi PM/BA yêu cầu. |
 | `implement-task` | Trace code, implement thay đổi nhỏ nhất và verify. |
@@ -298,17 +298,13 @@ Deep pages chỉ dùng category có evidence: `architecture/` cho system structu
 
 ```text
 brainstorm-feature → làm rõ scope, phân loại và xin design approval
-        ↓
-plan-feature       → lưu plan đã approve
-        ↓
-implement-task     → code và verify
-        ↓
-review-and-verify  → review evidence mới
-        ↓
-document-wiki      → refresh docs nếu behavior thay đổi
-        ↓
-USER COMMITS
+  ├─ Spike          → điều tra và report
+  ├─ Bounded        → implement-task → review-and-verify
+  └─ Architectural  → spec → plan-feature → implement-task → review-and-verify
 ```
+
+Sau mọi nhánh có implementation, dùng `document-wiki` nếu behavior thay đổi.
+USER COMMITS sau khi review pass.
 
 ### Debug bug
 

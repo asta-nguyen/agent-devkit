@@ -25,7 +25,7 @@
   debugging classification and verification gates.
 - Allow the explicit-change lane only after exact scope and impact checks;
   batch independent brainstorming questions only.
-- Centralize shared artifact naming and vault-link rules, and make
+- Centralize shared artifact naming and relative Markdown link rules, and make
   `review-and-verify` the sole owner of the wiki-impact result block.
 - Move rare skill guidance into supporting reference files and smoke-check
   their paths; record host-reported input and output tokens in evals and pilots.
@@ -41,6 +41,18 @@
   optional FFF search installation guidance only to README and GUIDE files.
 - Add search-routing and caller-tracing acceptance scenarios, including an
   `rg`-only fallback and executed temporary-repository results.
+- Handle planned entries with no existing source in impact maps, plans,
+  estimates, and implementation; persist refreshed maps to the active spec or
+  plan.
+- Report OpenEZ CLI indexing separately from MCP query verification, and mark
+  the MCP index query unverified when tools are unavailable.
+- Use standard relative Markdown links for internal docs regardless of vault or
+  app availability. Resolve the LLM wiki index by its full path and continue
+  when only one wiki entry file exists.
+- Migrate resolvable legacy wikilinks across `docs/llm/` during wiki work and
+  block completion when any remain or a target is unresolved.
+- Route new and ambiguous features by their Spike, Bounded, or Architectural
+  classification.
 
 ## [0.5.0] - 2026-09-29
 

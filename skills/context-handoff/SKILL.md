@@ -62,7 +62,7 @@ Do not create handoffs for short tasks that are already complete.
    requirement passes without fresh evidence. Do not copy secrets or full
    logs; record the command and relevant result instead.
 4. If `docs/agent-devkit/INDEX.md` exists, add the handoff under a `##
-   Handoffs` section. Follow the shared vault-relative link and wiki-boundary
+   Handoffs` section. Follow the shared process-artifact link and wiki-boundary
    rules in `using-devkit` (read them if they are not loaded). Do not create a
    second index.
 5. Run `git diff --check` and read the created checkpoint before stopping.

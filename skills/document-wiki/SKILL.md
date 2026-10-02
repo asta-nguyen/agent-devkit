@@ -36,17 +36,25 @@ Never call unverified coverage current.
    `LOG.md`, or modifying wiki pages, and ask the user to resolve the conflict.
    If `docs/llm/` is missing after this preflight, run the repository's
    `setup-codebase` procedure inline. Preserve every existing file. Before
-   writing links, follow the shared vault-relative link rule in `using-devkit`
-   (read it if it is not loaded). If no vault exists, retain the existing
-   `docs/llm`-relative form.
+   writing links, follow the shared relative Markdown link rule in
+   `using-devkit` (read it if it is not loaded). Link internal wiki pages
+   relative to the file containing the link; do not link to process artifacts
+   from `docs/llm/`. No Obsidian vault or app is required.
 2. After the instruction preflight in step 1 succeeds, read `INDEX.md` and all
    existing wiki content pages. Treat the wiki as **empty** when it is missing,
    contains only the setup skeleton, or its pages still contain placeholder text
    such as `Populate this page` or `No pages yet`. If a legacy
    `docs/llm/LOG.md` exists, preserve it byte-for-byte and do not open, read, or
-   use it as evidence. If the repository has no application source, report that
-   no verified behavior exists, preserve the skeleton, and stop. Do not create
-   an overview or feature pages from proposed specs or plans.
+   use it as evidence. Scan all wiki pages for legacy `[[...]]` links. During
+   this wiki pass, convert every
+   resolvable internal wikilink in `docs/llm/` to a relative Markdown link,
+   including links on pages whose business content is not being refreshed.
+   This mechanical migration preserves page content and does not require feature
+   selection. Report missing or ambiguous targets; do not claim migration is
+   complete while a legacy wikilink remains. If the repository has no
+   application source, report that no verified behavior exists, preserve the
+   skeleton, and stop; do not create overview or feature pages from proposed
+   specs or plans.
 3. Build a domain map and current feature list from behavior, not filenames.
    Inspect routes, commands, scripts, workers/jobs, public APIs, manifests,
    tests, and README instructions. Use the Locate → Expand → Confirm → Read
@@ -137,7 +145,8 @@ Never call unverified coverage current.
    Update `docs/llm/FEATURES.md` only if that file already exists; do not create
    a second tracking system.
 9. Verify that every listed source path exists as a file, every internal
-   wikilink resolves from the vault root, every index link resolves, every
+   relative Markdown link resolves from the file containing it, and no legacy
+   `[[...]]` links remain in `docs/llm/`. Every index link must resolve; every
    `Tests: none found` claim has a recorded search with no matching result, and
    `git diff --check` passes. For a confirmed omission or contradiction, mark
    `[~]` as `confirmed content gap` and report the source evidence. For a check

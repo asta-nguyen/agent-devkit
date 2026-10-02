@@ -20,8 +20,14 @@ Never run this optional skill unless the user requests an estimate.
    rule: validate the recorded commit, find tracked and untracked paths changed
    since then, and confirm every mapped entry-point and implementation symbol
    across the repository. If the baseline is missing, unavailable, or no longer
-   an ancestor, trace the current flow from scratch. Still read current source
-   for every file the plan says implementation will edit. If
+   an ancestor, trace existing source from scratch. Do not try to trace planned
+   entry points, callers, or tests that do not exist yet; use planned files,
+   interfaces, behavior, and verification only from the approved design and
+   plan. Mark unspecified behavior as unknown and block an estimate when it
+   prevents a defensible range. Re-trace planned paths only after source exists.
+   Read current source for every existing file the plan says implementation
+   will edit. For a planned file that does not exist yet, use the approved
+   design and plan; do not treat that file as traced source. If
    tasks omit files, behavior, or verification, tell the user to invoke
    `plan-feature`.
 3. State the AI support profile. Assume the coding agent can inspect and edit
@@ -72,7 +78,7 @@ Never run this optional skill unless the user requests an estimate.
 
 6. Add `## Estimate` with a link to the estimate in the plan, and add the
    estimate to `docs/agent-devkit/INDEX.md` under `## Estimates`. Follow the
-   shared vault-relative link and wiki-boundary rules in `using-devkit` (read
+   shared process-artifact link and wiki-boundary rules in `using-devkit` (read
    them if they are not loaded).
 7. Treat the estimate as stale when the linked plan's tasks, files, behavior,
    verification, or assumptions change. On refresh, compare the whole current

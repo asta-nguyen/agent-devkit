@@ -257,7 +257,7 @@ FFF is never required. Without it, skills use `rg` and reach the same results.
 |---|---|
 | `using-devkit` | Route a task to the correct devkit workflow before editing. |
 | `setup-codebase` | Create missing context files and capture missing repository conventions; safe to rerun when conventions are absent. |
-| `setup-openez` | Ask before CLI install, existing `AGENTS.md` guidance, or client wiring; verify the MCP connection after restart. |
+| `setup-openez` | Ask before CLI install, existing `AGENTS.md` guidance, or client wiring; report CLI indexing and MCP verification separately, including an unverified MCP query when tools do not load. |
 | `read-codebase-context` | Choose search by the question and trace code paths before feature work or wiki generation. |
 | `context-handoff` | Save a compact evidence checkpoint when a session must pause or is approaching its context limit. |
 
@@ -265,7 +265,7 @@ FFF is never required. Without it, skills use `rg` and reach the same results.
 
 | Skill | Purpose |
 |---|---|
-| `brainstorm-feature` | Classify task (spike/bounded/architectural), clarify scope, get design approval. |
+| `brainstorm-feature` | Classify scope, clarify and get design approval; route Spike to investigation, Bounded to implementation, and Architectural through a plan. |
 | `plan-feature` | Save an approved architectural plan under `docs/agent-devkit/plans/` with bite-sized, verifiable tasks. |
 | `estimate-feature` | Optionally estimate every completed plan task in AI-assisted engineering hours. |
 | `implement-task` | Execute an approved plan: trace code, make the smallest change, verify, then flag wiki coverage. |

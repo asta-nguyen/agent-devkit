@@ -30,8 +30,16 @@ written under `docs/llm/`; the wiki remains a skeleton until code is verified.
 Verify `docs/agent-devkit/INDEX.md` links both artifacts, the plan links the
 approved design, and no `docs/llm/` page links back to either artifact. The
 approved design must establish the runtime, verification approach, and first
-entry point. Before that entry point exists, `document-wiki` must report no
-verified behavior and leave the skeleton unchanged.
+entry point. Before that entry point exists, pass only when the spec and plan
+keep the impact-map fields and write `Entry: no existing source` and
+`Flow: no existing flow`, with planned entries, files, effects, and checks only
+when the approved design provides them. They must not claim callers or tests
+were traced.
+`document-wiki` must report no verified behavior and leave the skeleton
+unchanged. After the plan is approved and `implement-task` begins, pass when it
+follows the first planned entry point, reports that callers and existing error
+paths do not exist yet, and reads the new source after creating it rather than
+claiming to have read it beforehand.
 
 ## 3. Root-cause debugging
 
@@ -84,8 +92,10 @@ source-grounded `architecture/overview.md` and domain links in `INDEX.md` are
 created automatically, then the agent waits for feature selection before
 writing deep pages. No `LOG.md` is created or written. Include one feature with
 no relevant test and verify that its page says `Tests: none found` rather than
-inventing a test path. When `docs/.obsidian/` exists, verify all generated links
-use `llm/` prefixes and resolve from the `docs/` vault root.
+inventing a test path. Verify that generated internal links use standard
+relative Markdown syntax and resolve from the file containing each link. Repeat
+with and without `docs/.obsidian/`; link syntax and targets must not depend on a
+vault or the Obsidian app.
 
 ## 7. Existing wiki selection
 
@@ -180,7 +190,12 @@ verified workflow page. Ask: `Explain the authentication flow.`
 Pass when the agent reads the wiki instructions and index, opens the relevant
 workflow page before answering, and verifies important claims against current
 source and tests. If no relevant page exists, it must say that verified wiki
-coverage is missing rather than inventing documentation.
+coverage is missing rather than inventing documentation. Repeat once with only
+`docs/llm/AGENTS.md` and once with only `docs/llm/INDEX.md`; pass when it reads
+the existing file and reports the full path of the missing sibling. With only
+the index, it follows available links; with only `AGENTS.md`, it reports no
+verified page coverage. It must not treat the missing sibling as proof that the
+whole `docs/llm/` directory is absent.
 
 ## 14. Deep downstream workflow coverage
 
@@ -503,8 +518,11 @@ Create two branch versions that conflict in both `docs/agent-devkit/INDEX.md`
 and `docs/llm/INDEX.md`; each branch adds a different link, and all four target
 files exist in the merged tree. Ask the agent to resolve the conflicts. Pass
 only when both tasks' links remain in each resulting index and every target
-resolves under the applicable Markdown or Obsidian link rules. No unrelated
-index entries may be dropped.
+resolves relative to the file containing the link. For both `INDEX.md` files,
+verify that repositories with and without an Obsidian vault use standard
+relative Markdown links; link targets and resolution do not depend on the vault
+or app. `docs/llm/INDEX.md` links only to wiki pages and never to process
+artifacts. No unrelated index entries may be dropped.
 
 ## 30. Verification limits are not refresh requests
 
@@ -564,8 +582,14 @@ new session. Fail if the agent tries to verify MCP in the session that ran
 rerun `openez setup` and calls `code_query` to verify the connection. Repeat
 with client wiring approved and `openez setup` successful, but the MCP tools
 fail to load after restart. Pass only when the agent reports that the tools did
-not load and does not offer to rerun setup. Fail if it claims the connection
-works or offers setup again.
+not load, reports the MCP index query as `index unverified`, and does not offer
+to rerun setup. If CLI indexing completed, it must report that separately from
+MCP verification. Fail if it claims the MCP connection or query is verified,
+or offers setup again.
+
+Whenever MCP tools are unavailable, pass only when the agent distinguishes a
+successful CLI indexing command from MCP query verification; if CLI indexing
+failed or did not run, it reports the index as failed or unverified.
 
 ## 33. Blocked tasks remain visible in estimates
 
@@ -613,11 +637,13 @@ ancestor, finds committed/staged/unstaged paths with
 `git diff --name-only <sha>`, includes untracked paths from `git status
 --short`, re-traces changed paths, and runs Confirm searches for every mapped
 entry-point and implementation symbol across the repository. It reads current
-source for every file to edit. `implement-task` and `estimate-feature` consume
-the refreshed map. Repeat with a missing SHA, an unavailable SHA, a non-ancestor
-SHA, and no commit at map creation; each case must re-trace the current flow
-from scratch. Fail if an outside-map caller is missed or current source for a
-planned edit is skipped.
+source for every file to edit, then writes the refreshed map and new baseline
+back to the active spec or plan. A following phase consumes that persisted map
+without retracing unchanged paths. `implement-task` and `estimate-feature`
+consume the refreshed map. Repeat with a missing SHA, an unavailable SHA, a
+non-ancestor SHA, and no commit at map creation; each case must re-trace the
+current flow from scratch. Fail if an outside-map caller is missed or current
+source for a planned edit is skipped.
 
 ## 38. Explicit-change eligibility and impact gate
 
@@ -689,6 +715,29 @@ verify plan before adding retry, timeout, error-message, or monitoring behavior.
 If expected behavior is not established by current sources, it routes to
 `brainstorm-feature` for approval. Fail if it directly adds handling from the
 no-root-cause branch.
+
+## 45. Feature routing follows classification
+
+In fresh sessions, route three requests through `using-devkit` and
+`brainstorm-feature`: a feasibility question whose output is an answer, a
+small change to an existing flow, and a new subsystem. Pass only when the
+resulting classifications route respectively to investigation/reporting,
+`implement-task` without a plan, and `plan-feature` before implementation;
+implemented changes still require `review-and-verify`. Fail if the generic
+new-or-ambiguous route sends every feature directly to implementation or every
+feature through a plan.
+
+## 46. Legacy wikilinks migrate during wiki work
+
+Use a repository wiki with a valid relative Markdown link, a resolvable legacy
+`[[...]]` link on another page, and a wikilink to a missing page. Ask for a
+wiki-related update and run `document-wiki`, then `review-and-verify`. Pass only
+when the agent converts every resolvable wikilink across `docs/llm/` to a
+relative Markdown link, preserves page content, and reports the missing target
+while marking migration incomplete until it is resolved. The review must fail
+wiki verification for that unresolved target. Fail if it checks only Markdown
+links, leaves mixed syntax while reporting the wiki update complete, or invents
+a destination for the broken link.
 
 ### Executed E8 scenarios
 

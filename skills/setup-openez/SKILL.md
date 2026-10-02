@@ -42,7 +42,10 @@ steps 1–4 and go to step 5. Re-index only if the index is missing or stale.
    ```
 
    Run this for initial setup or when the index is missing or stale. For large
-   repositories, this may take a while. Report progress to the user.
+   repositories, this may take a while. Report progress to the user and check
+   the command result: a nonzero exit means indexing failed; do not report the
+   index as created. A successful CLI run confirms that command completed, not
+   that the MCP query works.
 
 3. **Record in `AGENTS.md`:**
 
@@ -98,7 +101,10 @@ steps 1–4 and go to step 5. Re-index only if the index is missing or stale.
    `code_query`. If wiring was declined or skipped, report
    that the client connection remains unconfigured. If wiring was approved and
    run, report that the MCP tools did not load after restart. In either case,
-   continue with direct file reads and `rg`.
+   report the MCP index query as `index unverified`. If the CLI indexing command
+   succeeded, report that separately as CLI indexing completed; if it failed or
+   was not run, report the index as failed or unverified. Continue with direct
+   file reads and `rg`.
 
 ## When to re-index
 

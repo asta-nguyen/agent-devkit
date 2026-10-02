@@ -70,7 +70,7 @@ Relevant test paths, or `Tests: none found` after an explicit repository search.
 
 ## Related
 
-- [[architecture/overview|Architecture overview]]
+- [Architecture overview](../architecture/overview.md)
 
 ## Sources
 
@@ -82,8 +82,8 @@ Relevant test paths, or `Tests: none found` after an explicit repository search.
 no unrelated paths. Use exact existing file paths only; never use `*`, `**`, or
 a directory. Keep prose concise. Never turn a helper, file, or inferred product
 idea into a feature. If evidence is missing, omit the claim or label it an open
-question. Use Obsidian wikilinks for internal pages and ordinary Markdown links
-only for external URLs. Add `## Related` to every non-overview page when a
+question. Use relative Markdown links for internal pages. Add `## Related` to
+every non-overview page when a
 related wiki page exists. YAML frontmatter is optional; do not invent it for
 formatting. Before stating `Tests: none found`, search the repository test tree
 for the route, service, domain terms, and state names. Never invent a test path.

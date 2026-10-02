@@ -132,10 +132,9 @@ before any write.
    only after user approval.
    Do not restore files from Git. Read back every created or changed file
    before reporting it.
-8. Use Obsidian wikilinks (`[[path/to/page|Label]]`) for internal wiki links.
-   Follow the shared vault-relative link rule in `using-devkit` (read it if it
-   is not loaded). Use `## Sources` for evidence and `## Related` when a related
-   page exists.
+8. Use standard relative Markdown links for internal wiki links, following the
+   shared link rule in `using-devkit`. Use `## Sources` for evidence and
+   `## Related` when a related page exists.
    Do not document features here; `document-wiki` owns that.
 9. Run `git diff --check`. Report distinct `created`, `updated`, and `kept`
    lists, tracked local artifacts, and the evidence paths used.

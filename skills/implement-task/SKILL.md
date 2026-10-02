@@ -21,11 +21,14 @@ description: Use when the user has approved a bounded change or feature plan and
    callers and existing error paths do not exist yet.
    When the active plan has an `## Impact map`, follow the map-refresh rule in
    `read-codebase-context`: validate `Verified at`, inspect tracked and
-   untracked paths since that commit, re-trace changed paths, and confirm every
-   mapped entry-point and implementation symbol across the current repository.
-   If the baseline is missing, unavailable, or no longer an ancestor, trace the
-   current flow from scratch. Always read current source for every file to edit;
-   the map is navigation, not evidence.
+   untracked paths since that commit, re-trace changed existing paths, and
+   confirm every mapped entry-point and implementation symbol across the
+   current repository. If the baseline is missing, unavailable, or no longer
+   an ancestor, trace existing source from scratch; if the planned source does
+   not exist yet, use the source-less map rule instead. Read current source for
+   every existing file to edit. For a planned new file, follow the approved
+   design and read the source after creating it; the map is navigation, not
+   evidence.
 3. Follow the approved `plan-feature` output when one exists. Read its
    `## Approval Gate` before editing application code:
    - `Required: yes` proceeds only with `Status: approved`. Missing or `pending`
@@ -108,7 +111,7 @@ When implementation needs a user answer before it can continue:
      artifact naming rule in `using-devkit` (read it if it is not loaded). Link
      it under `## Decisions` in `docs/agent-devkit/INDEX.md` and to the task
      issue or related artifact when one exists, following the shared
-     vault-relative link rule in `using-devkit`.
+     process-artifact link rule in `using-devkit`.
 
    After persisting the decision, optionally use `memory_write` to store only
    its title and file path; never make memory the only copy. At session start,

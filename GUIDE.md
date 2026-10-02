@@ -183,7 +183,7 @@ FFF is never required. Without it, skills use `rg` and reach the same results.
 |---|---|---|
 | `using-devkit` | Starting work or deciding which workflow applies | Routes the task to the owning devkit skill; it does not replace that skill's process. |
 | `setup-codebase` | The repo lacks context files or recorded repository conventions | Reads repository evidence, creates missing context files, and captures missing conventions only after user approval. |
-| `setup-openez` | The user agrees to use OpenEZ or the index is stale | Gets approval before CLI install, existing `AGENTS.md` guidance, or client wiring; verifies after a restart. |
+| `setup-openez` | The user agrees to use OpenEZ or the index is stale | Gets approval before CLI install, existing `AGENTS.md` guidance, or client wiring; reports CLI indexing separately from MCP verification and marks an unavailable MCP query unverified. |
 | `read-codebase-context` | Before design, planning, or wiki work that needs affected files, callers, and tests | Uses OpenEZ for concepts/callers, FFF for fuzzy filenames/literal references, `rg` for regex, then reads current source and records an impact map. |
 | `context-handoff` | A session must pause or is approaching its context limit | Saves a compact, source-grounded checkpoint under `docs/agent-devkit/handoffs/` for the next session. |
 
@@ -191,7 +191,7 @@ FFF is never required. Without it, skills use `rg` and reach the same results.
 
 | Skill | When to use | Summary |
 |---|---|---|
-| `brainstorm-feature` | A new, ambiguous request or a request that changes product behavior | Classifies Spike / Bounded / Architectural, asks clarifying questions, and presents a design; only eligible exact-scope changes skip waiting for approval after impact checks. |
+| `brainstorm-feature` | A new, ambiguous request or a request that changes product behavior | Classifies Spike / Bounded / Architectural, asks clarifying questions, and presents a design; routes Spike to investigation, Bounded to implementation, and Architectural through a plan. Only eligible exact-scope changes skip waiting after impact checks. |
 | `plan-feature` | After design approval and before a non-trivial feature | Specifies behavior, interfaces, named test cases, and verification without writing function or test code; persists the impact map and approval gate. |
 | `estimate-feature` | When a PM or BA explicitly requests an estimate | Estimates an hours range for each plan task with confidence and rationale. Runs only when requested. |
 | `implement-task` | An approved bounded design or an approved architectural plan exists | Traces code, applies the 6-step implementation ladder, and verifies each non-trivial change; `review-and-verify` owns the final wiki-impact block. |
@@ -528,7 +528,10 @@ document-wiki
    workflow for this task; preserve the old instructions and report that they
    need an update. Without that decision, stop for user resolution. If the wiki
    is missing after this preflight, run `setup-codebase` inline.
-2. Identify the Obsidian vault root if `.obsidian/` exists.
+2. Resolve each internal Markdown link relative to the file containing it.
+   During wiki work, scan all `docs/llm/` pages for legacy `[[...]]` links and
+   migrate every resolvable one. Report missing or ambiguous targets; do not
+   claim the migration is complete while any legacy wikilink remains.
 3. Read existing wiki content pages; do not open or use a legacy `LOG.md`.
 4. Build a domain map from **behavior**, not filenames. For each selected
    feature, check an evidence matrix covering the entry/caller, use case, state
@@ -571,10 +574,10 @@ document-wiki
 9. Update `INDEX.md`; do not read or write `LOG.md`, and preserve any legacy
    log file unchanged.
 10. Read current source/test files and compare page claims in this run; verify
-    source paths exist, wikilinks resolve, test claims are supported, and
-    `git diff --check` passes. Mark `[x]` only after sufficient checks. For
-    `[~]`, label the reason `verification limit` or `confirmed content gap`;
-    only confirmed gaps are offered for refresh.
+    source paths exist, relative Markdown links resolve, test claims are
+    supported, and `git diff --check` passes. Mark `[x]` only after sufficient
+    checks. For `[~]`, label the reason `verification limit` or
+    `confirmed content gap`; only confirmed gaps are offered for refresh.
 
 ---
 

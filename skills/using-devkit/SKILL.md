@@ -18,8 +18,16 @@ Read context before changing files: run `read-codebase-context`, or
   `YYYY-MM-DD-<issue-id>-<slug>` before any type suffix when the task or a
   related artifact (including its filename) provides an issue ID. Otherwise
   keep the existing form. Never infer an ID or rename an artifact.
-- Obsidian wikilink targets are relative to the nearest ancestor containing
-  `.obsidian/`.
+- For internal document links, use standard relative Markdown links
+  (`[label](relative/path.md)`), resolved from the file containing the link.
+  No Obsidian vault or app is required.
+- When editing any document that contains legacy `[[...]]` links, convert
+  every resolvable link in that document to relative Markdown and verify it. If
+  `docs/llm/` contains legacy wikilinks during wiki work, migrate every
+  resolvable internal link across the wiki in the `document-wiki` pass. If the
+  task cannot include that full migration, route wiki work through
+  `document-wiki`; do not report it complete while links remain mixed. Report
+  missing or ambiguous targets instead of inventing them.
 - Process artifacts stay under `docs/agent-devkit/`: never put them in
   `docs/llm/` or link to them from `docs/llm/`.
 
@@ -40,8 +48,7 @@ and verify all targets. Do not add locks or coordination tools.
 | Pause unfinished work | `context-handoff` |
 | Create or refresh the LLM wiki | `document-wiki` |
 | Whole-repository simplicity audit | `lean-audit` |
-| New or ambiguous feature | `brainstorm-feature` → `implement-task` → `review-and-verify` |
-| Architectural feature | `brainstorm-feature` → `plan-feature` → `implement-task` → `review-and-verify` |
+| New or ambiguous feature | `brainstorm-feature`; follow the handoff for its classification |
 | Exact, low-risk, non-bug change | `brainstorm-feature` impact check → `implement-task` → `review-and-verify` |
 | Bug or possible bug | `systematic-debugging` |
 | Per-task AI estimate, when requested | `estimate-feature` |
@@ -50,6 +57,11 @@ and verify all targets. Do not add locks or coordination tools.
 The explicit-change row applies only after `brainstorm-feature` verifies
 eligibility; otherwise it uses the approval gate. The arrow marks a required
 handoff.
+
+After `brainstorm-feature` classifies the request, route a Spike to
+investigation and reporting, a Bounded feature to `implement-task`, and an
+Architectural feature through `plan-feature` before implementation. Implemented
+work still goes through `review-and-verify`.
 
 ## Bug classification
 

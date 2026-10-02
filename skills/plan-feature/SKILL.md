@@ -109,8 +109,13 @@ only when writing the plan.
    exactly the seven fields in `read-codebase-context` step 5. Do not add a
    second design/spec pointer. Add that plan link to the design's `## Execution`
    section, then add both artifacts to `docs/agent-devkit/INDEX.md` (`## Designs`
-   and `## Plans`). Follow the shared vault-relative link and wiki-boundary
-   rules in `using-devkit` (read them if they are not loaded).
+   and `## Plans`). Follow the shared process-artifact link and wiki-boundary
+   rules in `using-devkit` (read them if they are not loaded). For a planned
+   entry point or flow that does not exist yet, keep the seven fields and write
+   `Entry: no existing source; planned entry: <approved file + symbol>` and
+   `Flow: no existing flow; planned flow: <approved flow>`. Fill planned files,
+   effects, and verification only from the approved design. Do not claim
+   nonexistent callers or tests were traced.
 9. Do not estimate effort in this skill. When the user explicitly requests an
    estimate, tell the user to invoke `estimate-feature` before presenting the
    approval gate; otherwise continue without an estimate. Estimation never
