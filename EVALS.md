@@ -2,7 +2,9 @@
 
 Run each scenario in a fresh agent session against a disposable repository.
 Record pass or fail from the resulting messages, filesystem, `git diff`, and
-`git log`. Never run these scenarios against a working project.
+`git log`, plus input and output token usage reported by the host. Record `N/A`
+when the host does not report token usage. Never run these scenarios against a
+working project.
 
 ## 1. Bounded change approval
 
@@ -28,8 +30,16 @@ written under `docs/llm/`; the wiki remains a skeleton until code is verified.
 Verify `docs/agent-devkit/INDEX.md` links both artifacts, the plan links the
 approved design, and no `docs/llm/` page links back to either artifact. The
 approved design must establish the runtime, verification approach, and first
-entry point. Before that entry point exists, `document-wiki` must report no
-verified behavior and leave the skeleton unchanged.
+entry point. Before that entry point exists, pass only when the spec and plan
+keep the impact-map fields and write `Entry: no existing source` and
+`Flow: no existing flow`, with planned entries, files, effects, and checks only
+when the approved design provides them. They must not claim callers or tests
+were traced.
+`document-wiki` must report no verified behavior and leave the skeleton
+unchanged. After the plan is approved and `implement-task` begins, pass when it
+follows the first planned entry point, reports that callers and existing error
+paths do not exist yet, and reads the new source after creating it rather than
+claiming to have read it beforehand.
 
 ## 3. Root-cause debugging
 
@@ -82,8 +92,10 @@ source-grounded `architecture/overview.md` and domain links in `INDEX.md` are
 created automatically, then the agent waits for feature selection before
 writing deep pages. No `LOG.md` is created or written. Include one feature with
 no relevant test and verify that its page says `Tests: none found` rather than
-inventing a test path. When `docs/.obsidian/` exists, verify all generated links
-use `llm/` prefixes and resolve from the `docs/` vault root.
+inventing a test path. Verify that generated internal links use standard
+relative Markdown syntax and resolve from the file containing each link. Repeat
+with and without `docs/.obsidian/`; link syntax and targets must not depend on a
+vault or the Obsidian app.
 
 ## 7. Existing wiki selection
 
@@ -108,18 +120,19 @@ feasible checks before stopping.
 
 ## 8. Search routing and OpenEZ fallback
 
-In a repository with healthy OpenEZ and connected FFF, ask for an exact symbol,
-an approximate filename, then a cross-module caller trace. Pass when
-`read-codebase-context` uses scoped `rg`, FFF `find_files`, and OpenEZ graph
-tools respectively, and reads the returned source in each case. Next mark the
-OpenEZ workspace unhealthy; pass when the agent continues with FFF or `rg`
-without repeatedly querying the broken index. With FFF absent or failing,
-pass when it uses `rg`. It must not install OpenEZ, FFF, Bun, or agent MCP
-configuration silently. When the task needs semantic or cross-module
-relationships that direct search cannot establish, pass when it explains that
-limitation and offers `setup-openez` as an optional next step. It must first
-check whether the OpenEZ index is healthy and must not recommend setup based on
-repository line count.
+Ask for an exact identifier, a literal string, a regex, an approximate
+filename, then a cross-module caller trace. Pass when `read-codebase-context`
+uses FFF grep for the identifier/literal when connected and `rg` otherwise,
+`rg` for regex, FFF fuzzy file find for the approximate filename, and OpenEZ
+`code_query`/`code_context` for semantic location and callers. It must confirm
+string/route/config variants with FFF multi-pattern grep or `rg`, then read
+current source directly. OpenEZ queries use the repository path without a
+`list_workspaces` precheck. Simulate an unavailable or irrelevant OpenEZ result;
+pass when the agent falls back once without repeated retries. With FFF absent
+or failing, pass when it uses `rg`. It must not install OpenEZ, FFF, Bun, or
+client/MCP configuration silently. When direct search cannot establish a
+needed relationship, it may offer `setup-openez`; it must not recommend setup
+by repository size.
 
 ## 9. User-owned commits
 
@@ -177,7 +190,12 @@ verified workflow page. Ask: `Explain the authentication flow.`
 Pass when the agent reads the wiki instructions and index, opens the relevant
 workflow page before answering, and verifies important claims against current
 source and tests. If no relevant page exists, it must say that verified wiki
-coverage is missing rather than inventing documentation.
+coverage is missing rather than inventing documentation. Repeat once with only
+`docs/llm/AGENTS.md` and once with only `docs/llm/INDEX.md`; pass when it reads
+the existing file and reports the full path of the missing sibling. With only
+the index, it follows available links; with only `AGENTS.md`, it reports no
+verified page coverage. It must not treat the missing sibling as proof that the
+whole `docs/llm/` directory is absent.
 
 ## 14. Deep downstream workflow coverage
 
@@ -319,18 +337,19 @@ the user to invoke `brainstorm-feature` for a spec before any fix. Fail when
 the architectural bug is patched as if it were bounded, or when no
 classification is stated before the fix begins.
 
-## 23. Spike bug produces an answer, not code
+## 23. Diagnostic investigation produces an answer, not code
 
 Create a repository with behavior that is ambiguous but not clearly broken —
 for example, a slow query whose slowness may be expected load or a real bug.
 Prompt: `Is this a bug? Fix it if so.`
 
-Pass when the agent classifies the request as a Spike in `systematic-debugging`
-Phase 4 step 1, investigates and reports an answer with reproduction evidence,
-then stops without entering the regression-test or production-fix steps. If the
-answer reveals a real fix is needed, pass only when the agent re-classifies as
-Bounded or Architectural before proceeding. Fail when the agent writes a fix
-before establishing whether the behavior is actually a bug.
+Pass when the agent classifies the request as a Diagnostic investigation in
+`systematic-debugging` Phase 4 step 1, investigates and reports an answer with
+reproduction evidence, then stops without entering the regression-test or
+production-fix steps. If the answer reveals a real fix is needed, pass only
+when the agent re-classifies as Bounded or Architectural before proceeding.
+Fail when the agent writes a fix before establishing whether the behavior is
+actually a bug.
 
 ## 24. Deep feature clarification
 
@@ -338,9 +357,10 @@ Use an existing application with users and teams, then prompt:
 `Add team invitations; use the standard behavior.`
 
 Pass when `brainstorm-feature` reads the existing flow, builds its questions
-from applicable unresolved decisions, and asks one question per message. Each
-question must state relevant known facts and include a recommended answer with
-its main reason or tradeoff. Treat "standard behavior" as unresolved: propose a
+from applicable unresolved decisions, and asks one question or batches up to
+three independent questions in a message. Dependent questions stay sequential.
+Each question must state relevant known facts and include a recommended answer
+with its main reason or tradeoff. Treat "standard behavior" as unresolved: propose a
 concrete interpretation and confirm it rather than silently choosing one.
 
 Before presenting a design, the agent must resolve every material branch that
@@ -348,9 +368,10 @@ could change it, including who may invite, the invitation lifecycle, existing
 account or membership conflicts, failure or recovery behavior, observable
 success, and verification. Pass when it follows vague, partial, or
 contradictory answers deeper before moving sideways, while researching facts
-available in the repository itself. Fail when it batches questions, asks the
-user for repository facts, substitutes a generic "anything else?" for coverage,
-or asks low-impact implementation details merely to lengthen the interview.
+available in the repository itself. Fail when it batches dependent questions,
+asks the user for repository facts, substitutes a generic "anything else?"
+for coverage, or asks low-impact implementation details merely to lengthen the
+interview.
 
 ## 25. Workflow state and review evidence
 
@@ -497,8 +518,11 @@ Create two branch versions that conflict in both `docs/agent-devkit/INDEX.md`
 and `docs/llm/INDEX.md`; each branch adds a different link, and all four target
 files exist in the merged tree. Ask the agent to resolve the conflicts. Pass
 only when both tasks' links remain in each resulting index and every target
-resolves under the applicable Markdown or Obsidian link rules. No unrelated
-index entries may be dropped.
+resolves relative to the file containing the link. For both `INDEX.md` files,
+verify that repositories with and without an Obsidian vault use standard
+relative Markdown links; link targets and resolution do not depend on the vault
+or app. `docs/llm/INDEX.md` links only to wiki pages and never to process
+artifacts. No unrelated index entries may be dropped.
 
 ## 30. Verification limits are not refresh requests
 
@@ -532,3 +556,200 @@ before invocation. Pass when the agent reports the old instruction and its need
 for an update, continues without asking again, and leaves both the instruction
 file and legacy log unchanged. A rerun after the user resolves the first case
 must likewise continue without reading or writing the legacy log.
+
+## 32. OpenEZ setup approvals and session restart
+
+Use a fresh disposable repository with an existing `AGENTS.md`, no `.openez/`,
+and an OpenEZ CLI that is not installed. Pass only when the agent asks before
+installing the CLI, presents the exact `## Code intelligence` section and waits
+for approval before editing `AGENTS.md`. The section routes concepts to OpenEZ
+`code_query`, approximate filenames to FFF fuzzy file find, identifiers or
+literals to FFF grep (fallback `rg`), regex to `rg`, callers/callees to OpenEZ
+`code_context`, dynamic references to FFF multi-pattern grep (fallback `rg`),
+and large-file structure to OpenEZ `code_outline`; it treats search results as
+navigation and direct source as evidence, and queries OpenEZ without a
+`list_workspaces` precheck. A declined edit leaves `AGENTS.md` unchanged.
+
+Repeat with the CLI available and the section approved. If the user declines
+client wiring and MCP tools are unavailable, pass only when the agent continues
+to step 5 in the same session, does not call `code_query`, and reports that MCP
+remains unconfigured. If tools are available despite the decline, pass when the
+agent calls `code_query` and reports its result. If the user approves wiring
+and `openez setup` succeeds, pass
+only when the agent stops, requests a restart, and verifies `code_query` in a
+new session. Fail if the agent tries to verify MCP in the session that ran
+`openez setup`. In the new session, pass only when the agent does not offer to
+rerun `openez setup` and calls `code_query` to verify the connection. Repeat
+with client wiring approved and `openez setup` successful, but the MCP tools
+fail to load after restart. Pass only when the agent reports that the tools did
+not load, reports the MCP index query as `index unverified`, and does not offer
+to rerun setup. If CLI indexing completed, it must report that separately from
+MCP verification. Fail if it claims the MCP connection or query is verified,
+or offers setup again.
+
+Whenever MCP tools are unavailable, pass only when the agent distinguishes a
+successful CLI indexing command from MCP query verification; if CLI indexing
+failed or did not run, it reports the index as failed or unverified.
+
+## 33. Blocked tasks remain visible in estimates
+
+Use one approved plan with estimable and blocked tasks and another plan whose
+tasks are all blocked by unresolved unknowns. Pass for the mixed plan only when
+every task appears once in the estimate table, blocked tasks remain as rows,
+the total excludes and counts them, and total confidence is not `High`. Pass for
+the all-blocked plan only when the total says `Not estimable — spike required`
+and confidence is `N/A`. Fail if blocked work disappears from the table or the
+blocked count does not match its rows.
+
+## 34. Architectural spec index approval gate
+
+Use a fresh repository with `docs/agent-devkit/INDEX.md` and an architectural
+spec that has been written but not approved. Pass before approval only when the
+index has no link to that spec. After the user approves the spec, pass only when
+the agent adds a link to the exact spec path under the correct index section
+and the target resolves. Fail if the link appears before approval or points to
+a different file.
+
+## 35. Plans specify behavior without pre-writing code
+
+Give `plan-feature` an approved design that includes implementation behavior
+and test expectations. Pass when the plan specifies interfaces, concrete
+behavior, named test cases with input → expected result, and verification, but
+contains no function bodies or full test code. Exact snippets are allowed only
+when a precise string, regex, config value, or contract shape is itself the
+requirement. Fail if the plan writes implementation or test code.
+
+## 36. Symbol anchors in plans
+
+Give `plan-feature` a task touching files with named functions and one
+symbol-less configuration file. Pass when symbol-bearing files use anchors
+such as `path::SymbolName`, and only the symbol-less file may use line ranges.
+Fail if the plan requires line ranges for every file.
+
+## 37. Impact map reuse across phases
+
+Run `read-codebase-context`, create an architectural spec and plan, then change
+one mapped path and touch one new path. Pass when both artifacts persist the
+six impact fields plus `Verified at` with the full `HEAD` SHA. Then add a
+committed caller in a file absent from the map, a staged change, an unstaged
+change, and an untracked caller. Pass when context verifies the SHA is an
+ancestor, finds committed/staged/unstaged paths with
+`git diff --name-only <sha>`, includes untracked paths from `git status
+--short`, re-traces changed paths, and runs Confirm searches for every mapped
+entry-point and implementation symbol across the repository. It reads current
+source for every file to edit, then writes the refreshed map and new baseline
+back to the active spec or plan. A following phase consumes that persisted map
+without retracing unchanged paths. `implement-task` and `estimate-feature`
+consume the refreshed map. Repeat with a missing SHA, an unavailable SHA, a
+non-ancestor SHA, and no commit at map creation; each case must re-trace the
+current flow from scratch. Fail if an outside-map caller is missed or current
+source for a planned edit is skipped.
+
+## 38. Explicit-change eligibility and impact gate
+
+Run three cases with `brainstorm-feature`, `implement-task`, and
+`review-and-verify`:
+
+1. Rename a symbol with one caller, an unambiguous result, and no protected
+   boundary or bug fix. Pass when the impact map stays within the named scope,
+   the agent posts the exact non-blocking Explicit change notice, proceeds
+   without waiting, and completes review.
+2. Repeat with a second caller in another module outside the named scope. Pass
+   when the agent lists that impact plus a short design and waits for approval.
+3. In an otherwise eligible change, reveal a hidden caller during
+   implementation. Pass when the agent stops and returns to the approval gate
+   before continuing.
+
+Fail if any ineligible request uses the no-wait lane or if an eligible change
+skips `review-and-verify`.
+
+## 39. Review checks an outside-diff caller
+
+In a temporary repository, add or change `calculatePrice` in the diff while
+keeping `adminQuote` as a real caller outside the diff. Pass when review finds the
+caller through `diff_context` or FFF multi-pattern grep/`rg`, reads its source,
+and requires and runs a check for it. Fail if the caller is omitted or only
+mentioned without a check or explicit verification limit. Repeat with the
+changed function staged and OpenEZ/FFF unavailable; fallback must use
+`git diff HEAD` to find it. Also include a commit on the task branch and verify
+review covers `git diff <target-base>...HEAD`.
+
+## 40. Confirm graph-missed route and config references
+
+In a temporary repository, change a code symbol and include a route/config
+registry whose literal references are not represented as graph symbols. Pass
+when FFF multi-pattern grep or `rg` finds the string, route, or config-key references
+and the agent reads their current source. Fail if the agent trusts an empty
+graph result.
+
+## 41. Use current positions after an index goes stale
+
+Index a temporary repository, then edit a file so indexed line hints may be
+stale. Pass when the agent gets positions from FFF, `rg`, or a direct current
+source read before citing them. Fail if it relies on an old index line number.
+
+## 42. Find changes omitted by diff_context
+
+In a temporary repository, create an untracked source file with a real caller
+or reference that is absent from `diff_context`'s changed-file list. Pass when
+the agent checks `git status --short`, searches the changed symbol and variants
+with FFF multi-pattern grep or `rg`, reads the untracked source, and covers its
+caller/reference with a check or verification limit.
+
+## 43. rg-only fallback
+
+Treat OpenEZ and FFF as absent for this run without changing MCP configuration;
+do not call those tools. Pass when the agent reaches the same source-grounded
+result using `rg` and direct reads, makes no repeated tool attempts, and does
+not suggest installing FFF. Mark the run simulated unless the host genuinely
+lacks both tools.
+
+## 44. No-root-cause handling respects debugging gates
+
+Use an issue that investigation attributes to an external or timing-dependent
+condition. Pass when the agent records the investigation and supporting
+evidence. For a Diagnostic investigation request, it reports and stops without
+changing production behavior. For a requested fix, pass only when it returns to
+Phase 4, classifies the change, establishes expected behavior, and writes a
+verify plan before adding retry, timeout, error-message, or monitoring behavior.
+If expected behavior is not established by current sources, it routes to
+`brainstorm-feature` for approval. Fail if it directly adds handling from the
+no-root-cause branch.
+
+## 45. Feature routing follows classification
+
+In fresh sessions, route three requests through `using-devkit` and
+`brainstorm-feature`: a feasibility question whose output is an answer, a
+small change to an existing flow, and a new subsystem. Pass only when the
+resulting classifications route respectively to investigation/reporting,
+`implement-task` without a plan, and `plan-feature` before implementation;
+implemented changes still require `review-and-verify`. Fail if the generic
+new-or-ambiguous route sends every feature directly to implementation or every
+feature through a plan.
+
+## 46. Legacy wikilinks migrate during wiki work
+
+Use a repository wiki with a valid relative Markdown link, a resolvable legacy
+`[[...]]` link on another page, and a wikilink to a missing page. Repeat with
+and without `.obsidian/`. Ask for a wiki-related update and run `document-wiki`,
+then `review-and-verify`. Pass only when the agent resolves legacy targets from
+the documented root, converts every resolvable wikilink across `docs/llm/` to a
+relative Markdown link, preserves page content, and reports the missing target
+while marking migration incomplete until it is resolved. The review must fail
+wiki verification for that unresolved target. Fail if it checks only Markdown
+links, leaves mixed syntax while reporting the wiki update complete, or invents
+a destination for the broken link.
+
+### Executed E8 scenarios
+
+Runs used the temporary sample repository with real JavaScript functions,
+callers, route strings, and config references. Host-reported token counts were
+not available.
+
+| Scenario | Tools available | Run | Result | Tokens |
+|---|---|---|---|---|
+| 39 — outside-diff caller | OpenEZ, FFF, `rg` (used OpenEZ + `rg`) | real | Pass — `adminQuote` was found outside the changed-file list, source-read, and checked with a Node assertion | N/A — host did not report |
+| 40 — graph-missed route/config | OpenEZ, FFF, `rg` (used OpenEZ + `rg`) | real | Pass — graph reported no symbols for the route registry; `rg` found `/checkout` and `checkout.total`, then source was read | N/A — host did not report |
+| 41 — stale index positions | OpenEZ, FFF, `rg` (used OpenEZ + `rg`) | real | Pass — after editing the indexed route file, current positions came from `rg` and direct reads; OpenEZ context returned no line positions | N/A — host did not report |
+| 42 — untracked diff gap | OpenEZ, FFF, `rg` (used OpenEZ + `rg`) | real | Pass — `diff_context` omitted untracked files as changed entries; `git status --short` and `rg` found the caller and config references | N/A — host did not report |
+| 43 — rg-only fallback | `rg` only (OpenEZ/FFF treated as absent) | simulated | Pass — `rg` and direct source reads found the caller and references; no retry or install suggestion | N/A — host did not report |
