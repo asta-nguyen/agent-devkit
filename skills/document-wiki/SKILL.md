@@ -49,7 +49,10 @@ Never call unverified coverage current.
    this wiki pass, convert every
    resolvable internal wikilink in `docs/llm/` to a relative Markdown link,
    including links on pages whose business content is not being refreshed.
-   This mechanical migration preserves page content and does not require feature
+   Resolve a legacy target from the nearest ancestor containing `.obsidian/`
+   when present, or from the `docs/llm/` root otherwise. Confirm the exact
+   target file, then write the new link relative to the source page. This
+   mechanical migration preserves page content and does not require feature
    selection. Report missing or ambiguous targets; do not claim migration is
    complete while a legacy wikilink remains. If the repository has no
    application source, report that no verified behavior exists, preserve the

@@ -730,9 +730,10 @@ feature through a plan.
 ## 46. Legacy wikilinks migrate during wiki work
 
 Use a repository wiki with a valid relative Markdown link, a resolvable legacy
-`[[...]]` link on another page, and a wikilink to a missing page. Ask for a
-wiki-related update and run `document-wiki`, then `review-and-verify`. Pass only
-when the agent converts every resolvable wikilink across `docs/llm/` to a
+`[[...]]` link on another page, and a wikilink to a missing page. Repeat with
+and without `.obsidian/`. Ask for a wiki-related update and run `document-wiki`,
+then `review-and-verify`. Pass only when the agent resolves legacy targets from
+the documented root, converts every resolvable wikilink across `docs/llm/` to a
 relative Markdown link, preserves page content, and reports the missing target
 while marking migration incomplete until it is resolved. The review must fail
 wiki verification for that unresolved target. Fail if it checks only Markdown

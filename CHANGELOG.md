@@ -50,7 +50,8 @@
   app availability. Resolve the LLM wiki index by its full path and continue
   when only one wiki entry file exists.
 - Migrate resolvable legacy wikilinks across `docs/llm/` during wiki work and
-  block completion when any remain or a target is unresolved.
+  block completion when any remain or a target is unresolved; resolve legacy
+  targets from the existing wiki root before writing relative Markdown links.
 - Route new and ambiguous features by their Spike, Bounded, or Architectural
   classification.
 

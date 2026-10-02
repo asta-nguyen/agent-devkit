@@ -22,7 +22,9 @@ Read context before changing files: run `read-codebase-context`, or
   (`[label](relative/path.md)`), resolved from the file containing the link.
   No Obsidian vault or app is required.
 - When editing any document that contains legacy `[[...]]` links, convert
-  every resolvable link in that document to relative Markdown and verify it. If
+  every resolvable link in that document to relative Markdown and verify it.
+  Resolve legacy targets using the owning workflow's existing target-root rule;
+  read the exact target before converting and do not guess among duplicates. If
   `docs/llm/` contains legacy wikilinks during wiki work, migrate every
   resolvable internal link across the wiki in the `document-wiki` pass. If the
   task cannot include that full migration, route wiki work through

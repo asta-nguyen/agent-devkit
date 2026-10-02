@@ -530,8 +530,11 @@ document-wiki
    is missing after this preflight, run `setup-codebase` inline.
 2. Resolve each internal Markdown link relative to the file containing it.
    During wiki work, scan all `docs/llm/` pages for legacy `[[...]]` links and
-   migrate every resolvable one. Report missing or ambiguous targets; do not
-   claim the migration is complete while any legacy wikilink remains.
+   migrate every resolvable one. Resolve legacy targets from the nearest
+   `.obsidian/` root when present, otherwise from `docs/llm/`; confirm the
+   target file and write its new Markdown link relative to the source page.
+   Report missing or ambiguous targets; do not claim the migration is complete
+   while any legacy wikilink remains.
 3. Read existing wiki content pages; do not open or use a legacy `LOG.md`.
 4. Build a domain map from **behavior**, not filenames. For each selected
    feature, check an evidence matrix covering the entry/caller, use case, state
