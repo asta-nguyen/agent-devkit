@@ -1,0 +1,195 @@
+skills/brainstorm-feature/SKILL.md
+  s_3f6d9c4f205bb0::t_3093e3c5ebc862 31-34,59-63,115-121,125-126,129-133,139,143-144
+  s_3f6d9c4f205bb0::t_521bb6db21327a 98-99,123-124,127-128
+  s_a83b472fb5cc51::t_cc19855a1c023b 100-103
+  s_3f6d9c4f205bb0::t_dbfe95b7a76fe5 122
+CHANGELOG.md
+  s_3f6d9c4f205bb0::t_82d344b748ceaa 5-10,15-17,44
+  s_a96e890459e4c2::t_d58b96c6e244f0 22-25
+  s_3f6d9c4f205bb0::t_822c09cfc66d0d 11-14
+  s_3f6d9c4f205bb0::t_c73c8f757ca466 18-21,26-31
+  s_3f6d9c4f205bb0::t_1ac7ebeda515c0 32-43
+skills/context-handoff/SKILL.md
+  s_3f6d9c4f205bb0::t_8473da3cd1a854 29-30,65-67
+  s_3f6d9c4f205bb0::t_6a043d09f4b8ab 73-74
+  s_3f6d9c4f205bb0::t_7fa1f039615f74 28
+  s_3f6d9c4f205bb0::t_faee8804037a97 72,75-78
+skills/systematic-debugging/SKILL.md
+  s_a83b472fb5cc51::t_fedd2b05680d65 87-97,166-167
+  s_3f6d9c4f205bb0::t_95d9cb24548f3b 53-56
+  s_3f6d9c4f205bb0::t_708bd79f1bc3df 45-49,121-122
+  s_a96e890459e4c2::t_d74dda576c6708 184-191
+skills/estimate-feature/SKILL.md
+  s_3f6d9c4f205bb0::t_b9828c0e00255a 19,74
+  s_3f6d9c4f205bb0::t_c503aa4e8a3ee6 24
+  s_3f6d9c4f205bb0::t_d76a084dcfd006 39-42,81-85
+  s_3f6d9c4f205bb0::t_d200260e488897 65-67
+  s_3f6d9c4f205bb0::t_7fa1f039615f74 44-46,75-76
+  s_a83b472fb5cc51::t_5c287a20adbf49 33-38,47,62,70,80,86
+  s_a96e890459e4c2::t_d74dda576c6708 20-23
+PILOT.md
+  s_3f6d9c4f205bb0::t_d9f715cdc17217 43,60-61,71-72,79-85,152-153,218-225,378
+  s_3f6d9c4f205bb0::t_2493210ff10a4d 226-231
+skills/setup-codebase/SKILL.md
+  s_a83b472fb5cc51::t_3c5dee8075d173 62-65,93-98,128-130,133-134,152-153
+  s_3f6d9c4f205bb0::t_faee8804037a97 92,99-113
+  s_3f6d9c4f205bb0::t_d7760ff6721834 136-138
+  s_3f6d9c4f205bb0::t_879fff58cb9c4d 15-17
+  s_3f6d9c4f205bb0::t_fee611ce851bba 87-89
+  s_a83b472fb5cc51::t_1e745102a2bbd6 61,131-132
+skills/review-and-verify/references/receiving-code-review.md
+  s_3f6d9c4f205bb0::t_39ad7201c58ecc 1-17
+skills/setup-codebase/references/convention-capture.md
+  s_3f6d9c4f205bb0::t_68ff8485fffe20 1-42
+skills/review-and-verify/SKILL.md
+  s_3f6d9c4f205bb0::t_9226e73e4f02ea 68-70
+  s_a96e890459e4c2::t_d74dda576c6708 79-83
+  s_a96e890459e4c2::t_682d706f365d04 84-86
+  s_3f6d9c4f205bb0::t_708bd79f1bc3df 66-67,71-78,87,127-129
+  s_3f6d9c4f205bb0::t_7d5df5f9816898 168-169
+skills/using-devkit/SKILL.md
+  s_3f6d9c4f205bb0::t_8473da3cd1a854 19,65-67
+  s_3f6d9c4f205bb0::t_25fbc5fc10c178 50-52
+  s_3f6d9c4f205bb0::t_c7b72f9eac7e06 3,8,10,12-13,15,17-18,20-24,28-31,35,37,39-43,45,47-49,53-64,68
+GUIDE.md
+  s_3f6d9c4f205bb0::t_ea8e90e6ddcd1c 223-226
+  s_3f6d9c4f205bb0::t_883ca629bf2e18 97-133,136-166,730-733
+  s_a96e890459e4c2::t_d58b96c6e244f0 464-466,487-490
+  s_3f6d9c4f205bb0::t_64269c2c07f241 186,303-305
+  s_3f6d9c4f205bb0::t_9226e73e4f02ea 134-135
+  s_3f6d9c4f205bb0::t_95d9cb24548f3b 482-484
+  s_3f6d9c4f205bb0::t_6392f508fd6087 187
+  s_3f6d9c4f205bb0::t_d9f715cdc17217 195
+  s_3f6d9c4f205bb0::t_e7cd13994acac3 194
+  s_3f6d9c4f205bb0::t_0414680d12aec8 197
+  s_3f6d9c4f205bb0::t_65c33ea9f829fa 173-174,621-622
+README.vi.md
+  s_3f6d9c4f205bb0::t_d9f715cdc17217 17,30-32
+  s_3f6d9c4f205bb0::t_64269c2c07f241 262
+  s_3f6d9c4f205bb0::t_65c33ea9f829fa 128-130
+  s_3f6d9c4f205bb0::t_82d344b748ceaa 316,318-321
+  s_3f6d9c4f205bb0::t_883ca629bf2e18 176-191,193-208,211-252
+  s_3f6d9c4f205bb0::t_b6724bd6a1ca26 192
+  s_3f6d9c4f205bb0::t_9226e73e4f02ea 209-210
+  s_dba1fb7a26f365::t_170630b87a13f6 10
+  s_3f6d9c4f205bb0::t_95d9cb24548f3b 317
+  s_3f6d9c4f205bb0::t_64c7dde5a00573 33
+skills/document-wiki/SKILL.md
+  s_a83b472fb5cc51::t_b6a73ba91386d0 18-20
+  s_3f6d9c4f205bb0::t_72e7ed1ebc0e65 39-41,132-133
+  s_3f6d9c4f205bb0::t_c22b527921915e 52-54
+skills/lean-audit/SKILL.md
+  s_3f6d9c4f205bb0::t_708bd79f1bc3df 29-31
+skills/document-wiki/references/evidence-matrix-and-page-template.md
+  s_3f6d9c4f205bb0::t_72e7ed1ebc0e65 1-89
+CONTRIBUTING.md
+  s_3f6d9c4f205bb0::t_d9f715cdc17217 38-41
+  s_3f6d9c4f205bb0::t_6f5683e1f11824 44-45
+README.md
+  s_3f6d9c4f205bb0::t_95d9cb24548f3b 334
+  s_3f6d9c4f205bb0::t_883ca629bf2e18 162-163,174-187,190-206,209-252
+  s_3f6d9c4f205bb0::t_9226e73e4f02ea 207-208
+  s_3f6d9c4f205bb0::t_82d344b748ceaa 333,335-338
+  s_dba1fb7a26f365::t_2500098700b922 10
+  s_3f6d9c4f205bb0::t_64269c2c07f241 260
+  s_3f6d9c4f205bb0::t_65c33ea9f829fa 140-141
+  s_3f6d9c4f205bb0::t_d9f715cdc17217 17,31-33
+  s_3f6d9c4f205bb0::t_5ca4ebe17191ff 34
+  s_3f6d9c4f205bb0::t_109467e4935b11 253
+skills/brainstorm-feature/references/spec-self-review.md
+  s_3f6d9c4f205bb0::t_e025246df5464e 10
+  s_a96e890459e4c2::t_d74dda576c6708 11,22-25
+  s_a96e890459e4c2::t_0c0ebee95bc657 20
+  s_3f6d9c4f205bb0::t_3093e3c5ebc862 1-4,9,12-19,21,26-42
+  s_3f6d9c4f205bb0::t_3e66012c7c2715 5-8
+skills/read-codebase-context/SKILL.md
+  s_3f6d9c4f205bb0::t_daa022da8233fa 52-55
+  s_3f6d9c4f205bb0::t_c3c59b0c85e746 8,26-27,35-36,39-40,42-44,46-51,56-58
+  s_a96e890459e4c2::t_0c0ebee95bc657 12-16,72
+  s_3f6d9c4f205bb0::t_80a85404b1d38e 28-34,37-38,41,45
+  s_3f6d9c4f205bb0::t_b9828c0e00255a 17
+  s_a96e890459e4c2::t_d74dda576c6708 10-11,18-25
+skills/plan-feature/SKILL.md
+  s_3f6d9c4f205bb0::t_8473da3cd1a854 112-113
+  s_3f6d9c4f205bb0::t_b9828c0e00255a 108,110-111
+  s_a96e890459e4c2::t_d74dda576c6708 109
+  s_3f6d9c4f205bb0::t_95d9cb24548f3b 82-85
+  s_3f6d9c4f205bb0::t_985ad643b921b5 46
+  s_3f6d9c4f205bb0::t_6531a070e2396e 130
+  s_3f6d9c4f205bb0::t_7fa1f039615f74 10-12
+  s_3f6d9c4f205bb0::t_f74a7ea136767e 52-56,139-141,156-157
+tests/plugin-smoke.mjs
+  s_3f6d9c4f205bb0::t_e30c4be771ed11 9-23
+EVALS.md
+  s_3f6d9c4f205bb0::t_12d58147a63474 348
+  s_3f6d9c4f205bb0::t_1fa97b50d44d66 563
+  s_3f6d9c4f205bb0::t_0cd9dff674e980 113-125,547-553,639-641,644-645,650-652,656-680,693-705
+  s_3f6d9c4f205bb0::t_62b0b79d3575bc 564-568
+  s_3f6d9c4f205bb0::t_928622e93a72cc 653
+  s_3f6d9c4f205bb0::t_738b06b2d97578 541-546,554-555,561-562,569-587
+  s_3f6d9c4f205bb0::t_8f2ec165fd3c2c 588-607,621-638
+  s_3f6d9c4f205bb0::t_ea8e90e6ddcd1c 345-346
+  s_3f6d9c4f205bb0::t_a7a97e42a411a1 642-643,654-655
+  s_3f6d9c4f205bb0::t_f70c90d07e9b15 556-560
+  s_3f6d9c4f205bb0::t_985ad643b921b5 347
+  s_3f6d9c4f205bb0::t_95d9cb24548f3b 325,331-337
+  s_a96e890459e4c2::t_8fe8ab0a162587 681-692
+  s_3f6d9c4f205bb0::t_105e59fe1df984 5-7,356-359
+  s_a96e890459e4c2::t_d58b96c6e244f0 608-620,646-649
+skills/implement-task/SKILL.md
+  s_3f6d9c4f205bb0::t_3e66012c7c2715 136-137
+  s_3f6d9c4f205bb0::t_faee8804037a97 113-115
+  s_3f6d9c4f205bb0::t_6a043d09f4b8ab 116-117
+  s_3f6d9c4f205bb0::t_5e9765a05247ac 106-111
+  s_3f6d9c4f205bb0::t_b9828c0e00255a 22,39-42,151
+  s_a96e890459e4c2::t_d74dda576c6708 23-28
+  s_3f6d9c4f205bb0::t_632c46c9bcd5d4 112
+skills/setup-openez/SKILL.md
+  s_3f6d9c4f205bb0::t_074f8e1305ba02 13-16,38,44-50,52-53,63,65-67,69,75-77,93-95,107-108,114-115
+  s_3f6d9c4f205bb0::t_6531a070e2396e 81
+  s_3f6d9c4f205bb0::t_f70c90d07e9b15 83,97-98
+  s_3f6d9c4f205bb0::t_d76a084dcfd006 30,79-80,82,85,87
+  s_3f6d9c4f205bb0::t_faee8804037a97 55-62
+  s_3f6d9c4f205bb0::t_822c09cfc66d0d 24-25
+  s_3f6d9c4f205bb0::t_1fa97b50d44d66 26,88-91,99-101
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "774aac7d353ff7027a4a374dba13a984593d4c0a",
+  "prompts": {},
+  "sessions": {
+    "s_3f6d9c4f205bb0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0f856-0fca-76e0-ae54-4462c6f621e3",
+        "model": "gpt-6-luna"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    },
+    "s_a83b472fb5cc51": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0f825-5c74-7263-86f2-d050b8497564",
+        "model": "gpt-6-luna"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    },
+    "s_a96e890459e4c2": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0fb73-ac59-7b40-b177-f94b29d7f707",
+        "model": "gpt-6-luna"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    },
+    "s_dba1fb7a26f365": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0fb57-aec2-7122-9a0b-95e9763f972a",
+        "model": "gpt-6-luna"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
