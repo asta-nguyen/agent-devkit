@@ -6,6 +6,21 @@ import { fileURLToPath } from "node:url";
 import { AgentDevkitPlugin } from "../.opencode/plugins/agent-devkit.js";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const skillsRoot = path.join(repoRoot, "skills");
+for (const entry of fs.readdirSync(skillsRoot, { withFileTypes: true })) {
+  if (!entry.isDirectory()) continue;
+  const skillDir = path.join(skillsRoot, entry.name);
+  const skillPath = path.join(skillDir, "SKILL.md");
+  if (!fs.existsSync(skillPath)) continue;
+  const content = fs.readFileSync(skillPath, "utf8");
+  for (const [, referencePath] of content.matchAll(/`(references\/[^`\s]+\.md)`/g)) {
+    assert.ok(
+      fs.existsSync(path.join(skillDir, referencePath)),
+      `${entry.name} references missing file ${referencePath}`,
+    );
+  }
+}
+
 const runHook = (env = {}) => JSON.parse(execFileSync(
   process.execPath,
   [path.join(repoRoot, "hooks/session-start.js")],

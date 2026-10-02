@@ -35,10 +35,14 @@ Guidelines:
   follows Markdown instructions directly.
 - **Minimal and focused.** One skill = one workflow. Do not merge multiple
   workflows into a single skill.
+- **Progressive disclosure.** Reference files beside `SKILL.md` are a
+  sanctioned exception to fewest-files when they keep rarely used branches out
+  of every invocation. Keep them within the skill folder and smoke-check each
+  mentioned `references/...` path.
 - **Chain explicitly.** If a skill hands off to another, name it (e.g.
   `**REQUIRED SUB-SKILL:** Use review-and-verify`).
-- **Red flags table.** End each skill with a table of common bad thoughts and
-  why they are wrong. This is the established pattern across all skills.
+- **Red flags.** Include only rationalizations the skill body does not already
+  answer; omit the section when its rows would repeat body rules.
 - **No placeholders.** Every step must contain actual content an agent can
   follow. No "TBD", "TODO", or "fill in later".
 

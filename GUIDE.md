@@ -94,23 +94,84 @@ openez setup codex    # or claude / opencode
 
 After setup, **restart the agent** so MCP tools are loaded.
 
-OpenEZ is optional when a task needs semantic search or complex cross-module
-relationships and the workspace index is healthy; repository line count is not
-a reason to set it up. `read-codebase-context` and `document-wiki` use scoped
-`rg` for known paths or text, FFF MCP for approximate filenames or repeated
-search when connected, and OpenEZ for semantic or cross-module questions. They
-read source directly and fall back to direct search when a tool fails or the
-index is unhealthy. `setup-codebase` continues with direct source reads. The
-agent may mention `setup-openez` when needed relationships remain unclear after
-direct search; it never installs dependencies or changes MCP configuration
-silently.
+OpenEZ is optional for semantic or cross-module questions; repository size or
+index health is not a search-routing precondition. `read-codebase-context` and
+`document-wiki` use this Locate → Expand → Confirm → Read flow:
+
+| Stage | Need | Tool |
+|---|---|---|
+| Locate | Concept or behavior | OpenEZ `code_query` |
+| Locate | Approximate filename | FFF fuzzy file find |
+| Locate | Identifier or literal | FFF grep, falling back to `rg` |
+| Locate | Regex | `rg` |
+| Expand | Callers and callees | OpenEZ `code_context` (1–2 hops) |
+| Confirm | Dynamic or registration references | FFF multi-pattern grep, falling back to `rg` |
+| Read | Large-file structure and evidence | OpenEZ `code_outline`, then read current source directly |
+
+They read current source as evidence and fall back when a tool fails, the
+workspace is not indexed, or results are irrelevant. `setup-codebase` continues
+with direct source reads. Mention `setup-openez` only when direct search cannot
+establish a needed relationship; never install tools or change MCP
+configuration silently.
+
+### Optional: FFF search
+
+FFF adds a background watcher that updates an in-memory content index when it
+detects file changes, including uncommitted edits. It also provides
+frecency-ranked fuzzy file find, multi-pattern grep in one call, and git-aware
+annotations for modified, untracked, and staged files. See the [official FFF
+README, MCP server section](https://github.com/dmtrKovalenko/fff).
+
+It is useful in large repositories or monorepos with repeated searches,
+approximate filename lookups, caller/reference sweeps during review or
+lean-audit, or alongside OpenEZ for files changed after the last index. Costs
+include RAM for the content index, a background watcher, per-client MCP
+configuration, and a startup update check. For fff-mcp 0.11.0,
+`--no-update-check` is documented by `fff-mcp --help`, not the README.
+
+| OS | Install |
+|---|---|
+| macOS / Linux | <code>curl -L https://dmtrkovalenko.dev/install-fff-mcp.sh &#124; bash</code> |
+| Windows (PowerShell) | <code>irm https://raw.githubusercontent.com/dmtrKovalenko/fff/main/install-mcp.ps1 &#124; iex</code> |
+| macOS / Linux (Homebrew) | `brew install dmtrKovalenko/fff/fff-mcp`<br>`brew upgrade fff-mcp` for later updates |
+
+Read the install script before piping it to a shell. Use an absolute binary path
+for MCP registration because desktop clients may not inherit the shell `PATH`.
+The one-line installer defaults to `$HOME/.local/bin/fff-mcp`, Homebrew to
+`$(brew --prefix)/bin/fff-mcp`, and Windows prints the installed path. The
+official Codex example is `codex mcp add fff -- "$(brew --prefix)/bin/fff-mcp"`;
+it creates an entry like:
+
+```toml
+[mcp_servers.fff]
+command = "/absolute/path/to/fff-mcp"
+```
+
+To skip the update check, add `args = ["--no-update-check"]` separately by
+hand; the command above does not create it. For other clients, use their
+official docs or the installer's printed wiring instructions rather than an
+unverified snippet: [Claude Code](https://code.claude.com/docs/en/mcp),
+[Cursor](https://docs.cursor.com/context/model-context-protocol),
+[OpenCode](https://opencode.ai/docs/en/mcp-servers/), and
+[Devin](https://docs.devin.ai/cli/extensibility/mcp/configuration). Restart
+the client after setup.
+
+In fff-mcp 0.11.0, tool names are `find_files`, `grep`, and `multi_grep`; the
+FFF README calls them `fffind`, `ffgrep`, and `fff-multi-grep`. These are
+version examples; use the connected server's tool list if names differ. Say
+“FFF grep” for this capability; it uses literal identifiers, while regex stays
+with `rg`. Do not copy a blanket “use FFF for any search” rule into
+`CLAUDE.md` or `AGENTS.md`; devkit routing remains authoritative.
+
+FFF is never required. Without it, skills use `rg` and reach the same results.
 
 ### After installation
 
 - **Restart the agent session** so the skill list is reloaded.
 - **Do not customize** skill files in the target project. Updates overwrite
   same-named skills; retired skill folders must be removed manually.
-- Copy **all** skills because they reference one another in the workflow chain.
+- Copy **all complete skill folders**, including their `references/` files,
+  because skills chain together and load those supporting files when needed.
 
 ---
 
@@ -122,18 +183,18 @@ silently.
 |---|---|---|
 | `using-devkit` | Starting work or deciding which workflow applies | Routes the task to the owning devkit skill; it does not replace that skill's process. |
 | `setup-codebase` | The repo lacks context files or recorded repository conventions | Reads repository evidence, creates missing context files, and captures missing conventions only after user approval. |
-| `setup-openez` | The user agrees to use OpenEZ or the index is stale | Installs, indexes, and verifies the OpenEZ MCP connection. |
-| `read-codebase-context` | Before design, planning, or wiki work that needs affected files, callers, and tests | Chooses `rg` for exact search, FFF for approximate/repeated search, and healthy OpenEZ for semantic/graph questions; then records an impact map. |
+| `setup-openez` | The user agrees to use OpenEZ or the index is stale | Gets approval before CLI install, existing `AGENTS.md` guidance, or client wiring; verifies after a restart. |
+| `read-codebase-context` | Before design, planning, or wiki work that needs affected files, callers, and tests | Uses OpenEZ for concepts/callers, FFF for fuzzy filenames/literal references, `rg` for regex, then reads current source and records an impact map. |
 | `context-handoff` | A session must pause or is approaching its context limit | Saves a compact, source-grounded checkpoint under `docs/agent-devkit/handoffs/` for the next session. |
 
 ### Feature Development
 
 | Skill | When to use | Summary |
 |---|---|---|
-| `brainstorm-feature` | A new, ambiguous request or a request that changes product behavior | Classifies Spike / Bounded / Architectural, asks clarifying questions, presents a design, and requires approval before coding. |
-| `plan-feature` | After design approval and before a non-trivial feature | Turns the design into an ordered execution plan with a persisted approval gate. Each task has Files / Interfaces / Change / Verify. |
+| `brainstorm-feature` | A new, ambiguous request or a request that changes product behavior | Classifies Spike / Bounded / Architectural, asks clarifying questions, and presents a design; only eligible exact-scope changes skip waiting for approval after impact checks. |
+| `plan-feature` | After design approval and before a non-trivial feature | Specifies behavior, interfaces, named test cases, and verification without writing function or test code; persists the impact map and approval gate. |
 | `estimate-feature` | When a PM or BA explicitly requests an estimate | Estimates an hours range for each plan task with confidence and rationale. Runs only when requested. |
-| `implement-task` | An approved bounded design or an approved architectural plan exists | Traces code, applies the 6-step implementation ladder, verifies each non-trivial change, and flags wiki coverage. |
+| `implement-task` | An approved bounded design or an approved architectural plan exists | Traces code, applies the 6-step implementation ladder, and verifies each non-trivial change; `review-and-verify` owns the final wiki-impact block. |
 | `systematic-debugging` | Any technical issue: bug, test failure, build failure, or performance problem | Investigates root cause, classifies the bug, writes a verify plan, then fixes bounded bugs or hands architectural bugs off for design. |
 | `review-and-verify` | After implementation and before claiming completion | Enforces **NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE**. Reviews the diff, runs checks, and performs a complexity pass. |
 
@@ -158,6 +219,10 @@ created only when a real page needs them.
 ---
 
 ## 4. Standard Workflow — Idea to Production
+
+An exact, low-risk, non-bug change may proceed without waiting only when
+`brainstorm-feature` confirms that the impact map stays inside the user's named
+scope and no protected boundary is affected.
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
@@ -235,7 +300,9 @@ setup-codebase
    exists and what is missing.
 2. Read the README, package manifests, CI config, source layout, and other
    evidence.
-3. Create **only** missing files. Every claim must have a source:
+3. Create **only** missing files. Before adding optional OpenEZ guidance to an
+   existing `AGENTS.md`, show the exact section and wait for approval. Every
+   claim must have a source:
    - `AGENTS.md` — purpose, layout, commands, conventions, and gotchas
    - `AGENTS.md` `## Documentation` — `docs/llm/INDEX.md` entry point and
      wiki-first rules for behavior and workflow questions
@@ -394,6 +461,9 @@ Fix this failure quickly.
 - Read the complete error message, stack trace, line numbers, and paths.
 - Reproduce the failure by running the test.
 - Inspect `git diff` and recent changes.
+- For staged changes, inspect `git diff HEAD`; for a branch review, include
+  `git diff <target-base>...HEAD`, then check untracked paths from
+  `git status --short`.
 - Trace the data flow to find where the bad value originates.
 
 **Phase 2 — Analyze:**
@@ -409,10 +479,15 @@ Fix this failure quickly.
 
 **Phase 4 — Implement:**
 
-- Classify the bug as Spike, Bounded, or Architectural. A Spike reports
-  evidence and stops; an Architectural bug hands off to `brainstorm-feature`.
+- Classify the bug as Diagnostic investigation, Bounded, or Architectural. A
+  Diagnostic investigation reports evidence and stops; an Architectural bug
+  hands off to `brainstorm-feature`.
 - For a Bounded bug, establish expected behavior from source, tests, and the
   current wiki.
+- If investigation points to an environmental, timing-dependent, or external
+  cause, record the evidence. Diagnostic investigation reports and stops. Any
+  production handling returns to classification, expected-behavior, and verify
+  plan gates; unresolved behavior goes to `brainstorm-feature` for approval.
 - Write a verify plan before the regression check or production fix.
 - Reproduce the symptom with an existing test or another repeatable check.
 - Verify the check fails before the fix.
@@ -543,8 +618,8 @@ Estimate this plan in hours for a developer using an AI coding agent.
 
 - **Run `setup-codebase` first** when onboarding a repo, and rerun it when
   repository-specific conventions are not recorded.
-- **Copy all skills** because they chain together. Do not copy individual
-  skills unless you know exactly what you need.
+- **Copy all complete skill folders**, including their `references/` files,
+  because they chain together and load those supporting files when needed.
 - **Restart the agent session** after installing skills so the skill list reloads.
 - **Do not customize skill files** in the target project. Updates overwrite them.
 - **OpenEZ is optional but valuable** for large repositories; semantic search is
@@ -652,12 +727,10 @@ OpenCode, Cursor, or Devin client.
 
 ### Q: Is OpenEZ required?
 
-**No.** Use scoped `rg` for known paths/text, FFF MCP for approximate filenames
-or repeated searches when connected, and OpenEZ for semantic or cross-module
-questions when the workspace index is healthy. Read source directly and fall
-back when a tool fails. FFF setup is never required; mention optional OpenEZ
-setup only when direct search cannot establish a needed semantic or cross-module
-relationship. Do not recommend it based on repository size.
+**No.** Follow the Locate → Expand → Confirm → Read tool table above. OpenEZ
+and FFF are optional; use `rg` when FFF is unavailable, and read current source
+directly. Mention `setup-openez` only when direct search cannot establish a
+needed relationship. Do not recommend it based on repository size.
 
 ### Q: Are unit tests required?
 

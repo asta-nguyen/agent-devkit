@@ -2,6 +2,46 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Rename the bug investigation-only category from Spike to Diagnostic
+  investigation, distinct from the feasibility Spike in brainstorm-feature.
+- Require approval before setup-openez installs its CLI or edits AGENTS.md;
+  stop after client wiring and verify the connection in a new session.
+- Require approval before setup-codebase adds Code intelligence to an existing
+  AGENTS.md, and describe OpenEZ as optional for semantic or cross-module search.
+- Remove temporary diagnostic logs before reporting an investigation result or
+  entering Phase 4 in systematic-debugging.
+- Make implement-task the single owner of the final review-and-verify run.
+- Keep blocked estimate tasks as table rows and report them in the total.
+- Index an architectural spec only after the user approves it.
+- Keep execution plans at behavior and interface detail; `implement-task`
+  writes function bodies and test code, and plan file lists use symbol anchors.
+- Persist the shared impact map in specs and plans, refresh it between phases,
+  and keep current source reads mandatory before edits.
+- Anchor reusable impact maps to a verified commit and confirm their symbols
+  across current callers; include staged and branch-committed changes in review.
+- Route production handling for external or timing-dependent failures through
+  debugging classification and verification gates.
+- Allow the explicit-change lane only after exact scope and impact checks;
+  batch independent brainstorming questions only.
+- Centralize shared artifact naming and vault-link rules, and make
+  `review-and-verify` the sole owner of the wiki-impact result block.
+- Move rare skill guidance into supporting reference files and smoke-check
+  their paths; record host-reported input and output tokens in evals and pilots.
+- Route code search through Locate → Expand → Confirm → Read; FFF is optional,
+  identifiers use literal FFF grep when connected, and regex stays with `rg`.
+- Trace diff callers with OpenEZ plus FFF multi-pattern grep or `rg`; record
+  staged/unstaged coverage and scan untracked paths before closing caller gaps.
+- Apply the caller-tracing procedure in systematic-debugging and lean-audit,
+  and make document-wiki reuse the shared search table.
+- Treat OpenEZ memory as a pointer to persisted decisions or handoffs; read the
+  linked artifact before relying on it.
+- Align setup guidance and documentation with the shared search flow; add
+  optional FFF search installation guidance only to README and GUIDE files.
+- Add search-routing and caller-tracing acceptance scenarios, including an
+  `rg`-only fallback and executed temporary-repository results.
+
 ## [0.5.0] - 2026-09-29
 
 ### Changed

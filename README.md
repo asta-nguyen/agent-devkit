@@ -7,16 +7,14 @@ code retrieval, token-aware context flow, and hard review gates.
 
 Turn a vague request into a traceable change:
 
-```text
-retrieve context → capture decisions → write spec/plan → implement → verify
-```
+![Five stages from context retrieval to verification](assets/readme-workflow.png)
 
 ## Core capabilities
 
 | Capability | What it gives the agent |
 |---|---|
 | Semantic / RAG-style code retrieval | Optional OpenEZ semantic search, graph traversal, and caller analysis; direct source remains authoritative. |
-| Spec- and plan-driven delivery | Approved designs, `Global Constraints`, edge-case coverage, and explicit implementation gates. |
+| Spec- and plan-driven delivery | Approved designs, behavior-level plans with named test cases, persisted impact maps, edge-case coverage, and explicit implementation gates. |
 | Token-aware context management | Focused source retrieval, compact handoffs, and evidence instead of dumping the whole repository into context. |
 | Evidence-first verification | Fresh tests/checks, precise `path:line` findings, and failing `cannot verify` gaps when proof is missing. |
 | Convention capture and enforcement | Repository-specific rules with provenance, approval, scoped precedence, and review evidence. |
@@ -29,6 +27,10 @@ project provides portable Markdown skills for bootstrapping repository context,
 retrieving code relationships, designing and planning changes, implementing
 with local conventions, debugging root causes, verifying fresh evidence, and
 maintaining a source-grounded LLM wiki.
+
+Plans specify behavior and checks; `implement-task` writes code. An exact,
+low-risk, non-bug change may proceed without waiting for design approval only
+after `brainstorm-feature` verifies its named scope and impact map.
 
 ## Skills
 
@@ -135,7 +137,8 @@ npx skills add asta-nguyen/agent-devkit -a claude-code
 The public repository is currently `asta-nguyen/agent-devkit`; the shorthand
 `asta/agent-devkit` is not the repository's current GitHub path.
 
-Install the whole set because the workflow skills reference each other. Treat the
+Install the whole set because the workflow skills reference each other; keep
+each skill folder intact so its supporting references are installed. Treat the
 copies as managed files: do not customize them in the target project. Updating
 overwrites same-named skills, and retired skill folders must be removed manually.
 Start a fresh agent session after copying so its skill list is reloaded.
@@ -156,6 +159,8 @@ implement-task → review-and-verify     # review, fix blockers once, review aga
 systematic-debugging                   # investigate before fixing bugs
 ```
 
+## OpenEZ
+
 OpenEZ is a separate code-intelligence MCP service. Install/index a repository
 and wire the clients you use, then restart those clients so their MCP tools are
 loaded:
@@ -166,11 +171,85 @@ openez index <repo-path>
 openez setup codex                  # or claude / opencode
 ```
 
-Skills use `rg` for exact search, connected FFF for approximate or repeated
-search, and OpenEZ for semantic or graph questions when its index is healthy.
-They verify findings in current source. A plugin is optional: use one when you
-want to distribute a skill, MCP server, and optional UI together; a shared
+Skills use this tool-by-purpose flow:
+
+| Stage | Need | Tool |
+|---|---|---|
+| Locate | Concept or behavior | OpenEZ `code_query` |
+| Locate | Approximate filename | FFF fuzzy file find |
+| Locate | Identifier or literal | FFF grep, falling back to `rg` |
+| Locate | Regex | `rg` |
+| Expand | Callers and callees | OpenEZ `code_context` (1–2 hops) |
+| Confirm | Dynamic or registration references | FFF multi-pattern grep, falling back to `rg` |
+| Read | Large-file structure and evidence | OpenEZ `code_outline`, then read current source directly |
+
+Search and index results are navigation, never evidence. A plugin is optional:
+use one to distribute a skill, MCP server, and optional UI together; a shared
 `SKILL.md` folder is enough for the workflow itself.
+
+### Optional: FFF search
+
+FFF adds a background watcher that updates an in-memory content index when it
+detects file changes, including uncommitted edits. It also provides
+frecency-ranked fuzzy file find, multi-pattern grep in one call, and git-aware
+annotations for modified, untracked, and staged files. See the [official FFF
+README, MCP server section](https://github.com/dmtrKovalenko/fff).
+
+It can help in large repositories or monorepos with repeated searches,
+approximate filename lookups, caller/reference sweeps during review or
+lean-audit, or alongside OpenEZ when files changed after the last index. Costs
+are RAM for the content index, a background watcher, per-client MCP
+configuration, and a startup update check. For fff-mcp 0.11.0,
+`--no-update-check` is documented by `fff-mcp --help`, not the README.
+
+| OS | Install |
+|---|---|
+| macOS / Linux | <code>curl -L https://dmtrkovalenko.dev/install-fff-mcp.sh &#124; bash</code> |
+| Windows (PowerShell) | <code>irm https://raw.githubusercontent.com/dmtrKovalenko/fff/main/install-mcp.ps1 &#124; iex</code> |
+| macOS / Linux (Homebrew) | `brew install dmtrKovalenko/fff/fff-mcp`<br>`brew upgrade fff-mcp` for later updates |
+
+Read the install script before piping it to a shell. For MCP registration, use
+an absolute binary path because desktop clients may not inherit the shell
+`PATH`: the one-line installer defaults to `$HOME/.local/bin/fff-mcp`,
+Homebrew to `$(brew --prefix)/bin/fff-mcp`, and Windows prints its path.
+
+The official Codex example is:
+
+```sh
+codex mcp add fff -- "$(brew --prefix)/bin/fff-mcp"
+```
+
+This creates an entry in `~/.codex/config.toml` like:
+
+```toml
+[mcp_servers.fff]
+command = "/absolute/path/to/fff-mcp"
+```
+
+To skip the startup update check, add this separately by hand; it is not
+produced by the command above:
+
+```toml
+args = ["--no-update-check"]
+```
+
+For other clients, follow their official docs or the installer's printed
+instructions; this guide does not invent client-specific snippets:
+[Claude Code](https://code.claude.com/docs/en/mcp),
+[Cursor](https://docs.cursor.com/context/model-context-protocol),
+[OpenCode](https://opencode.ai/docs/en/mcp-servers/), and
+[Devin](https://docs.devin.ai/cli/extensibility/mcp/configuration). Restart
+the client after setup.
+
+In fff-mcp 0.11.0 the tools are `find_files`, `grep`, and `multi_grep`; the FFF
+README calls them `fffind`, `ffgrep`, and `fff-multi-grep`. These are version
+examples; use the connected server's tool list if names differ. Say “FFF grep”
+for this capability. FFF grep uses literal identifiers; regex stays with
+`rg`. Do not copy a blanket “use FFF for any search” instruction into
+`CLAUDE.md` or `AGENTS.md`; devkit routing remains authoritative and FFF is
+optional.
+
+FFF is never required. Without it, skills use `rg` and reach the same results.
 
 ### Bootstrap & context
 
@@ -178,7 +257,7 @@ want to distribute a skill, MCP server, and optional UI together; a shared
 |---|---|
 | `using-devkit` | Route a task to the correct devkit workflow before editing. |
 | `setup-codebase` | Create missing context files and capture missing repository conventions; safe to rerun when conventions are absent. |
-| `setup-openez` | Install, initialize, index, and verify OpenEZ MCP connection for a repository. |
+| `setup-openez` | Ask before CLI install, existing `AGENTS.md` guidance, or client wiring; verify the MCP connection after restart. |
 | `read-codebase-context` | Choose search by the question and trace code paths before feature work or wiki generation. |
 | `context-handoff` | Save a compact evidence checkpoint when a session must pause or is approaching its context limit. |
 
@@ -251,12 +330,12 @@ document-wiki             → refresh documentation for the changed feature
 ### 3. Debug a bug
 
 ```
-systematic-debugging      → investigate and classify
-  ├─ Spike                → report evidence and stop
-  ├─ Architectural        → brainstorm-feature → plan-feature
-  └─ Bounded              → verify plan → regression check → fix
-                               ↓
-                            review-and-verify
+systematic-debugging          → investigate and classify
+  ├─ Diagnostic investigation → report evidence and stop
+  ├─ Architectural            → brainstorm-feature → plan-feature
+  └─ Bounded                  → verify plan → regression check → fix
+                              ↓
+                              review-and-verify
 ```
 
 ### 4. Document an existing app
