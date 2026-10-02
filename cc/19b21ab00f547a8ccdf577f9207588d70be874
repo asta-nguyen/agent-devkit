@@ -1,0 +1,27 @@
+skills/using-devkit/SKILL.md
+  s_3f6d9c4f205bb0::t_9a9639d63e5fc5 25-27
+skills/document-wiki/SKILL.md
+  s_3f6d9c4f205bb0::t_9a9639d63e5fc5 52-55
+EVALS.md
+  s_3f6d9c4f205bb0::t_9a9639d63e5fc5 733-736
+CHANGELOG.md
+  s_3f6d9c4f205bb0::t_9a9639d63e5fc5 53-54
+GUIDE.md
+  s_3f6d9c4f205bb0::t_9a9639d63e5fc5 533-537
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "cc19b21ab00f547a8ccdf577f9207588d70be874",
+  "prompts": {},
+  "sessions": {
+    "s_3f6d9c4f205bb0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0f856-0fca-76e0-ae54-4462c6f621e3",
+        "model": "gpt-6-luna"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
