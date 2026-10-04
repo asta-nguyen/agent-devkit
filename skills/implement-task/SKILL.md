@@ -14,8 +14,8 @@ description: Use when the user has approved a bounded change or feature plan and
    files, with the most specific matching scope winning; route same-scope
    conflicts through user clarification.
 2. If application source exists, call the available Skill entry whose local
-   name is `read-codebase-context` to trace the relevant code path, or use
-   direct file reads. Understand callers, data flow, and error paths before editing. For a
+   name is `read-codebase-context` to trace the relevant code path.
+   Understand callers, data flow, and error paths before editing. For a
    source-less new project, read the
    approved spec and plan, then create the first planned entry point; state that
    callers and existing error paths do not exist yet.

@@ -2,6 +2,21 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Align the repository wiki contract with relative Markdown links and require
+  the shared context skill before implementation, with portable skill calls.
+- Scope the plugin's development contract to the agent-devkit source repository.
+- Add Devin's root SessionStart hook with an empty matcher and the shared
+  bootstrap script; document local hook fail-open behavior.
+- Select OpenEZ client wiring from CLI help or the client's official MCP docs,
+  and identify the intended target branch for branch review.
+
+### Documentation
+
+- Add direct planning/resume routes and acceptance coverage for Devin bootstrap
+  and consumer contract scope.
+
 ### Changed
 
 - Rename the bug investigation-only category from Spike to Diagnostic

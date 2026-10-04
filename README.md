@@ -58,12 +58,18 @@ files under `skills/`; do not add an installation mirror under
 - **Cursor:** `.cursor-plugin/` points to `hooks/cursor-hooks.json` and reuses
   the same `skills/` tree and script.
 - **Devin CLI:** `.devin-plugin/` packages the same `skills/` tree as a Devin
-  plugin.
+  plugin; root `hooks.json` runs the shared `SessionStart` bootstrap. Local
+  CLI/Desktop plugin hooks are best-effort and fail-open; check for
+  `AGENT-DEVKIT:ACTIVE`, and invoke `using-devkit` manually if bootstrap is absent.
 - **OpenCode:** `.opencode/plugins/agent-devkit.js` registers the canonical
   `skills/` tree and bootstraps `using-devkit` through OpenCode's plugin API.
 
 The target project, not this source repository, owns its `AGENTS.md` and
 `.agents/skills/` installation files.
+
+Devin also loads the plugin's root `AGENTS.md` as an always-on rule. Its
+development contract is scoped to the agent-devkit source repository and does
+not impose those repository-specific policies on consumer projects.
 
 This repo also exposes the Codex plugin through the repo-scoped marketplace at
 `.agents/plugins/marketplace.json`. Users can install it directly from GitHub:

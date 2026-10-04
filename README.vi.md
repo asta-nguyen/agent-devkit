@@ -55,7 +55,12 @@ buộc; `agents/openai.yaml` chỉ bổ sung metadata UI cho Codex/OpenAI.
   cùng `skills/` tree.
 - **Cursor:** `.cursor-plugin/` dùng `hooks/cursor-hooks.json` và cùng
   `skills/` tree.
-- **Devin CLI:** `.devin-plugin/` đóng gói cùng `skills/` tree thành plugin.
+- **Devin CLI:** `.devin-plugin/` đóng gói cùng `skills/` tree thành plugin;
+  `hooks.json` ở root chạy bootstrap `SessionStart` dùng chung. Plugin hooks
+  trên CLI/Desktop có thể fail-open; kiểm tra `AGENT-DEVKIT:ACTIVE` và gọi
+  `using-devkit` thủ công nếu bootstrap không chạy. Devin cũng nạp root
+  `AGENTS.md` của plugin; contract phát triển trong đó chỉ áp dụng khi sửa source
+  agent-devkit, không áp quy tắc riêng của repo này lên project người dùng.
 - **OpenCode:** `.opencode/plugins/agent-devkit.js` đăng ký `skills/` tree
   canonical và bootstrap `using-devkit` qua OpenCode plugin API.
 

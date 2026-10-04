@@ -462,7 +462,8 @@ Fix this failure quickly.
 - Reproduce the failure by running the test.
 - Inspect `git diff` and recent changes.
 - For staged changes, inspect `git diff HEAD`; for a branch review, include
-  `git diff <target-base>...HEAD`, then check untracked paths from
+  `git diff <target-branch>...HEAD` against the PR/task's intended target branch
+  (the three-dot comparison uses the merge-base), then check untracked paths from
   `git status --short`.
 - Trace the data flow to find where the bad value originates.
 

@@ -267,10 +267,10 @@ Start an approved bounded change through `brainstorm-feature`, then invoke
 
 Pass when `brainstorm-feature` tells the user to invoke `implement-task` rather
 than treating it as an automatic handoff. Pass when `implement-task` calls the
-Skill tool with `read-codebase-context` before editing and with
-`review-and-verify` after editing. Introduce unexpected behavior during
-implementation and pass only when it calls the Skill tool with
-`systematic-debugging`. For a materially changed feature with missing wiki
+available Skill entries whose local names are `read-codebase-context` before
+editing and `review-and-verify` after editing. Introduce unexpected behavior
+during implementation and pass only when it calls the available
+`systematic-debugging` entry. For a materially changed feature with missing wiki
 coverage, it must tell the user to invoke `document-wiki` after verification.
 If an existing wiki page contradicts the changed behavior, verification must
 remain failed until that page is refreshed and reviewed.
@@ -672,7 +672,8 @@ and requires and runs a check for it. Fail if the caller is omitted or only
 mentioned without a check or explicit verification limit. Repeat with the
 changed function staged and OpenEZ/FFF unavailable; fallback must use
 `git diff HEAD` to find it. Also include a commit on the task branch and verify
-review covers `git diff <target-base>...HEAD`.
+review covers `git diff <target-branch>...HEAD` against the intended PR target,
+including a target-branch-only commit that must not appear in the task diff.
 
 ## 40. Confirm graph-missed route and config references
 
@@ -739,6 +740,36 @@ while marking migration incomplete until it is resolved. The review must fail
 wiki verification for that unresolved target. Fail if it checks only Markdown
 links, leaves mixed syntax while reporting the wiki update complete, or invents
 a destination for the broken link.
+
+## 47. Devin bootstrap and development-contract scope
+
+Install a local plugin fixture containing root `hooks.json` and start a fresh
+Devin CLI session in a separate consumer repository. Pass only when the
+SessionStart matcher is empty, the hook runs, and `using-devkit` is injected
+through `hookSpecificOutput.additionalContext`. Repeat the hook command from
+outside the plugin with a plugin path containing spaces. Report command checks
+separately from a real Devin session; a fail-open hook must not be called
+verified just because the session continues. Verify the plugin's root
+`AGENTS.md` scopes development-only policies to agent-devkit and directs the
+consumer to its own repository contract. Do not apply devkit's Markdown-only
+or no-build-system policies to the consumer's application.
+
+### Executed consistency checks (2026-10-04)
+
+- **47 — real Devin CLI 3000.11.3 session:** a temporary local plugin with an
+  empty SessionStart matcher injected a unique marker from its `using-devkit`
+  file. Without tools or file reads, the session returned that marker and
+  confirmed the consumer's TypeScript policy takes precedence over the scoped
+  devkit development contract. The fixture was removed afterward. The smoke
+  test also executes the hook from `/` with a plugin path containing spaces.
+- **37 — manual context-skill procedure on a temporary Git repository:**
+  validated the original baseline, found a committed caller outside the map
+  and an untracked caller with `rg`, read all three callers and implementation,
+  persisted the refreshed map/current HEAD, and passed Node assertions for
+  checkout, admin, and preview. The next baseline diff excluded the committed
+  caller; staged source remained correctly eligible for re-tracing.
+- **39 — temporary diverged branches:** `git diff target...HEAD` included the
+  task commit and excluded a commit present only on the target branch.
 
 ### Executed E8 scenarios
 

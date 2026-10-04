@@ -21,7 +21,7 @@ memory recall. This skill bootstraps it for a repository.
 
 ## Process
 
-**Resume after client wiring:** If a previous session ran `openez setup`, skip
+**Resume after client wiring:** If a previous session completed client wiring, skip
 steps 1–4 and go to step 5. Re-index only if the index is missing or stale.
 
 1. **Initialize the workspace index.** Before initialization, ensure
@@ -71,15 +71,25 @@ steps 1–4 and go to step 5. Re-index only if the index is missing or stale.
 
 4. **Wire the agent client** (optional; ask the user first):
 
+   Read `openez setup --help` to find supported clients. For a supported client,
+   get approval before running:
+
    ```bash
-   openez setup claude    # or: codex, opencode
+   openez setup <supported-client>
    ```
 
-   This configures the agent's MCP client to use OpenEZ. The user must restart
+   If the user's client is not listed, consult that client's official MCP
+   configuration documentation (for example, Cursor). Do not invent
+   a configuration snippet. Present any documented configuration change for
+   approval, then apply the same restart-and-verify procedure below. If no
+   supported configuration can be established, report that limitation and
+   continue to step 5 without wiring.
+
+   Wiring configures the agent's MCP client to use OpenEZ. The user must restart
    their agent after this step for MCP tools to load. Do not run this without
    approval; it changes agent-specific configuration.
 
-   If the user approves and this command runs, stop and tell the user to restart
+   If the user approves and wiring is applied, stop and tell the user to restart
    the agent. Do not continue to step 5 in this session. Tell the user to invoke
    `setup-openez` again after restarting so the new session can verify the
    connection; an agent cannot restart its own session and continue here. If

@@ -79,7 +79,10 @@ and untracked paths. This closes gaps when `diff_context` omits untracked files
 or graph edges. Without OpenEZ, when `HEAD` exists derive tracked symbols from
 `git diff HEAD` (staged and unstaged changes); when no commit exists, use both
 `git diff --cached` and `git diff`. For a branch review, also include
-`git diff <target-base>...HEAD` so committed branch changes are reviewed. Read
+`git diff <target-branch>...HEAD` so committed branch changes are reviewed.
+Use the PR's target branch, or the branch the task is intended to merge into;
+the three-dot comparison uses its merge-base with `HEAD`. If that target cannot
+be established from repository or PR evidence, ask instead of assuming it. Read
 untracked files listed by `git status --short` directly, then find callers with
 FFF multi-pattern grep or `rg`. Read every listed caller. For large diffs, call
 OpenEZ `index_workspace` (`mode: "incremental"`) only on the current

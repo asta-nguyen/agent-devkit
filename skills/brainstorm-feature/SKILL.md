@@ -40,8 +40,9 @@ downgrades mid-task.
 ## Process
 
 1. Read `AGENTS.md` and relevant wiki pages when they exist. If the target has
-   application source, call the Skill tool with "read-codebase-context" to
-   establish the affected code path before asking questions. Otherwise, state
+   application source, call the available Skill entry whose local name is
+   `read-codebase-context` to establish the affected code path before asking
+   questions. Otherwise, state
    that the project is new and establish scope from the user's request; there
    is no code path to trace.
 2. If the project is too large for a single spec, help the user decompose into

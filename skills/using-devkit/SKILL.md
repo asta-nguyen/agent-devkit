@@ -48,12 +48,14 @@ and verify all targets. Do not add locks or coordination tools.
 | Set up or refresh OpenEZ when needed and approved | `setup-openez` |
 | Understand affected code and callers | `read-codebase-context` |
 | Pause unfinished work | `context-handoff` |
+| Resume paused work | `context-handoff` Resume procedure |
 | Create or refresh the LLM wiki | `document-wiki` |
 | Whole-repository simplicity audit | `lean-audit` |
 | New or ambiguous feature | `brainstorm-feature`; follow the handoff for its classification |
 | Exact, low-risk, non-bug change | `brainstorm-feature` impact check → `implement-task` → `review-and-verify` |
 | Bug or possible bug | `systematic-debugging` |
 | Per-task AI estimate, when requested | `estimate-feature` |
+| Turn an approved architectural design into an execution plan | `plan-feature` |
 | Implement an approved design or plan | `implement-task` → `review-and-verify` |
 
 The explicit-change row applies only after `brainstorm-feature` verifies
