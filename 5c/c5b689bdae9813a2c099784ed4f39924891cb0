@@ -1,0 +1,35 @@
+RELEASE_DESCRIPTION.md
+  s_3f6d9c4f205bb0::t_6ad7c2db6c0562 1,3-5,9-20
+.claude-plugin/plugin.json
+  s_3f6d9c4f205bb0::t_6ad7c2db6c0562 3
+.cursor-plugin/marketplace.json
+  s_3f6d9c4f205bb0::t_6ad7c2db6c0562 14
+CHANGELOG.md
+  s_3f6d9c4f205bb0::t_6ad7c2db6c0562 5-6
+.devin-plugin/plugin.json
+  s_3f6d9c4f205bb0::t_6ad7c2db6c0562 3
+.cursor-plugin/plugin.json
+  s_3f6d9c4f205bb0::t_6ad7c2db6c0562 3
+package.json
+  s_3f6d9c4f205bb0::t_6ad7c2db6c0562 3
+.codex-plugin/plugin.json
+  s_3f6d9c4f205bb0::t_6ad7c2db6c0562 3
+.claude-plugin/marketplace.json
+  s_3f6d9c4f205bb0::t_6ad7c2db6c0562 12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5cc5b689bdae9813a2c099784ed4f39924891cb0",
+  "prompts": {},
+  "sessions": {
+    "s_3f6d9c4f205bb0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0f856-0fca-76e0-ae54-4462c6f621e3",
+        "model": "gpt-6-luna"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
