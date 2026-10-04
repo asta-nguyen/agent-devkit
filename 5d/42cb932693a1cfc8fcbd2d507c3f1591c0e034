@@ -1,0 +1,51 @@
+skills/implement-task/SKILL.md
+  s_a96e890459e4c2::t_20f22a6ffc41eb 17-18
+skills/brainstorm-feature/SKILL.md
+  s_a96e890459e4c2::t_6a8aab7f0bb77d 44-45
+  s_a96e890459e4c2::t_20f22a6ffc41eb 43
+README.md
+  s_a96e890459e4c2::t_9be671294d2b88 61-63,70-72
+  s_a96e890459e4c2::t_37a12608eaa9d5 73
+EVALS.md
+  s_a96e890459e4c2::t_6a8aab7f0bb77d 270-273,756-772
+  s_a96e890459e4c2::t_9be671294d2b88 675-676
+  s_a96e890459e4c2::t_3b01e5bc7542ef 744-755,773
+CHANGELOG.md
+  s_a96e890459e4c2::t_3b01e5bc7542ef 5-19
+skills/review-and-verify/SKILL.md
+  s_a96e890459e4c2::t_20f22a6ffc41eb 82-85
+AGENTS.md
+  s_a96e890459e4c2::t_20f22a6ffc41eb 3-9
+tests/plugin-smoke.mjs
+  s_a96e890459e4c2::t_3b01e5bc7542ef 4,38-57
+  s_a96e890459e4c2::t_0f9bdc35a9d415 58
+skills/using-devkit/SKILL.md
+  s_a96e890459e4c2::t_20f22a6ffc41eb 51,58
+hooks.json
+  s_a96e890459e4c2::t_20f22a6ffc41eb 1-16
+GUIDE.md
+  s_a96e890459e4c2::t_9be671294d2b88 465-466
+skills/setup-openez/SKILL.md
+  s_a96e890459e4c2::t_9be671294d2b88 24,88,92
+  s_a96e890459e4c2::t_6a8aab7f0bb77d 82
+  s_a96e890459e4c2::t_20f22a6ffc41eb 74-76,78,81,83-86
+  s_a96e890459e4c2::t_6ca8f7de7220d8 87
+README.vi.md
+  s_a96e890459e4c2::t_9be671294d2b88 58-63
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5d42cb932693a1cfc8fcbd2d507c3f1591c0e034",
+  "prompts": {},
+  "sessions": {
+    "s_a96e890459e4c2": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0fb73-ac59-7b40-b177-f94b29d7f707",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
