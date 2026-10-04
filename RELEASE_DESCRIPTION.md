@@ -1,26 +1,23 @@
-# agent-devkit 0.5.0
+# agent-devkit 0.6.0
 
-This release makes wiki freshness depend on current source and tests, and
-clarifies how agents handle verification gaps, team workflows, and pilot
-measurements.
+This release strengthens evidence-based planning, implementation, review, and
+documentation workflows, adds optional FFF search guidance, and adds Devin
+SessionStart bootstrapping.
 
 ## Changes
 
-- Verify wiki claims against current source and tests in the current run instead
-  of relying on commit snapshots or `LOG.md`; preserve legacy logs without
-  reading or updating them.
-- Distinguish verification limits from confirmed content gaps. Continue feasible
-  checks, and offer refreshes only for confirmed omissions or contradictions.
-- Detect conflicting root/wiki `AGENTS.md` instructions and ask the user to
-  resolve them rather than silently following either policy.
-- Clarify bounded bug, small feature, and architectural workflows while
-  preserving approval and verification gates.
-- Add team guidance for one branch/PR per task, issue IDs in new artifact names,
-  and conflict-safe updates to shared indexes.
-- Make OpenEZ optional based on code-search needs and index health, not
-  repository size.
-- Expand the pilot to track active task and wiki time, wiki pages and source/test
-  files read, documentation conflicts, and user/reviewer wait time separately.
+- Route feature requests through explicit Spike, Bounded, and Architectural
+  classifications, with approval gates and handoffs that preserve the design.
+- Keep plans at behavior and interface detail; persist and refresh impact maps,
+  including planned entries where source does not exist yet.
+- Trace callers and dynamic references across OpenEZ, FFF, and `rg`; treat
+  search results as navigation and current source as evidence.
+- Use relative Markdown links for internal docs, migrate resolvable legacy
+  wikilinks during wiki work, and block completion on unresolved wiki links.
+- Tighten setup, debugging, estimation, memory, and documentation workflows;
+  move rarely used guidance into skill references.
+- Add Devin's SessionStart hook and shared bootstrap; expand acceptance
+  scenarios and record host-reported token usage.
 
 ## Verification
 

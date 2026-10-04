@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-10-04
+
 ### Fixed
 
 - Align the repository wiki contract with relative Markdown links and require
