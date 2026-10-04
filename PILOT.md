@@ -40,6 +40,7 @@ team can focus on using the workflow.
 - [ ] **Choose one target repository** the team actively works in.
 - [ ] **Each pilot user records a baseline** before the trial:
       - Average active time to complete a task, excluding time waiting for a user or reviewer
+      - Average input and output tokens per task and workflow phase, when reported by the host
       - User/reviewer wait time separately, if it can be measured
       - Number of bugs fixed by the agent without reading callers
       - Number of times the agent reported completion without verification
@@ -56,6 +57,8 @@ You will use agent-devkit for two weeks. The agent chooses a route based on the 
   architectural-boundary change, stop and switch to spec → plan before fixing.
 - Small feature in an existing flow: brainstorm-feature (short design in chat)
   → approval → implement-task → review-and-verify. Do not create a spec or plan file.
+- Exact, low-risk, non-bug change: brainstorm-feature checks the named scope and
+  impact map; only an eligible change proceeds to implement-task without waiting.
 - Architectural change: brainstorm-feature writes a spec
   → approval → plan-feature (approve the plan if its approval gate requires it)
   → implement-task → review-and-verify.
@@ -65,12 +68,21 @@ You do not need to memorize skill names—describe the task and the agent will r
 After each task, record:
   - What was the task, and which route did the agent use? (bug / small feature / architecture / docs)
   - Active task time through review pass; record user/reviewer waiting time separately.
+  - Input and output tokens for the task and each workflow phase, as reported
+    by the host. Use `N/A` when a host does not report usage.
   - If the task used the wiki: active document-wiki time, number of wiki pages read,
     and number of source/test files read. Enter N/A if the task did not use the wiki.
   - Documentation conflicts: count and affected files (0 if none; N/A if the task
     did not touch documentation).
   - Did the agent follow approval gates and verify before reporting completion?
   - Were there any issues? Compared with before DevKit: better / worse / about the same?
+
+Use this task log so time and token fields stay together:
+
+| Task or workflow phase | Active time | Input tokens | Output tokens |
+|---|---:|---:|---:|
+| Task total | | | |
+| `<skill/phase>` | | | |
 ```
 
 ---
@@ -137,6 +149,8 @@ Continue using DevKit for daily tasks and complete the evaluation form.
 | Metric | How to measure | Compare with baseline |
 |---|---|---|
 | Active task time | Active work from task start to review pass; record user/reviewer wait time separately | Faster / same / slower |
+| Input tokens | Host-reported tokens per task and workflow phase | Before / with DevKit / difference |
+| Output tokens | Host-reported tokens per task and workflow phase | Before / with DevKit / difference |
 | `document-wiki` time | Active time for each wiki run, excluding wait time | Record during the pilot |
 | Wiki pages read | Count wiki files/pages actually opened for each wiki task | Record during the pilot |
 | Source/test files read | Count source and test files actually opened for each wiki task | Record during the pilot |
@@ -201,6 +215,20 @@ Record these during the trial:
 1. Average active time to complete a task BEFORE DevKit: ____ hours
    Average active time WITH DevKit: ____ hours
    → Difference: ____ (faster / slower / about the same)
+   Average input tokens per task BEFORE DevKit: ____
+   Average input tokens per task WITH DevKit: ____
+   → Difference: ____ tokens
+   Average output tokens per task BEFORE DevKit: ____
+   Average output tokens per task WITH DevKit: ____
+   → Difference: ____ tokens
+   For each task, record input/output tokens for every workflow phase in its
+   task log; enter `N/A` when the host does not report them.
+   Compare each phase with its baseline:
+
+   | Workflow phase | Input before | Input with DevKit | Difference | Output before | Output with DevKit | Difference |
+   |---|---:|---:|---:|---:|---:|---:|
+   | `<skill/phase>` | | | | | | |
+
    User/reviewer waiting time with DevKit: ____ hours (record separately; do not
    include it in active time; see the task log)
 
@@ -347,6 +375,7 @@ parallel execution.
 │                                                      │
 │  MEASURE:                                            │
 │    • Active task time; user/reviewer wait separately │
+│    • Input/output tokens by task and workflow phase  │
 │    • document-wiki time, pages, source/test counts │
 │    • Documentation conflict count                    │
 │    • Review rounds and bugs found after review       │

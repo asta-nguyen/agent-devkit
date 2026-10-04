@@ -1,5 +1,12 @@
 # Coding Agent Contract
 
+## Scope
+
+The sections below apply only when developing the agent-devkit source
+repository. When this file is loaded as a plugin rule in another project,
+follow that project's own `AGENTS.md` and use `using-devkit` to choose the
+workflow; this file imposes no repository-specific policies on that project.
+
 This repository contains dependency-free Markdown skills for keeping
 coding-agent context and an LLM-facing codebase wiki in sync.
 

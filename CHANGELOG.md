@@ -2,6 +2,76 @@
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-10-04
+
+### Fixed
+
+- Align the repository wiki contract with relative Markdown links and require
+  the shared context skill before implementation, with portable skill calls.
+- Scope the plugin's development contract to the agent-devkit source repository.
+- Add Devin's root SessionStart hook with an empty matcher and the shared
+  bootstrap script; document local hook fail-open behavior.
+- Select OpenEZ client wiring from CLI help or the client's official MCP docs,
+  and identify the intended target branch for branch review.
+
+### Documentation
+
+- Add direct planning/resume routes and acceptance coverage for Devin bootstrap
+  and consumer contract scope.
+
+### Changed
+
+- Rename the bug investigation-only category from Spike to Diagnostic
+  investigation, distinct from the feasibility Spike in brainstorm-feature.
+- Require approval before setup-openez installs its CLI or edits AGENTS.md;
+  stop after client wiring and verify the connection in a new session.
+- Require approval before setup-codebase adds Code intelligence to an existing
+  AGENTS.md, and describe OpenEZ as optional for semantic or cross-module search.
+- Remove temporary diagnostic logs before reporting an investigation result or
+  entering Phase 4 in systematic-debugging.
+- Make implement-task the single owner of the final review-and-verify run.
+- Keep blocked estimate tasks as table rows and report them in the total.
+- Index an architectural spec only after the user approves it.
+- Keep execution plans at behavior and interface detail; `implement-task`
+  writes function bodies and test code, and plan file lists use symbol anchors.
+- Persist the shared impact map in specs and plans, refresh it between phases,
+  and keep current source reads mandatory before edits.
+- Anchor reusable impact maps to a verified commit and confirm their symbols
+  across current callers; include staged and branch-committed changes in review.
+- Route production handling for external or timing-dependent failures through
+  debugging classification and verification gates.
+- Allow the explicit-change lane only after exact scope and impact checks;
+  batch independent brainstorming questions only.
+- Centralize shared artifact naming and relative Markdown link rules, and make
+  `review-and-verify` the sole owner of the wiki-impact result block.
+- Move rare skill guidance into supporting reference files and smoke-check
+  their paths; record host-reported input and output tokens in evals and pilots.
+- Route code search through Locate → Expand → Confirm → Read; FFF is optional,
+  identifiers use literal FFF grep when connected, and regex stays with `rg`.
+- Trace diff callers with OpenEZ plus FFF multi-pattern grep or `rg`; record
+  staged/unstaged coverage and scan untracked paths before closing caller gaps.
+- Apply the caller-tracing procedure in systematic-debugging and lean-audit,
+  and make document-wiki reuse the shared search table.
+- Treat OpenEZ memory as a pointer to persisted decisions or handoffs; read the
+  linked artifact before relying on it.
+- Align setup guidance and documentation with the shared search flow; add
+  optional FFF search installation guidance only to README and GUIDE files.
+- Add search-routing and caller-tracing acceptance scenarios, including an
+  `rg`-only fallback and executed temporary-repository results.
+- Handle planned entries with no existing source in impact maps, plans,
+  estimates, and implementation; persist refreshed maps to the active spec or
+  plan.
+- Report OpenEZ CLI indexing separately from MCP query verification, and mark
+  the MCP index query unverified when tools are unavailable.
+- Use standard relative Markdown links for internal docs regardless of vault or
+  app availability. Resolve the LLM wiki index by its full path and continue
+  when only one wiki entry file exists.
+- Migrate resolvable legacy wikilinks across `docs/llm/` during wiki work and
+  block completion when any remain or a target is unresolved; resolve legacy
+  targets from the existing wiki root before writing relative Markdown links.
+- Route new and ambiguous features by their Spike, Bounded, or Architectural
+  classification.
+
 ## [0.5.0] - 2026-09-29
 
 ### Changed
