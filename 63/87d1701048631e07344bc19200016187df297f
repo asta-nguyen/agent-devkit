@@ -1,0 +1,72 @@
+skills/brainstorm-feature/references/spec-self-review.md
+  s_335ed271739061::t_90a3f0aa948fce 10-14
+CHANGELOG.md
+  s_335ed271739061::t_90a3f0aa948fce 5-9
+GUIDE.md
+  s_335ed271739061::t_f67bea7e3498c2 658,661-663
+  s_335ed271739061::t_90a3f0aa948fce 659-660
+skills/review-and-verify/SKILL.md
+  s_335ed271739061::t_90a3f0aa948fce 39-50
+skills/plan-feature/SKILL.md
+  s_335ed271739061::t_5778590d559808 25-26
+  s_335ed271739061::t_f67bea7e3498c2 22-24,99,109
+  s_335ed271739061::t_431e5d233fd15c 3,135
+  s_335ed271739061::t_15ee59bcad9387 173-174
+EVALS.md
+  s_335ed271739061::t_b9a96f51daceba 815-819
+  s_335ed271739061::t_a9afd6e5ccdd14 757-758,761
+  s_acaf668468df60::t_1899a2cef847fe 813
+  s_335ed271739061::t_2262618766eff9 759-760,762-781,812,814
+skills/using-devkit/SKILL.md
+  s_335ed271739061::t_b31f5c5d9f0784 46,51
+  s_335ed271739061::t_5778590d559808 43-44
+  s_335ed271739061::t_19b19ae9eb9902 47-48,52
+  s_acaf668468df60::t_e396b16c5d8185 40-42
+  s_335ed271739061::t_f67bea7e3498c2 36-39,45,55
+  s_335ed271739061::t_926b2b6086f151 49-50,53-54
+  s_335ed271739061::t_15ee59bcad9387 79
+skills/brainstorm-feature/SKILL.md
+  s_2ae61a207f2f1f::t_7583f7d57fe517 99-100
+  s_335ed271739061::t_f67bea7e3498c2 47-50
+  s_335ed271739061::t_75e70731975a5d 101,113-117
+  s_2ae61a207f2f1f::t_f55008d1df5d7a 118
+skills/implement-task/SKILL.md
+  s_335ed271739061::t_01552a3f748700 41
+  s_335ed271739061::t_81649df4e276eb 139-140
+  s_335ed271739061::t_441ddeb4193b47 42-43
+  s_335ed271739061::t_431e5d233fd15c 138
+  s_335ed271739061::t_b31f5c5d9f0784 40
+  s_335ed271739061::t_5778590d559808 44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "6387d1701048631e07344bc19200016187df297f",
+  "prompts": {},
+  "sessions": {
+    "s_2ae61a207f2f1f": {
+      "agent_id": {
+        "tool": "windsurf",
+        "id": "mangrove-wombat",
+        "model": "unknown"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    },
+    "s_335ed271739061": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a11e76-2c8d-76a0-86e7-4c37d8ba005a",
+        "model": "gpt-6-luna"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    },
+    "s_acaf668468df60": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ee17863adfferp47qekdaNeOKQ",
+        "model": "deepseek-flash"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
