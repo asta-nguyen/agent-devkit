@@ -1,0 +1,52 @@
+skills/implement-task/SKILL.md
+  s_2ae61a207f2f1f::t_f5d83fd60452ce 44-46
+  s_2ae61a207f2f1f::t_b320e22f3614db 119,147-148
+  s_2ae61a207f2f1f::t_c0d31c89db9cac 8-11
+skills/context-handoff/SKILL.md
+  s_2ae61a207f2f1f::t_f3f590af9e325d 11-14
+  s_2ae61a207f2f1f::t_b320e22f3614db 33,70
+skills/brainstorm-feature/SKILL.md
+  s_2ae61a207f2f1f::t_0858cb8e034466 10-13
+  s_2ae61a207f2f1f::t_b320e22f3614db 37
+skills/document-wiki/SKILL.md
+  s_2ae61a207f2f1f::t_b320e22f3614db 44
+  s_2ae61a207f2f1f::t_2c94b14878442c 12-15
+EVALS.md
+  s_2ae61a207f2f1f::t_1c54429e223a26 782-783,786-792
+  s_2ae61a207f2f1f::t_079a9d8599c58e 784-785
+skills/setup-codebase/SKILL.md
+  s_2ae61a207f2f1f::t_40ecc65324e490 11-14
+CHANGELOG.md
+  s_2ae61a207f2f1f::t_3c764a708afc06 10-14
+README.vi.md
+  s_2ae61a207f2f1f::t_ce14ac6838f16c 149-151
+skills/estimate-feature/SKILL.md
+  s_2ae61a207f2f1f::t_1ac585532000cd 11-14
+  s_2ae61a207f2f1f::t_b320e22f3614db 55,85
+README.md
+  s_2ae61a207f2f1f::t_1b6876dc8f0bf5 147-149
+skills/plan-feature/SKILL.md
+  s_2ae61a207f2f1f::t_109893ea88d429 27-28
+  s_2ae61a207f2f1f::t_b344fa2c571b29 8-11
+  s_2ae61a207f2f1f::t_b320e22f3614db 15,122
+skills/brainstorm-feature/references/spec-self-review.md
+  s_2ae61a207f2f1f::t_b320e22f3614db 5
+AGENTS.md
+  s_2ae61a207f2f1f::t_fdd3155225e8ae 26-29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "25e0d96bb1b3ccbd5f1b2e35c5abd09dfec9904f",
+  "prompts": {},
+  "sessions": {
+    "s_2ae61a207f2f1f": {
+      "agent_id": {
+        "tool": "windsurf",
+        "id": "mangrove-wombat",
+        "model": "unknown"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
