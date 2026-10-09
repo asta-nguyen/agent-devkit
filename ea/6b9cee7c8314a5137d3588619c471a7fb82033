@@ -1,0 +1,43 @@
+README.md
+  s_acaf668468df60::t_2dda66cd645309 294
+GUIDE.md
+  s_acaf668468df60::t_b9837d4a0f6521 573,575-579
+  s_acaf668468df60::t_ef737cab77bdac 214
+CHANGELOG.md
+  s_acaf668468df60::t_719ecd7bc1ea3a 9-11
+skills/document-wiki/SKILL.md
+  s_acaf668468df60::t_afe28a99d19bea 145-150,155-157,159-165
+  s_acaf668468df60::t_b418c7c870ffe6 133
+  s_acaf668468df60::t_567cdc813072cc 166-168
+EVALS.md
+  s_acaf668468df60::t_0096ee3152cdff 783-801
+  s_acaf668468df60::t_81fccba4a42b8b 210-212
+  s_acaf668468df60::t_a0f411bb9efa1f 213-215
+skills/document-wiki/references/evidence-matrix-and-page-template.md
+  s_acaf668468df60::t_40a482a851007c 17
+  s_acaf668468df60::t_1ad0a6e7aa96a8 100-131,134-140
+  s_acaf668468df60::t_a5a00b2a6f5311 43,45-55
+  s_acaf668468df60::t_2ce29bd890c5f7 132-133
+skills/setup-codebase/SKILL.md
+  s_acaf668468df60::t_dddc358b77e692 59-62
+README.vi.md
+  s_acaf668468df60::t_e955c9994fae94 295
+skills/review-and-verify/SKILL.md
+  s_acaf668468df60::t_3728c85c0e4e83 138-145
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ea6b9cee7c8314a5137d3588619c471a7fb82033",
+  "prompts": {},
+  "sessions": {
+    "s_acaf668468df60": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ee17863adfferp47qekdaNeOKQ",
+        "model": "deepseek-flash"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
