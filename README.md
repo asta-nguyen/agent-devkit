@@ -291,7 +291,7 @@ FFF is never required. Without it, skills use `rg` and reach the same results.
 | `document-wiki` | Build a source-grounded domain baseline, then let the user choose undocumented features or confirmed content gaps. |
 
 Deep pages use evidence-backed folders only when needed: `architecture/` for
-system structure, `domains/` for state and business rules, `workflows/` for
+system structure, `domains/` for state and requirements, `workflows/` for
 user/operator flows, `integrations/` for external systems, `operations/` for
 jobs/cron/deployment, and `decisions/` for source-backed decisions. Small repos
 may need only `architecture/` and `workflows/`; empty folders are never created.

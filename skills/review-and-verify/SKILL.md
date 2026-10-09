@@ -135,6 +135,14 @@ real, internal relative Markdown links resolve from their containing files,
 requires the full `document-wiki` migration; report missing or ambiguous
 targets, and fail the wiki check while any legacy wikilink remains.
 
+For changed pages with `## Requirements`, name the requirement format owned by
+`document-wiki` and fail on: an ID that appears elsewhere in `docs/llm/`; a page
+using more than one prefix; a prefix missing from `## Requirement prefixes` or
+repeated in it; an `Evidence:` path that does not exist or is missing from
+`## Sources`; a requirement anchor link that does not resolve; or two
+requirements of one prefix describing the same behavior. Internal link checks
+include anchors for requirement links.
+
 Before the final result, classify wiki impact even for a bug fix. If the change
 alters documented behavior or leaves a relevant page incomplete, use `yes` and
 list the pages for a `document-wiki` handoff. Use `no` only after inspecting

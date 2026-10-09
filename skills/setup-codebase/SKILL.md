@@ -56,7 +56,10 @@ before any write.
      The generated `AGENTS.md` must match `document-wiki`'s current-source
      verification rules, distinguish verification limits from confirmed
      content gaps, and state that any existing log is legacy, not read or
-     written and not used for freshness. Do not create `LOG.md`. If a legacy
+     written and not used for freshness. It must also state that feature pages
+     use `document-wiki`'s requirement format and the `## Requirement
+     prefixes` registry in `INDEX.md`, without restating the format. Do not
+     create `LOG.md`. If a legacy
      `LOG.md` already exists,
      preserve it byte-for-byte without reading or updating it.
      Create wiki category folders (`architecture/`, `domains/`, `workflows/`,

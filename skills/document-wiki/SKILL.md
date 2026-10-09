@@ -130,7 +130,7 @@ Never call unverified coverage current.
    | Category | Use for |
    |---|---|
    | `architecture/` | Cross-cutting structure, boundaries, and API topology |
-   | `domains/` | Domain concepts, state models, and business rules |
+   | `domains/` | Domain concepts, state models, and requirements |
    | `workflows/` | User or operator flows across multiple components |
    | `integrations/` | Stripe, storage, email, and other external systems |
    | `operations/` | Jobs, cron, deployment, maintenance, and runbooks |
@@ -142,17 +142,30 @@ Never call unverified coverage current.
    small repositories, `architecture/`, `decisions/` and `workflows/` may be sufficient.
    When documenting or refreshing a selected feature, read
    `references/evidence-matrix-and-page-template.md` before continuing.
-8. Update `docs/llm/INDEX.md` with working links. Each wiki page keeps its
-   business content and a `## Sources` section containing exact source/test file
+8. Update `docs/llm/INDEX.md` with working links. When a written or refreshed
+   page registers a new domain prefix, create or update the `## Requirement
+   prefixes` table (`Prefix`, `Domain`) in `docs/llm/INDEX.md`: reuse the
+   domain's existing prefix, and register a new one only when the table has no
+   row for that domain. Each wiki page keeps its business content, its
+   requirements, and a `## Sources` section containing exact source/test file
    paths. Do not create or update a source log or snapshot for wiki freshness.
    Update `docs/llm/FEATURES.md` only if that file already exists; do not create
    a second tracking system.
 9. Verify that every listed source path exists as a file, every internal
-   relative Markdown link resolves from the file containing it, and no legacy
-   `[[...]]` links remain in `docs/llm/`. Every index link must resolve; every
+   relative Markdown link resolves from the file containing it (including
+   `#<lowercase-id>` anchors in requirement links), and no legacy `[[...]]`
+   links remain in `docs/llm/`. Every index link must resolve; every
    `Tests: none found` claim has a recorded search with no matching result, and
-   `git diff --check` passes. For a confirmed omission or contradiction, mark
-   `[~]` as `confirmed content gap` and report the source evidence. For a check
+   `git diff --check` passes. For pages with `## Requirements`, also verify:
+   every ID is unique across `docs/llm/`; requirements are sorted by ID; each
+   has one `SHALL` statement, at least one scenario, and an `Evidence:` line
+   whose paths exist and appear in the page's `## Sources`; each page uses one
+   prefix that is registered in `## Requirement prefixes`; the table has no
+   repeated prefix; and no two requirements that share a prefix describe the
+   same behavior. When refreshing a legacy page with `## Business rules`,
+   convert it per `references/evidence-matrix-and-page-template.md`. For a
+   confirmed omission or contradiction, mark `[~]` as `confirmed content gap`
+   and report the source evidence. For a check
    that remains incomplete or blocked, mark `[~]` as `verification limit`, name
    the exact missing evidence, and do not offer a rewrite. Never silently repair
    claims or report unverified coverage as current. The final report must repeat

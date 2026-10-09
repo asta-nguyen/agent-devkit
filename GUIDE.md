@@ -211,7 +211,7 @@ FFF is never required. Without it, skills use `rg` and reach the same results.
 | `document-wiki` | The repo has no LLM wiki, only a skeleton, or missing, unverified, or source-contradictory feature docs | Builds a domain map from source, creates the baseline overview, waits for feature selection, and writes deep pages. Every claim needs a source path. |
 
 Deep pages use only categories established by evidence: `architecture/` for
-system structure, `domains/` for state and business rules, `workflows/` for
+system structure, `domains/` for state and requirements, `workflows/` for
 user/operator flows, `integrations/` for external systems, `operations/` for
 jobs/cron/deployment, and `decisions/` for source-backed decisions. Folders are
 created only when a real page needs them.
@@ -570,11 +570,13 @@ document-wiki
    classified as confirmed content gaps for refresh. Keep verification-limit
    `[~]` pages in the report, but do not offer them for rewriting; continue
    feasible checks and report the exact missing evidence if blocked.
-8. Write pages for selected features. Deep pages include `## Business rules`,
+8. Write pages for selected features. Deep pages include `## Requirements`,
    `## Flow`, `## State changes`, `## Side effects`, `## Authorization &
-   constraints`, `## Error paths`, and `## Tests`. Every `## Sources` entry is
-   an exact existing file path; use `Tests: none found` only after searching
-   the repository test tree.
+   constraints`, `## Error paths`, and `## Tests`. Requirements use stable
+   `<PREFIX>-<slug>` IDs, scenarios, and `Evidence:` paths; prefixes are
+   registered in the `## Requirement prefixes` table in `INDEX.md`. Every
+   `## Sources` entry is an exact existing file path; use `Tests: none found`
+   only after searching the repository test tree.
 9. Update `INDEX.md`; do not read or write `LOG.md`, and preserve any legacy
    log file unchanged.
 10. Read current source/test files and compare page claims in this run; verify

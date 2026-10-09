@@ -6,6 +6,9 @@
 
 - Track plan execution with `Execution: open | complete`; final review marks a
   plan complete, and follow-up work routes through `brainstorm-feature`.
+- Write wiki feature pages as requirements with stable `<PREFIX>-<slug>` IDs,
+  scenarios, and source evidence, registered in a `## Requirement prefixes`
+  table in `docs/llm/INDEX.md`.
 
 ## [0.6.0] - 2026-10-04
 

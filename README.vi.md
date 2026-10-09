@@ -292,7 +292,7 @@ FFF không bắt buộc. Không có FFF, các skill dùng `rg` và vẫn đạt 
 | `document-wiki` | Xây domain baseline từ source, sau đó chọn feature chưa có trang hoặc có content gap đã xác minh. |
 
 Deep pages chỉ dùng category có evidence: `architecture/` cho system structure,
-`domains/` cho state và business rules, `workflows/` cho user/operator flow,
+`domains/` cho state và requirements, `workflows/` cho user/operator flow,
 `integrations/` cho external system, `operations/` cho job/cron/deployment, và
 `decisions/` cho decision có source. Repo nhỏ có thể chỉ cần `architecture/` và
 `workflows/`; không tạo folder rỗng.

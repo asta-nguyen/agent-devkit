@@ -207,11 +207,12 @@ mention, then run `document-wiki` for that feature.
 Pass when the page traces the source-established happy path, persistence,
 storage, email side effect, authorization, error path, and relevant tests; its
 `## Sources` lists every file materially supporting those claims. It must omit
-the unsupported product claim and must not pad Sources with unrelated reachable
-helpers. The page must contain `## Business rules`, `## Flow`, `## State
-changes`, `## Side effects`, `## Authorization & constraints`, `## Error paths`,
-and `## Tests`. Every listed source must be an exact existing file path, and a
-`Tests: none found` claim passes only when the agent searched the repository's
+the unsupported product claim, which must not appear as a requirement, and must
+not pad Sources with unrelated reachable helpers. The page must contain
+`## Requirements`, `## Flow`, `## State changes`, `## Side effects`,
+`## Authorization & constraints`, `## Error paths`, and `## Tests`. Every
+listed source must be an exact existing file path, and a `Tests: none found`
+claim passes only when the agent searched the repository's
 test tree and found no matching test. After the relevant source/caller/test
 checks are complete, an omitted source-established stage or contradicted
 material claim is a confirmed content gap: mark it `[~]` and offer it for
@@ -778,6 +779,25 @@ For an architectural follow-up, verify that the new spec links prior artifacts
 with resolving relative Markdown links under `## Previous work`. A failed final
 review must not mark a plan complete. Record the plan diff and agent response
 for each case.
+
+## 49. Wiki requirements with stable IDs
+
+Run `document-wiki` on a disposable repository with one real feature and a
+test. Pass when the page has `## Requirements`, and each requirement has a
+unique `<PREFIX>-<slug>` ID, one `SHALL` statement, at least one scenario, an
+`Evidence:` line whose paths also appear in `## Sources`, and requirements are
+sorted by ID; the page's single prefix is registered in the `## Requirement
+prefixes` table in `docs/llm/INDEX.md`. Repeat with a legacy page containing
+`## Business rules`: every proven rule becomes a requirement and no rule is
+dropped silently. Repeat with a second page of the same prefix that already
+covers the behavior under another slug: `document-wiki` reuses the existing
+requirement, and `review-and-verify` fails when two requirements of one prefix
+describe the same behavior. A duplicate ID across pages fails; a requirement
+anchor link still resolves after its `SHALL` wording changes; two branches
+registering the same prefix fail after rebase.
+
+Execution: cannot verify — needs trusted temporary workspace for a real
+`document-wiki` run.
 
 ### Executed consistency checks (2026-10-04)
 
