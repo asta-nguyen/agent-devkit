@@ -18,6 +18,9 @@ Read context before changing files: run `read-codebase-context`, or
   `YYYY-MM-DD-<issue-id>-<slug>` before any type suffix when the task or a
   related artifact (including its filename) provides an issue ID. Otherwise
   keep the existing form. Never infer an ID or rename an artifact.
+- A change with process files keeps them in one folder,
+  `docs/agent-devkit/changes/YYYY-MM-DD-<issue-id>-<slug>/`, under the same
+  naming rule. Keep the folder together; see the change lifecycle.
 - For internal document links, use standard relative Markdown links
   (`[label](relative/path.md)`), resolved from the file containing the link.
   No Obsidian vault or app is required.
@@ -33,25 +36,35 @@ Read context before changing files: run `read-codebase-context`, or
 - Process artifacts stay under `docs/agent-devkit/`: never put them in
   `docs/llm/` or link to them from `docs/llm/`.
 
-## Plan lifecycle
+## Change lifecycle
 
-`Approval Gate` status records approval, not implementation. New plans have
-`Execution: open`; after all tasks pass final `review-and-verify`,
-that skill marks `Execution: complete` in the plan's `## Approval Gate`, or adds
-`## Completion` when the plan has no such section. For a legacy plan without
-this field, treat completed task results or an explicit spec completion statement
-as historical scope; inspect remaining tasks and final verification evidence
-before reusing the plan. Do not infer completion from `Status: approved`.
+`Approval Gate` records approval, not completion, for a change's `tasks.md`.
+A change whose folder sits directly under `changes/` is open: revise its files
+in place, and apply material changes through `tasks.md`'s decision log and
+approval gate. `review-and-verify` moves the folder to
+`changes/archive/<same name>/` only after final review passes; it merges a
+verified `delta.md` when the change has one, and a change without a delta only
+moves. That move marks the change complete. Change folders have no `Execution`
+field and are never renamed.
 
-For new work after a plan is complete, keep its design scope, tasks, and
-results as history. Classify the request again with `brainstorm-feature`:
-bounded work needs no new plan; architectural work gets a new spec that links
-the prior artifacts under `## Previous work`, then a new plan linked to that
-spec.
-Correct factual errors in old artifacts when needed, but do not add new
-requirements to the completed design or tasks. While a plan is open, revise
-that same file without renaming it and preserve completed task results;
-material changes still use its decision log and approval gate.
+Legacy plans in `docs/agent-devkit/plans/` keep their `Execution` lifecycle:
+after all tasks pass final `review-and-verify`, that skill marks
+`Execution: complete` in the plan's `## Approval Gate`, or adds `## Completion`
+when the plan has no such section. Treat completed task results or an explicit
+spec completion statement as historical scope; inspect remaining tasks and
+final verification evidence before reusing the plan. Do not infer completion
+from `Status: approved`.
+
+For new work, classify with `brainstorm-feature`: a change gets a folder when it
+produces a change file. An Architectural change always has `design.md` and
+`tasks.md`; write `delta.md` only when a `docs/llm/` requirement needs `ADDED`,
+`MODIFIED`, or `REMOVED`. A domain with no wiki page gets no delta and is
+reported as `Wiki impact: yes`. After a change is archived, start a new change.
+Keep archived changes, completed legacy plans, and legacy specs as history:
+correct factual errors when needed, but do not add requirements, tasks, or
+results to them. A delta only targets a page already in the `## Requirements`
+format; convert a legacy `## Business rules` page through `document-wiki`, after
+explicit page selection, before the delta names its IDs.
 
 ## Team Git workflow
 
@@ -75,9 +88,11 @@ and verify all targets. Do not add locks or coordination tools.
 | Exact, low-risk, non-bug change | `brainstorm-feature` impact check → `implement-task` → `review-and-verify` |
 | Bug or possible bug | `systematic-debugging` |
 | Per-task AI estimate, when requested | `estimate-feature` |
-| Turn an approved architectural design into an execution plan | `plan-feature` |
-| Revise an open plan | `plan-feature` |
-| Implement an approved design or plan | `implement-task` → `review-and-verify` |
+| Turn an approved architectural design into tasks in its change folder | `plan-feature` |
+| Revise an open architectural change (`tasks.md`) or an open legacy plan | `plan-feature` |
+| Revise an open Bounded change (`delta.md`) | `brainstorm-feature` |
+| Implement an approved design, tasks, or legacy plan | `implement-task` → `review-and-verify` |
+| Archive a verified change and merge its wiki delta | `review-and-verify` |
 
 The explicit-change row applies only after `brainstorm-feature` verifies
 eligibility; otherwise it uses the approval gate. The arrow marks a required

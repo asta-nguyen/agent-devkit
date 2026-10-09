@@ -13,8 +13,12 @@
 3. [The 13 Skills](#3-the-13-skills)
 4. [Standard Workflow — Idea to Production](#4-standard-workflow--idea-to-production)
 5. [Real Examples](#5-real-examples)
-6. [Tips & Best Practices](#6-tips--best-practices)
-7. [FAQ](#7-faq)
+6. [Requirement format](#6-requirement-format)
+7. [Artifact catalog](#7-artifact-catalog)
+8. [Tips & Best Practices](#8-tips--best-practices)
+9. [FAQ](#9-faq)
+
+*Tiếng Việt: [GUIDE.vi.md](GUIDE.vi.md)*
 
 ---
 
@@ -30,8 +34,9 @@ often make predictable mistakes:
 - **Stale documentation** — wiki pages no longer match the code.
 
 Agent-devkit addresses this with **prompt-driven skills**. Each skill is a
-`SKILL.md` playbook containing a repeatable process the agent follows. There
-are no scripts, dependencies, or build steps in the workflow itself.
+`SKILL.md` playbook containing a repeatable process the agent follows.
+`document-wiki` bundles one dependency-free validator for published wiki
+content; the workflow has no build step.
 
 **Result:** the agent works like a disciplined engineer — design → approval →
 implementation → verification → documentation.
@@ -75,6 +80,9 @@ mkdir -p .agents/skills
 cp -R /path/to/agent-devkit/skills/. .agents/skills/
 find .agents/skills -name SKILL.md -print
 ```
+
+When installed this way, run the bundled wiki check from the target project
+with `node .agents/skills/document-wiki/scripts/validate-llm-wiki.mjs .`.
 
 ### Option 4: OpenEZ (optional semantic index)
 
@@ -191,7 +199,7 @@ FFF is never required. Without it, skills use `rg` and reach the same results.
 
 | Skill | When to use | Summary |
 |---|---|---|
-| `brainstorm-feature` | A new, ambiguous request or a request that changes product behavior | Classifies Spike / Bounded / Architectural, asks clarifying questions, and presents a design; routes Spike to investigation, Bounded to implementation, and Architectural through a plan. Only eligible exact-scope changes skip waiting after impact checks. |
+| `brainstorm-feature` | A new, ambiguous request or a request that changes product behavior | Classifies Spike / Bounded / Architectural, asks clarifying questions, and presents a design; routes Spike to investigation, Bounded to implementation, and Architectural through a change folder. Only eligible exact-scope changes skip waiting after impact checks. |
 | `plan-feature` | After design approval and before a non-trivial feature | Specifies behavior, interfaces, named test cases, and verification without writing function or test code; persists the impact map and approval gate. |
 | `estimate-feature` | When a PM or BA explicitly requests an estimate | Estimates an hours range for each plan task with confidence and rationale. Runs only when requested. |
 | `implement-task` | An approved bounded design or an approved architectural plan exists | Traces code, applies the 6-step implementation ladder, and verifies each non-trivial change; `review-and-verify` owns the final wiki-impact block. |
@@ -242,7 +250,7 @@ scope and no protected boundary is affected.
 │           (chat design)    │                                 │
 │                │     ┌─────┴──────┐                          │
 │                │     ▼            ▼                          │
-│                │  setup-codebase  write spec                 │
+│                │  setup-codebase  write design               │
 │                │     │            │                          │
 │                │     │     plan-feature                      │
 │                │     │            │                          │
@@ -274,7 +282,7 @@ read-codebase-context                  # understand code before changing it
 context-handoff                        # checkpoint unfinished work before pausing
 document-wiki                          # document existing features
 lean-audit                             # audit whole-repo simplicity; report only
-brainstorm-feature → plan-feature      # architectural work: spec → plan
+brainstorm-feature → plan-feature      # architectural work: design → tasks.md → archive
 estimate-feature                       # optional: AI-assisted estimate
 implement-task → review-and-verify     # implement and check
 systematic-debugging                   # investigate before fixing a bug
@@ -366,7 +374,10 @@ Add a --json flag to this existing command.
 6. After approval, tell the user to invoke `implement-task`, which calls
    `review-and-verify` after implementation.
 
-**No spec file or plan file is created.** A short chat design is enough.
+**No spec file or tasks file is created.** A short chat design is enough. When a
+documented `docs/llm/` requirement needs `ADDED`, `MODIFIED`, or `REMOVED`,
+`brainstorm-feature` writes a `delta.md` in a change folder before
+implementation, and `review-and-verify` archives it.
 
 ---
 
@@ -392,16 +403,18 @@ Add a background job subsystem with persistent retries.
    present a design covering scope, architecture, interfaces, error cases, and
    verification. Recommend one clear solution when the choice is
    straightforward; present two or three options only when trade-offs matter.
-4. After design approval, write the spec at
-   `docs/agent-devkit/specs/2026-08-17-bg-jobs-design.md`.
-5. Self-review the spec for placeholders, consistency, scope, and ambiguity.
-6. Wait for user approval of the written spec.
+4. After design approval, create the change folder
+   `docs/agent-devkit/changes/2026-08-17-bg-jobs/`, write `design.md` there, and
+   write `delta.md` for any documented requirement the change alters or adds.
+5. Self-review the design and delta for placeholders, consistency, scope, and
+   ambiguity.
+6. Wait for user approval of the written design and delta.
 7. If the repo lacks `AGENTS.md`, tell the user to invoke `setup-codebase`
    first.
-8. Tell the user to invoke `plan-feature`, which writes
-   `docs/agent-devkit/plans/2026-08-17-bg-jobs-plan.md` with ordered tasks.
-   The plan copies approved cross-task rules into `## Global Constraints` and
-   maps each approved edge case to a task and verification check.
+8. Tell the user to invoke `plan-feature`, which writes `tasks.md` beside
+   `design.md` in the same folder with ordered tasks. The tasks copy approved
+   cross-task rules into `## Global Constraints` and map each approved edge case
+   to a task and verification check.
 9. Run `estimate-feature` before plan approval only if the user requested an
    estimate; an estimate never authorizes implementation.
 10. Because the plan changes public APIs, schemas, dependencies, CI, or a broad
@@ -416,8 +429,9 @@ Add a background job subsystem with persistent retries.
 13. `implement-task` calls `review-and-verify` for diff review, tests, and the
     complexity pass. Findings cite `path:line`; unverifiable requirements fail
     under `Spec gaps` as `cannot verify` with the missing evidence named.
-14. After verification, tell the user to invoke `document-wiki` to refresh the
-    wiki for the new feature.
+14. `review-and-verify` archives the change: it merges `delta.md` into
+    `docs/llm/` and moves the folder to `changes/archive/`. Tell the user to
+    invoke `document-wiki` only for wiki coverage outside the delta.
 
 **Artifact structure:**
 
@@ -425,13 +439,16 @@ Add a background job subsystem with persistent retries.
 docs/
   agent-devkit/
     INDEX.md                          # links all artifacts
-    specs/
-      2026-08-17-bg-jobs-design.md    # approved design
-    plans/
-      2026-08-17-bg-jobs-plan.md      # execution plan
-    decisions/                         # bounded-task decisions, only when needed
+    changes/
+      2026-08-17-bg-jobs/
+        design.md                     # approved design
+        delta.md                      # ADDED / MODIFIED / REMOVED requirements
+        tasks.md                      # execution tasks
+        estimate.md                   # optional, when requested
+    specs/ plans/                     # legacy designs and plans stay as history
+    decisions/                         # work outside a change
       2026-08-17-upload-policy.md
-    estimates/                         # optional
+    estimates/                         # work outside a change
       2026-08-17-bg-jobs-estimate.md
   llm/                                # source-grounded, verified wiki
     AGENTS.md
@@ -439,7 +456,7 @@ docs/
     architecture/
       overview.md
     operations/
-      background-jobs.md              # after implementation
+      background-jobs.md              # after the archived delta merges
 ```
 
 ---
@@ -621,7 +638,75 @@ Estimate this plan in hours for a developer using an AI coding agent.
 
 ---
 
-## 6. Tips & Best Practices
+## 6. Requirement format
+
+Deep wiki pages describe verified behavior under `## Requirements` — legacy
+pages may still show `## Business rules` until they are refreshed. Each
+requirement looks like:
+
+```md
+### PAY-refund-cap
+
+The system SHALL reject a refund larger than the remaining captured amount.
+
+#### Scenario: over-refund rejected
+
+- GIVEN a payment captured for 100
+- WHEN a refund of 120 is requested
+- THEN the refund is rejected with amount_exceeds_capture
+
+Evidence: src/payments/refund.ts, test/refund.test.ts
+```
+
+Rules:
+
+- The ID is `PREFIX-slug`: an uppercase domain prefix plus a lowercase
+  kebab-case slug. The heading contains only the ID, so its anchor
+  (`#pay-refund-cap`) stays stable when the wording changes.
+- Exactly one `SHALL` sentence describing observable behavior, and at least
+  one `#### Scenario:` with `GIVEN`/`WHEN`/`THEN`.
+- One `Evidence:` line naming exact source and test paths; each path must
+  exist and also appear in the page's `## Sources`.
+- Requirements are sorted by ID, and each page uses a single prefix
+  registered in the `## Requirement prefixes` table in `docs/llm/INDEX.md`.
+- A removed ID is never reused; `docs/llm/INDEX.md` keeps the retired-ID
+  list. A claim without source evidence is an open question, not a
+  requirement.
+- Requirements are never written from a proposal or unimplemented behavior.
+
+`document-wiki` enforces this format when writing pages;
+`review-and-verify` re-checks the invariants on changed wiki pages.
+
+## 7. Artifact catalog
+
+Every file and folder the devkit can create inside a target project. Nothing
+is global or mandatory: each entry appears only when its condition holds.
+
+| Path | Group | Appears when | Created by |
+|---|---|---|---|
+| `AGENTS.md` | context | Project contract (usually always present) | `setup-codebase` |
+| `CLAUDE.md` | context | `setup-codebase` runs | `setup-codebase` |
+| `CONVENTIONS.md` | context | Conventions worth storing separately | `setup-codebase` |
+| `docs/agent-devkit/INDEX.md` | process | First process artifact exists | whichever skill creates it |
+| `docs/agent-devkit/specs/` | process (legacy) | Approved architectural design (legacy work) | `brainstorm-feature` |
+| `docs/agent-devkit/plans/` | process (legacy) | After spec approval (legacy work) | `plan-feature` |
+| `docs/agent-devkit/decisions/` | process | Decision for work outside an active change or plan/spec | `implement-task` |
+| `docs/agent-devkit/estimates/` | process | User-requested estimate for a legacy plan | `estimate-feature` |
+| `docs/agent-devkit/handoffs/` | process | Checkpoint for work outside an active change | `context-handoff` |
+| `docs/agent-devkit/changes/<name>/` | process | Open change: Architectural has `design.md` and `tasks.md`, with `delta.md` only when needed; Bounded has `delta.md` only when needed. A Bounded change with no artifact has no folder. Optional `estimate.md` (when `tasks.md` exists), `decisions.md`, and `handoff.md` stay alongside them. | `brainstorm-feature`, `plan-feature`, `implement-task` |
+| `docs/agent-devkit/changes/archive/<name>/` | process | `review-and-verify` archives a verified change | `review-and-verify` |
+| `docs/llm/AGENTS.md`, `INDEX.md` | wiki | Wiki skeleton is created | `setup-codebase` |
+| `docs/llm/FEATURES.md` | wiki | Only updated if it already exists | `document-wiki` |
+| `docs/llm/architecture/overview.md` | wiki | Baseline map | `document-wiki` |
+| `docs/llm/{architecture,domains,workflows,integrations,operations,decisions}/` | wiki category | A real page belongs to the category | `document-wiki` |
+| `.agents/skills/` | install | Host uses a local skills folder instead of a plugin | user |
+| `.openez/` | local index | OpenEZ approved and set up | `setup-openez` |
+
+Never create empty folders ahead of need: `INDEX.md` indexes process
+artifacts once they exist, `LOG.md` is never created new, and `docs/llm/`
+category folders appear only when a real page needs them.
+
+## 8. Tips & Best Practices
 
 ### For team leads and PMs
 
@@ -730,7 +815,7 @@ complexity.
 
 ---
 
-## 7. FAQ
+## 9. FAQ
 
 ### Q: Which agents can use these skills?
 

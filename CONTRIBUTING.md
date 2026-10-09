@@ -31,8 +31,9 @@ description: Use when <trigger condition>.
 
 Guidelines:
 
-- **Prompt-driven only.** No scripts, no dependencies, no build steps. The agent
-  follows Markdown instructions directly.
+- **Prompt-driven workflow.** The agent follows Markdown instructions directly;
+  the dependency-free wiki validator under `document-wiki` enforces published
+  requirement format and links. No build step or new dependency is required.
 - **Minimal and focused.** One skill = one workflow. Do not merge multiple
   workflows into a single skill.
 - **Progressive disclosure.** Reference files beside `SKILL.md` are a

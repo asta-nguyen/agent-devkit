@@ -10,11 +10,13 @@ Never run this optional skill unless the user requests an estimate.
 
 ## Process
 
-1. Require a completed plan under `docs/agent-devkit/plans/`. If none exists,
+1. Require a completed plan under `docs/agent-devkit/plans/`, or a change's
+   `tasks.md` under `docs/agent-devkit/changes/<folder>/`. If neither exists,
    tell the user to invoke `plan-feature` only when the user also requested a
    plan and an approved design exists; otherwise stop and request a plan. Never
    estimate directly from a feature request.
-2. Read `AGENTS.md`, the plan, linked design, relevant wiki, source, and tests.
+2. Read `AGENTS.md`, the plan or `tasks.md`, the linked design, `delta.md`
+   (when present), relevant wiki, source, and tests.
    Call the available Skill entry whose local name is `read-codebase-context`
    when source exists. If the plan has an `## Impact map`, follow its map-refresh
    rule: validate the recorded commit, find tracked and untracked paths changed
@@ -46,11 +48,12 @@ Never run this optional skill unless the user requests an estimate.
    any task is blocked, total confidence cannot be `High`. If every task is
    blocked, report the total as `Not estimable — spike required` and total
    confidence as `N/A`.
-5. Save a new estimate at
-   `docs/agent-devkit/estimates/YYYY-MM-DD-<slug>-estimate.md`. Follow the
-   shared artifact naming rule in `using-devkit` (read it if it is not loaded),
-   and link to the exact plan filename.
-   Create `docs/agent-devkit/estimates/` only now if it does not exist. Use:
+5. For a change, save `estimate.md` beside its `tasks.md` and link to that file
+   relatively. For a legacy plan, save a new estimate at
+   `docs/agent-devkit/estimates/YYYY-MM-DD-<slug>-estimate.md` and link to the
+   exact plan filename. Follow the shared artifact naming rule in `using-devkit`
+   (read it if it is not loaded). Create `docs/agent-devkit/estimates/` only now
+   if it does not exist. Use:
 
    ```md
    # Feature Estimate
@@ -76,10 +79,12 @@ Never run this optional skill unless the user requests an estimate.
    - <unresolved information behind a blocked estimate, or "None">
    ```
 
-6. Add `## Estimate` with a link to the estimate in the plan, and add the
-   estimate to `docs/agent-devkit/INDEX.md` under `## Estimates`. Follow the
-   shared process-artifact link and wiki-boundary rules in `using-devkit` (read
-   them if they are not loaded).
+6. For a legacy plan, add `## Estimate` with a link to the estimate in the plan,
+   and add the estimate to `docs/agent-devkit/INDEX.md` under `## Estimates`.
+   For a change, link `estimate.md` from `tasks.md`; no separate index entry is
+   needed because the folder is already under `## Changes`. Follow the shared
+   process-artifact link and wiki-boundary rules in `using-devkit` (read them if
+   they are not loaded).
 7. Treat the estimate as stale when the linked plan's tasks, files, behavior,
    verification, or assumptions change. On refresh, compare the whole current
    plan with the estimate, then update the same estimate file and totals.
@@ -90,3 +95,6 @@ Never run this optional skill unless the user requests an estimate.
    resolve and `git diff --check` passes. Do not repeat task rows in `Open
    unknowns`; list only the unresolved information there. Do not edit
    application code, start implementation, or create a commit.
+9. Hand the estimate back to `plan-feature` to present with the plan and
+   approval gate. The estimate does not approve the plan or authorize
+   implementation.

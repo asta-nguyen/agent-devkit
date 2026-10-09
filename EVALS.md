@@ -796,8 +796,107 @@ describe the same behavior. A duplicate ID across pages fails; a requirement
 anchor link still resolves after its `SHALL` wording changes; two branches
 registering the same prefix fail after rebase.
 
-Execution: cannot verify — needs trusted temporary workspace for a real
-`document-wiki` run.
+Execution: waived (2026-10-09) — the user waived the full Eval 49 run.
+Eval 50 exercised a real `document-wiki` run and some related cases, but did
+not establish every case above as an Eval 49 pass.
+
+## 50. Change layer and archive
+
+In a disposable repository whose wiki page uses the `## Requirements` format,
+run these cases and record the change folder, delta, and wiki diff:
+
+- **Architectural change:** `brainstorm-feature` creates
+  `docs/agent-devkit/changes/<folder>/` with `design.md` and `delta.md`;
+  `plan-feature` adds `tasks.md`; after final review the delta merges into the
+  page and the folder moves to `changes/archive/`, its INDEX link moving from
+  `## Changes` to `## Archived changes`.
+- **Bounded change needing `MODIFIED`:** when `delta.md` is the only change
+  artifact, the folder holds only `delta.md` and archives the same way. A
+  Bounded change with no requirement delta and no optional process artifact
+  creates no folder.
+- **Bug fix:** a fix that changes a documented requirement writes `delta.md`; a
+  fix that restores a correctly documented requirement writes none.
+- **Explicit-change lane:** a request whose requirement needs `ADDED` writes
+  `delta.md` before `implement-task` starts; a request needing a legacy page
+  conversion uses the Bounded path.
+- **Legacy target page:** the design names the page, approval selects it, the
+  page is converted before the delta is written, and `MODIFIED` names a
+  converted ID. Without that selection, the change stops; a page marked
+  `verification limit` stops.
+- **New page in a registered domain:** pre-check passes; the merge creates the
+  page with every template section, open questions where evidence is missing,
+  and an INDEX link, with wiki checks passing and no placeholders.
+- **Architectural change in a domain without a wiki page:** the folder holds
+  `design.md` and `tasks.md` but no `delta.md`; final review reports
+  `Wiki impact: yes` and archives the folder without a wiki merge.
+- **Issue ID and ownership:** the folder name, `design.md`, and `delta.md` carry
+  the issue ID (wiki pages do not); the design assigns each requirement to one
+  change, and a delta targeting a requirement owned by another open change in
+  the same branch is rejected at the pre-check.
+- **Evidence:** a `Requirement:`/`Replacement:` `Evidence:` path that does not
+  exist stops the archive; a `MODIFIED` `Baseline:` citing a deleted file still
+  archives because only replacement evidence is checked.
+- **`REMOVED`:** a linked requirement's link is updated; the ID is added to
+  `## Retired requirement IDs`; a later `ADDED` reusing it fails the pre-check;
+  a rerun after a successful `REMOVED` accepts the absent ID.
+- **Conflicts:** a `MODIFIED` naming a missing ID before merge fails; a wiki
+  block changed by another branch (matching neither `Baseline:` nor the
+  replacement) stops without overwriting.
+- **Duplicate `ADDED` behavior:** a new ID that repeats behavior already
+  covered by another requirement fails the duplicate-behavior check; final
+  review reports `Status: fail` and keeps the change open for reconciliation.
+- **Repeated or partial archive:** a rerun after a full merge applies nothing
+  the second time; a partially merged wiki stops for reconciliation.
+- **Sources:** a `MODIFIED` with a new `Evidence:` path adds it to `## Sources`,
+  and a path is dropped only when no remaining claim relies on it.
+- **Links:** links from `tasks.md` to `design.md`, from change files to
+  `docs/llm/`, and from `docs/agent-devkit/INDEX.md` into the folder resolve
+  after the move; a link into the folder from a file outside
+  `docs/agent-devkit/` that the change does not modify stops the archive before
+  moving; a relink failure moves the folder back and undoes this archive's link
+  edits.
+- **No-delta change:** an Architectural refactor without behavior change has
+  `design.md` and `tasks.md` but no `delta.md`, and archive only moves the
+  folder. A Bounded change in a domain with no wiki page has no folder and
+  reports `Wiki impact: yes`.
+- **Legacy plan:** an open legacy plan finishes with the `Execution` lifecycle
+  and is not converted.
+
+Execution: pass (2026-10-09) — real skill workflow run in disposable Node
+repositories under `/tmp/agent-devkit-eval50.aENn3L` and
+`/tmp/agent-devkit-eval50-cases.7Z5mN7/`.
+
+- `document-wiki` read the sample source and tests, created the Requirements
+  page and PAY prefix registry, and verified source paths and links.
+- Architectural `PAY-50` created `design.md`, `delta.md`, and `tasks.md`;
+  after implementation, `npm test` passed 4/4, the exact MODIFIED block
+  merged once, Sources were updated, and the folder and INDEX link moved to
+  `changes/archive/`. The archived task-to-design and change-to-wiki links
+  resolved.
+- Also exercised Bounded delta-only archive, Bounded no-delta routing,
+  explicit-change ADDED before implementation, registered-domain new-page
+  creation, selected/unselected/verification-limited legacy conversion,
+  behavior-changing and behavior-restoring bug fixes, no-wiki Bounded and
+  Architectural paths, and a no-delta Architectural refactor.
+- Rejection/recovery cases passed: missing Evidence, missing MODIFIED ID,
+  duplicate ADDED behavior, same-branch requirement ownership, integrated
+  branch Baseline conflict, partial merge, out-of-scope incoming link, and
+  relink rollback. REMOVED updated an inbound anchor, retired the ID, accepted
+  a full-state rerun, and rejected later reuse. A deleted Baseline Evidence
+  path did not block merge; new Replacement Evidence was added to Sources.
+- Full merge rerun skipped reapplication. Wiki requirements, Sources, prefix
+  registry, retired IDs, INDEX links, relative links, and anchors were checked.
+  `git diff --check` passed in the main sample; the repository `npm test`
+  passed (plugin smoke checks).
+- A trusted Devin CLI run in `/tmp/agent-devkit-eval50-devin-20261009` exercised
+  the selected legacy-page Bounded path. The fractional-refund regression failed
+  before the source fix; afterward `npm test` passed 5/5. Final review caught
+  that `PAY-refund-exact` already covered positive fractional refunds, so the
+  delta was corrected from `ADDED` to `MODIFIED` with a verbatim Baseline and a
+  Replacement requiring whole-number refunds. The block merged once, existing
+  Sources remained accurate, and the delta-only folder and INDEX entry moved to
+  `changes/archive/`. An independent check found 0 broken links across 11
+  Markdown files; sample `git diff --check` passed. No commit was made.
 
 ### Executed consistency checks (2026-10-04)
 

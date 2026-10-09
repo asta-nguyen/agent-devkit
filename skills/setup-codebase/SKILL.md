@@ -19,8 +19,9 @@ before any write.
 1. Check the exact status of `AGENTS.md`, `CLAUDE.md`, `CONVENTIONS.md`,
    `docs/llm/`, and `.gitignore`. Read every existing context or conventions
    file before writing anything. If the repository has no application source
-   and an approved design exists under `docs/agent-devkit/specs/`, read that
-   design before writing context.
+   and an approved design exists under `docs/agent-devkit/specs/` or as
+   `design.md` in a `docs/agent-devkit/changes/` folder, read that design before
+   writing context.
 2. If context is missing, inspect only enough evidence to ground it: `README*`,
    root/workspace manifests, task scripts, environment examples, CI/config,
    top-level source layout, and any approved design from the previous step. Do

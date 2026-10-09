@@ -35,15 +35,15 @@ after `brainstorm-feature` verifies its named scope and impact map.
 ## Skills
 
 Skills are prompt-driven Markdown playbooks under `skills/`. Each skill has a
-`name`, `description`, and step-by-step instructions. No scripts — the agent
-follows the instructions directly.
+`name`, `description`, and step-by-step instructions. `document-wiki` also
+bundles a dependency-free validator for published `docs/llm/` content.
 
 ## Using the skills
 
 Skills are portable folders, not application dependencies. To use them, make
 the `skills/<name>/` folder visible to the agent's skill loader, then invoke
 the skill by name or ask for the task it describes. `SKILL.md` is the required
-file; `agents/openai.yaml` only adds Codex/OpenAI UI metadata.
+file.
 
 ### Harness packaging
 
@@ -271,10 +271,10 @@ FFF is never required. Without it, skills use `rg` and reach the same results.
 
 | Skill | Purpose |
 |---|---|
-| `brainstorm-feature` | Classify scope, clarify and get design approval; route Spike to investigation, Bounded to implementation, and Architectural through a plan. |
-| `plan-feature` | Save an approved architectural plan under `docs/agent-devkit/plans/` with bite-sized, verifiable tasks. |
-| `estimate-feature` | Optionally estimate every completed plan task in AI-assisted engineering hours. |
-| `implement-task` | Execute an approved plan: trace code, make the smallest change, verify, then flag wiki coverage. |
+| `brainstorm-feature` | Classify scope, clarify and get design approval; route Spike to investigation, Bounded to implementation, and Architectural through a change folder. |
+| `plan-feature` | Write `tasks.md` in an Architectural change folder; legacy plans stay under `docs/agent-devkit/plans/`. |
+| `estimate-feature` | Optionally estimate every task in an Architectural change or legacy plan in AI-assisted engineering hours. |
+| `implement-task` | Execute approved change tasks or a legacy plan: trace code, make the smallest change, verify, then flag wiki coverage. |
 | `systematic-debugging` | Find root cause, classify the bug, define verification, then fix bounded bugs or hand architectural bugs off for design. |
 | `review-and-verify` | Iron Law: no completion claims without fresh evidence. Diff review, code review reception, red flags. |
 
@@ -316,21 +316,24 @@ creates only missing, project-specific context files. It also appends missing
 ```
 brainstorm-feature        → clarify scope, get design approval
   ↓
-docs/agent-devkit/specs/  → save approved architectural design
+changes/<folder>/         → Architectural: design.md (+ delta.md when a
+                            requirement needs ADDED/MODIFIED/REMOVED)
   ↓
 setup-codebase            → new projects only: create initial contract
   ↓
-plan-feature              → save ordered plan under docs/agent-devkit/plans/
+plan-feature              → tasks.md beside design.md
   ↓
-estimate-feature          → optional: save per-task ranges under docs/agent-devkit/estimates/
+estimate-feature          → optional: estimate.md in the change folder
   ↓
 implement-task            → code, verify, run checks
   ↓
-review-and-verify         → pass/fail report with evidence and blockers
+review-and-verify         → pass/fail report with evidence and blockers;
+                            on pass, archive: merge delta.md into docs/llm/ and
+                            move the folder to changes/archive/
   ↓
 fix blockers once, then review again; stop if still failing
   ↓
-document-wiki             → refresh documentation for the changed feature
+document-wiki             → refresh wiki coverage outside the delta
 ```
 
 ### 3. Debug a bug

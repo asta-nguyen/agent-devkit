@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Cấu tạo requirement có evidence</title>
+  <desc id="desc">Ví dụ minh họa requirement gồm ID, một câu SHALL, một scenario GIVEN WHEN THEN, evidence trỏ tới source và test, cùng prefix được đăng ký trong INDEX.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M1 1 L11 6 L1 11 Z" fill="#1C9B8A"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#172B4D" flood-opacity=".10"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="1000" rx="28" fill="#F7F5EF"/>
+  <text x="70" y="72" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="760" fill="#17345B">MỘT REQUIREMENT CẦN NHỮNG GÌ?</text>
+  <text x="70" y="112" font-family="Inter, system-ui, sans-serif" font-size="18" fill="#52647A">Ví dụ minh họa format — các path bên dưới không phải evidence của repository này.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="150" width="980" height="690" rx="22" fill="#FFFFFF" stroke="#D8E0E8" stroke-width="2"/>
+    <rect x="1090" y="150" width="440" height="320" rx="22" fill="#FFFFFF" stroke="#A8DCD2" stroke-width="2"/>
+    <rect x="1090" y="500" width="440" height="340" rx="22" fill="#E9F4F1" stroke="#B9DDD5" stroke-width="2"/>
+  </g>
+
+  <rect x="105" y="185" width="225" height="32" rx="16" fill="#EAF1F8"/>
+  <text x="217" y="207" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="750" fill="#244C78">FEATURE PAGE · REQUIREMENT</text>
+  <rect x="105" y="238" width="330" height="56" rx="14" fill="#FFF0D2"/>
+  <text x="128" y="275" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="760" fill="#845314">PAY-refund-cap</text>
+  <text x="465" y="272" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#64748B">Heading chỉ chứa ID; ID không tái sử dụng</text>
+
+  <text x="105" y="345" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="750" letter-spacing="1" fill="#52647A">ONE OBSERVABLE BEHAVIOR</text>
+  <text x="105" y="386" font-family="Inter, system-ui, sans-serif" font-size="21" font-weight="650" fill="#17345B">
+    <tspan x="105" dy="0">The system SHALL reject a refund larger than</tspan>
+    <tspan x="105" dy="30">the remaining captured amount.</tspan>
+  </text>
+
+  <rect x="105" y="445" width="910" height="225" rx="18" fill="#F3F7FB" stroke="#D6E3EF" stroke-width="2"/>
+  <text x="135" y="485" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="750" fill="#244C78">Scenario: over-refund rejected</text>
+  <rect x="135" y="510" width="850" height="42" rx="10" fill="#FFFFFF"/>
+  <circle cx="159" cy="531" r="10" fill="#58BFB0"/>
+  <text x="182" y="537" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="750" fill="#176B61">GIVEN</text>
+  <text x="292" y="537" font-family="Inter, system-ui, sans-serif" font-size="16" fill="#344B65">payment captured for 100</text>
+  <rect x="135" y="562" width="850" height="42" rx="10" fill="#FFFFFF"/>
+  <circle cx="159" cy="583" r="10" fill="#3B82C4"/>
+  <text x="182" y="589" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="750" fill="#244C78">WHEN</text>
+  <text x="292" y="589" font-family="Inter, system-ui, sans-serif" font-size="16" fill="#344B65">refund of 120 is requested</text>
+  <rect x="135" y="614" width="850" height="42" rx="10" fill="#FFFFFF"/>
+  <circle cx="159" cy="635" r="10" fill="#D99A2B"/>
+  <text x="182" y="641" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="750" fill="#845314">THEN</text>
+  <text x="292" y="641" font-family="Inter, system-ui, sans-serif" font-size="16" fill="#344B65">refund is rejected with amount_exceeds_capture</text>
+
+  <rect x="105" y="700" width="910" height="100" rx="16" fill="#EAF6F3"/>
+  <text x="135" y="735" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="750" letter-spacing="1" fill="#176B61">EVIDENCE — PATHS CŨNG PHẢI CÓ TRONG ## SOURCES</text>
+  <rect x="135" y="752" width="400" height="32" rx="9" fill="#FFFFFF"/>
+  <text x="151" y="774" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" fill="#244C78">src/payments/refund.ts</text>
+  <rect x="555" y="752" width="390" height="32" rx="9" fill="#FFFFFF"/>
+  <text x="571" y="774" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" fill="#244C78">test/refund.test.ts</text>
+
+  <text x="1120" y="195" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="740" fill="#17345B">## Requirement prefixes</text>
+  <rect x="1120" y="225" width="380" height="50" rx="10" fill="#17345B"/>
+  <text x="1142" y="257" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700" fill="#FFFFFF">Prefix</text>
+  <text x="1290" y="257" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700" fill="#FFFFFF">Domain</text>
+  <line x1="1270" y1="225" x2="1270" y2="365" stroke="#D9E3EC" stroke-width="2"/>
+  <rect x="1120" y="285" width="380" height="80" rx="10" fill="#F5FAF9" stroke="#D6E9E4" stroke-width="1"/>
+  <text x="1142" y="332" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="750" fill="#176B61">PAY</text>
+  <text x="1290" y="332" font-family="Inter, system-ui, sans-serif" font-size="17" fill="#344B65">Payments</text>
+  <text x="1120" y="410" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#52647A">Prefix được đăng ký một lần trong INDEX.</text>
+
+  <text x="1120" y="550" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="740" fill="#17345B">Kiểm tra trước khi thêm</text>
+  <circle cx="1133" cy="594" r="5" fill="#209A89"/>
+  <text x="1150" y="600" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#344B65">Một prefix cho mỗi page</text>
+  <circle cx="1133" cy="638" r="5" fill="#209A89"/>
+  <text x="1150" y="644" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#344B65">Requirements sort theo ID</text>
+  <circle cx="1133" cy="682" r="5" fill="#209A89"/>
+  <text x="1150" y="688" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#344B65">Tìm requirement cùng prefix</text>
+  <circle cx="1133" cy="726" r="5" fill="#209A89"/>
+  <text x="1150" y="732" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#344B65">Thiếu source evidence → open question</text>
+  <path d="M1018 750 C1050 750 1055 752 1080 752" fill="none" stroke="#1C9B8A" stroke-width="3" marker-end="url(#arrow)"/>
+</svg>

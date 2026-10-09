@@ -116,8 +116,12 @@ Never call unverified coverage current.
    page, not permission to document every feature in depth.
 6. Present `[ ]` undocumented features and `[~]` features classified as
    `confirmed content gap` as selectable create/refresh candidates, grouped by
-   domain. Do not offer `[~]` items whose only cause is a `verification limit`
-   for rewriting. Continue feasible checks before presenting the list; if a check is
+   domain. Separately, offer a page still using `## Business rules` as a
+   `format conversion` candidate once a fresh source check confirms the page is
+   accurate: converting moves it to `## Requirements` and is not a content gap.
+   Do not offer `[~]` items whose only cause is a `verification limit`
+   for rewriting, and do not offer a conversion for such a page. Continue
+   feasible checks before presenting the list; if a check is
    blocked, report the exact missing evidence and ask only for the access or
    information needed, not for a rewrite decision. Do not create or refresh deep
    pages until the user selects eligible candidates; a generic request to
@@ -146,24 +150,34 @@ Never call unverified coverage current.
    page registers a new domain prefix, create or update the `## Requirement
    prefixes` table (`Prefix`, `Domain`) in `docs/llm/INDEX.md`: reuse the
    domain's existing prefix, and register a new one only when the table has no
-   row for that domain. Each wiki page keeps its business content, its
-   requirements, and a `## Sources` section containing exact source/test file
-   paths. Do not create or update a source log or snapshot for wiki freshness.
+   row for that domain. When a refresh removes or renames a requirement, append
+   its ID to a `## Retired requirement IDs` list in `docs/llm/INDEX.md`; a later
+   refresh must never reuse a retired ID. Each wiki page keeps its business
+   content, its requirements, and a `## Sources` section containing exact
+   source/test file paths. Do not create or update a source log or snapshot for
+   wiki freshness.
    Update `docs/llm/FEATURES.md` only if that file already exists; do not create
    a second tracking system.
 9. Verify that every listed source path exists as a file, every internal
    relative Markdown link resolves from the file containing it (including
    `#<lowercase-id>` anchors in requirement links), and no legacy `[[...]]`
-   links remain in `docs/llm/`. Every index link must resolve; every
+   links remain in `docs/llm/`. Run
+   `node "<this-skill-directory>/scripts/validate-llm-wiki.mjs" "<target-repository-root>"`
+   using absolute paths after the wiki edits. If the script is missing,
+   cannot run, or reports errors, keep verification incomplete and report the
+   failure. Every index link must resolve; every
    `Tests: none found` claim has a recorded search with no matching result, and
    `git diff --check` passes. For pages with `## Requirements`, also verify:
    every ID is unique across `docs/llm/`; requirements are sorted by ID; each
    has one `SHALL` statement, at least one scenario, and an `Evidence:` line
    whose paths exist and appear in the page's `## Sources`; each page uses one
    prefix that is registered in `## Requirement prefixes`; the table has no
-   repeated prefix; and no two requirements that share a prefix describe the
-   same behavior. When refreshing a legacy page with `## Business rules`,
-   convert it per `references/evidence-matrix-and-page-template.md`. For a
+   repeated prefix; no two requirements that share a prefix describe the
+   same behavior; and no requirement reuses an ID under
+   `## Retired requirement IDs`. When refreshing a legacy page with
+   `## Business rules`, convert it per
+   `references/evidence-matrix-and-page-template.md` and record any dropped ID
+   as retired. For a
    confirmed omission or contradiction, mark `[~]` as `confirmed content gap`
    and report the source evidence. For a check
    that remains incomplete or blocked, mark `[~]` as `verification limit`, name

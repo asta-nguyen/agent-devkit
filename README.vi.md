@@ -34,15 +34,17 @@ Plan mô tả behavior và cách kiểm tra; `implement-task` mới viết code.
 ## Skills
 
 Skills là các Markdown playbook điều khiển bằng prompt trong `skills/`. Mỗi
-skill có `name`, `description` và hướng dẫn từng bước. Không có script chạy
-logic workflow; agent trực tiếp làm theo hướng dẫn.
+skill có `name`, `description` và hướng dẫn từng bước. `document-wiki` có thêm
+validator không dependency để kiểm tra nội dung đã ghi trong `docs/llm/`.
 
 ## Sử dụng skills
+
+Hướng dẫn đầy đủ theo quy trình làm việc: [GUIDE.vi.md](GUIDE.vi.md).
 
 Skills là các folder portable, không phải application dependency. Để dùng,
 hãy làm cho folder `skills/<name>/` visible với skill loader của agent, sau đó
 invoke skill theo tên hoặc yêu cầu task mà skill mô tả. `SKILL.md` là file bắt
-buộc; `agents/openai.yaml` chỉ bổ sung metadata UI cho Codex/OpenAI.
+buộc.
 
 ### Đóng gói cho các harness
 
@@ -161,7 +163,7 @@ read-codebase-context                  # hiểu code trước khi thay đổi
 context-handoff                        # checkpoint khi phải tạm dừng
 document-wiki                          # document feature hiện có
 lean-audit                             # audit simplicity toàn repo; chỉ report
-brainstorm-feature → plan-feature      # công việc architectural: spec → plan
+brainstorm-feature → plan-feature      # công việc architectural: design → tasks
 estimate-feature                       # estimate AI-assisted tùy chọn
 implement-task → review-and-verify     # implement, review và verify
 systematic-debugging                   # điều tra trước khi fix bug
@@ -272,10 +274,10 @@ FFF không bắt buộc. Không có FFF, các skill dùng `rg` và vẫn đạt 
 
 | Skill | Mục đích |
 |---|---|
-| `brainstorm-feature` | Phân loại scope, làm rõ và xin design approval; Spike đi tới điều tra, Bounded tới implement, Architectural qua plan. |
-| `plan-feature` | Lưu execution plan đã được approve với task nhỏ và verify được. |
-| `estimate-feature` | Estimate từng task khi PM/BA yêu cầu. |
-| `implement-task` | Trace code, implement thay đổi nhỏ nhất và verify. |
+| `brainstorm-feature` | Phân loại scope, làm rõ và xin design approval; Spike đi tới điều tra, Bounded tới implement, Architectural qua change folder. |
+| `plan-feature` | Viết `tasks.md` trong change Architectural đã duyệt; plan legacy vẫn ở vị trí cũ. |
+| `estimate-feature` | Estimate task trong change Architectural hoặc plan legacy khi được yêu cầu. |
+| `implement-task` | Thực thi task của change đã duyệt hoặc plan legacy; trace code, implement và verify. |
 | `systematic-debugging` | Tìm root cause, phân loại bug rồi fix hoặc hand off để design. |
 | `review-and-verify` | Review diff, chạy check và không claim hoàn tất nếu thiếu evidence mới. |
 
@@ -304,12 +306,16 @@ Deep pages chỉ dùng category có evidence: `architecture/` cho system structu
 ```text
 brainstorm-feature → làm rõ scope, phân loại và xin design approval
   ├─ Spike          → điều tra và report
-  ├─ Bounded        → implement-task → review-and-verify
-  └─ Architectural  → spec → plan-feature → implement-task → review-and-verify
+  ├─ Bounded        → (delta.md nếu requirement cần ADDED/MODIFIED/REMOVED)
+  │                 → implement-task → review-and-verify
+  └─ Architectural  → changes/<folder>/ (design.md; delta.md nếu cần)
+                    → plan-feature (tasks.md) → implement-task
+                    → review-and-verify (archive)
 ```
 
-Sau mọi nhánh có implementation, dùng `document-wiki` nếu behavior thay đổi.
-USER COMMITS sau khi review pass.
+`review-and-verify` archive change: merge `delta.md` vào `docs/llm/` (nếu có) rồi
+chuyển folder vào `changes/archive/`; change không có delta chỉ move folder. Dùng
+`document-wiki` cho coverage ngoài delta. USER COMMITS sau khi review pass.
 
 ### Debug bug
 

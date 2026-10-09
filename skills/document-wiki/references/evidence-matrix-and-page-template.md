@@ -104,7 +104,9 @@ Each `###` heading under `## Requirements` is one requirement:
 
 - **ID:** `<PREFIX>-<slug>`, an uppercase domain prefix and a lowercase
   kebab-case slug. An ID is unique across `docs/llm/` and is never reused after
-  its requirement is removed.
+  its requirement is removed. Record a removed ID under
+  `## Retired requirement IDs` in `docs/llm/INDEX.md` so a later refresh cannot
+  reuse it.
 - **Heading:** the heading is the ID alone (`### PAY-refund-cap`), so its anchor
   (`#pay-refund-cap`) stays stable when wording changes. Link to a requirement
   with `<page>.md#<lowercase-id>`; the `SHALL` statement carries the

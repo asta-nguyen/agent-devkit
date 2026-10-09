@@ -1,16 +1,26 @@
 # Spec self-review
 
-Use `docs/agent-devkit/INDEX.md` as the process-artifact index. Link every
-design from `## Designs`. Follow the shared artifact naming rule in
-`using-devkit` (read it if it is not loaded). Follow its shared process-artifact
-link and wiki-boundary rules too. The spec's `## Related context` may link only
-to existing `docs/llm/` pages read during brainstorming; write `None` when
-there was no verified wiki context.
+Use `docs/agent-devkit/INDEX.md` as the process-artifact index. Link a new
+change folder from `## Changes` (legacy designs stay linked from `## Designs`).
+Follow the shared artifact naming rule in `using-devkit` (read it if it is not
+loaded). Follow its shared process-artifact link and wiki-boundary rules too. A
+design's `## Related context` may link only to existing `docs/llm/` pages read
+during brainstorming; write `None` when there was no verified wiki context.
 
-For a follow-up to a completed plan, require a `## Previous work` section with
-relative Markdown links to the prior spec and plan. Verify that both targets
-exist. Keep these links out of `## Related context`, which is only for verified
-wiki pages.
+For a follow-up to an archived change or a completed legacy plan, require a
+`## Previous work` section with relative Markdown links to the prior artifacts.
+Verify that every target exists. Keep these links out of `## Related context`,
+which is only for verified wiki pages.
+
+After writing `design.md` and `delta.md`, self-review the delta: every entry has
+a unique `<PREFIX>-<slug>` ID whose prefix is already registered in
+`## Requirement prefixes`; an `ADDED` ID is absent from `docs/llm/` and from
+`## Retired requirement IDs`; each four-backtick block is a complete
+requirement; the metadata matches its section (`ADDED` has `Page:` as a path and
+`Search:`; `MODIFIED` keeps the ID with `Baseline:` and `Replacement:`;
+`REMOVED` has `Reason:` and `Baseline:`); and no other open change in this branch
+targets the same ID. A delta only targets a page already in the
+`## Requirements` format.
 
 Every architectural spec must include a top-level `## Impact map` section from
 `read-codebase-context` with these exact fields, including the source baseline:

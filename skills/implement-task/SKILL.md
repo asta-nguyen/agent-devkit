@@ -17,8 +17,8 @@ description: Use when the user has approved a bounded change or feature plan and
    name is `read-codebase-context` to trace the relevant code path.
    Understand callers, data flow, and error paths before editing. For a
    source-less new project, read the
-   approved spec and plan, then create the first planned entry point; state that
-   callers and existing error paths do not exist yet.
+   approved design, tasks, and delta, then create the first planned entry point;
+   state that callers and existing error paths do not exist yet.
    When the active plan has an `## Impact map`, follow the map-refresh rule in
    `read-codebase-context`: validate `Verified at`, inspect tracked and
    untracked paths since that commit, re-trace changed existing paths, and
@@ -29,18 +29,22 @@ description: Use when the user has approved a bounded change or feature plan and
    every existing file to edit. For a planned new file, follow the approved
    design and read the source after creating it; the map is navigation, not
    evidence.
-3. Follow the approved `plan-feature` output when one exists. Read its
-   `## Approval Gate` before editing application code:
+3. Follow the approved `plan-feature` output when one exists. For a change,
+   read the change files that exist (`design.md`, `tasks.md`, `delta.md`), and
+   read `tasks.md`'s `## Approval Gate` before editing application code when it
+   exists; a Bounded or bug-fix change may have only `delta.md`. For a legacy
+   plan, read the plan's `## Approval Gate`:
    - `Required: yes` proceeds only with `Status: approved`. Missing or `pending`
      status means stop and request approval of the complete plan.
    - `Required: no` proceeds with `Status: not-required`.
    - For a legacy plan with no gate, inspect its impact. Public API, data schema,
      dependency, CI, or broad file changes require approval before proceeding.
 
-   Apply the plan lifecycle in `using-devkit`: a completed plan and its design
-   are historical, so route new work through `brainstorm-feature`. Use an open
-   plan for its remaining tasks. For legacy plans without `Execution`, inspect
-   completion evidence before treating them as active.
+   Apply the change lifecycle in `using-devkit`: an archived change and a
+   completed legacy plan are historical, so route new work through
+   `brainstorm-feature`. Use an open change or open legacy plan for its
+   remaining tasks. For a legacy plan without `Execution`, inspect completion
+   evidence before treating it as active.
 
    Approval given before the plan existed does not satisfy a required gate.
    Without a plan, require an approved bounded design from `brainstorm-feature`;
@@ -109,7 +113,12 @@ When implementation needs a user answer before it can continue:
    scope. Do not create an artifact for it.
 3. Persist every answer that changes observable behavior or an approved
    requirement:
-   - When a plan or spec exists, append the decision to its `## Decision Log`.
+   - When a change folder exists, append the decision to its `decisions.md`
+     (create it on the first persistent decision) and, for a material change
+     when `tasks.md` exists, also update `tasks.md`'s `## Decision Log` and
+     approval gate.
+   - When a legacy plan or spec exists, append the decision to its
+     `## Decision Log`.
    - For a bounded task with no plan/spec, create a decision file only when
      the first persistent decision occurs, at
      `docs/agent-devkit/decisions/YYYY-MM-DD-<slug>.md`. Follow the shared
@@ -135,10 +144,10 @@ When implementation needs a user answer before it can continue:
    Confirmed by user: YYYY-MM-DD
    ```
 
-4. If the answer materially changes an active approved design or open plan,
-   update the affected artifact and re-evaluate the plan's approval gate. When
-   the new impact requires approval, set `Required: yes`, update `Reason`, set
-   `Status: pending`, and stop for approval. If a bounded task expands beyond
+4. If the answer materially changes an active approved design, an open change,
+   or an open legacy plan, update the affected artifact and re-evaluate the
+   approval gate. When the new impact requires approval, set `Required: yes`,
+   update `Reason`, set `Status: pending`, and stop for approval. If a bounded task expands beyond
    its approved design, tell the user to invoke `brainstorm-feature` instead of
    silently widening scope.
 5. Follow the shared process-artifact/wiki boundary in `using-devkit` (read it

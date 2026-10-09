@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1220" role="img" aria-labelledby="title desc">
+  <title id="title">Chart chọn workflow agent-devkit</title>
+  <desc id="desc">Yêu cầu đi qua using-devkit và brainstorm-feature rồi chia thành Spike, Bounded và Architectural. Hai nhánh implementation dùng review-and-verify; change được archive sau final review, document-wiki xử lý wiki coverage ngoài delta. Change open được sửa tại chỗ; change đã archive nhận follow-up mới.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M1 1 L11 6 L1 11 Z" fill="#526A84"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#172B4D" flood-opacity=".10"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="1220" rx="28" fill="#F7F5EF"/>
+  <text x="72" y="72" font-family="Inter, system-ui, sans-serif" font-size="34" font-weight="760" fill="#17345B">CHỌN ĐÚNG WORKFLOW</text>
+  <text x="72" y="112" font-family="Inter, system-ui, sans-serif" font-size="18" fill="#52647A">Phân loại trước khi sửa code; approval gate quyết định khi nào được implement.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="390" y="150" width="820" height="112" rx="22" fill="#17345B"/>
+  </g>
+  <text x="800" y="192" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700" letter-spacing="1.4" fill="#B7D0EA">BẮT ĐẦU</text>
+  <text x="800" y="230" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="25" font-weight="720" fill="#FFFFFF">Yêu cầu → using-devkit → brainstorm-feature</text>
+  <path d="M800 262 V302 H270 V330 M800 302 V330 M800 302 H1330 V330" fill="none" stroke="#8091A5" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="55" y="345" width="440" height="420" rx="22" fill="#FFFDF8" stroke="#E8CB8A" stroke-width="2"/>
+    <rect x="580" y="345" width="440" height="420" rx="22" fill="#FFFFFF" stroke="#AFC7E0" stroke-width="2"/>
+    <rect x="1105" y="345" width="440" height="420" rx="22" fill="#F3FBF9" stroke="#A8DCD2" stroke-width="2"/>
+  </g>
+
+  <rect x="84" y="375" width="190" height="34" rx="17" fill="#F8E7BF"/>
+  <text x="179" y="398" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="750" fill="#845314">SPIKE · KHẢ THI</text>
+  <text x="84" y="454" font-family="Inter, system-ui, sans-serif" font-size="25" font-weight="740" fill="#17345B">Điều tra rồi báo cáo</text>
+  <circle cx="101" cy="500" r="5" fill="#D99A2B"/>
+  <text x="120" y="506" font-family="Inter, system-ui, sans-serif" font-size="17" fill="#344B65">Trả lời một câu hỏi khả thi</text>
+  <circle cx="101" cy="542" r="5" fill="#D99A2B"/>
+  <text x="120" y="548" font-family="Inter, system-ui, sans-serif" font-size="17" fill="#344B65">Probe code chỉ dùng thử</text>
+  <circle cx="101" cy="584" r="5" fill="#D99A2B"/>
+  <text x="120" y="590" font-family="Inter, system-ui, sans-serif" font-size="17" fill="#344B65">Không tạo design/tasks</text>
+  <rect x="84" y="635" width="382" height="80" rx="15" fill="#FFF2D8"/>
+  <text x="105" y="670" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700" fill="#845314">Đầu ra: kết luận + evidence</text>
+  <text x="105" y="697" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#6D5A39">Không giữ probe như production code</text>
+
+  <rect x="609" y="375" width="245" height="34" rx="17" fill="#DCEBFA"/>
+  <text x="731" y="398" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="750" fill="#244C78">BOUNDED · FLOW ĐÃ CÓ</text>
+  <text x="609" y="454" font-family="Inter, system-ui, sans-serif" font-size="25" font-weight="740" fill="#17345B">Design ngắn → approval</text>
+  <circle cx="626" cy="500" r="5" fill="#3B82C4"/>
+  <text x="645" y="506" font-family="Inter, system-ui, sans-serif" font-size="17" fill="#344B65">Scope rõ, không đổi boundary</text>
+  <circle cx="626" cy="542" r="5" fill="#3B82C4"/>
+  <text x="645" y="548" font-family="Inter, system-ui, sans-serif" font-size="17" fill="#344B65">Sau duyệt → implement-task</text>
+  <circle cx="626" cy="584" r="5" fill="#3B82C4"/>
+  <text x="645" y="590" font-family="Inter, system-ui, sans-serif" font-size="17" fill="#344B65">Chỉ ghi delta khi wiki cần đổi</text>
+  <rect x="609" y="635" width="382" height="80" rx="15" fill="#EAF3FC"/>
+  <text x="630" y="670" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700" fill="#244C78">Nếu change/plan legacy còn open:</text>
+  <text x="630" y="697" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#344B65">sửa đúng folder hoặc plan cũ</text>
+
+  <rect x="1134" y="375" width="262" height="34" rx="17" fill="#D6F1EA"/>
+  <text x="1265" y="398" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="750" fill="#176B61">ARCHITECTURAL · BOUNDARY</text>
+  <text x="1134" y="454" font-family="Inter, system-ui, sans-serif" font-size="24" font-weight="740" fill="#17345B">Design → tasks → code</text>
+  <circle cx="1151" cy="500" r="5" fill="#209A89"/>
+  <text x="1170" y="506" font-family="Inter, system-ui, sans-serif" font-size="17" fill="#344B65">Duyệt design → tạo folder</text>
+  <circle cx="1151" cy="542" r="5" fill="#209A89"/>
+  <text x="1170" y="548" font-family="Inter, system-ui, sans-serif" font-size="17" fill="#344B65">plan-feature ghi tasks.md</text>
+  <circle cx="1151" cy="584" r="5" fill="#209A89"/>
+  <text x="1170" y="590" font-family="Inter, system-ui, sans-serif" font-size="17" fill="#344B65">Required: yes + pending → dừng</text>
+  <rect x="1134" y="635" width="382" height="80" rx="15" fill="#E1F4EF"/>
+  <text x="1155" y="670" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700" fill="#176B61">Approved hoặc not-required</text>
+  <text x="1155" y="697" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#344B65">→ implement-task</text>
+
+  <text x="72" y="815" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="750" letter-spacing="1" fill="#52647A">SAU KHI CÓ IMPLEMENTATION</text>
+  <g filter="url(#shadow)">
+    <rect x="70" y="840" width="440" height="125" rx="20" fill="#FFFFFF" stroke="#D8E0E8" stroke-width="2"/>
+    <rect x="580" y="840" width="440" height="125" rx="20" fill="#FFFFFF" stroke="#D8E0E8" stroke-width="2"/>
+    <rect x="1090" y="840" width="440" height="125" rx="20" fill="#FFFFFF" stroke="#D8E0E8" stroke-width="2"/>
+  </g>
+  <text x="290" y="891" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="23" font-weight="730" fill="#17345B">implement-task</text>
+  <text x="290" y="926" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#52647A">Chỉ làm scope đã duyệt</text>
+  <text x="800" y="891" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="23" font-weight="730" fill="#17345B">review-and-verify</text>
+  <text x="800" y="926" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#52647A">Check bắt buộc pass mới báo pass</text>
+  <text x="1310" y="885" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="730" fill="#176B61">Archive nếu có folder</text>
+  <text x="1310" y="916" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#52647A">Merge delta; move folder</text>
+  <text x="1310" y="942" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#52647A">Wiki thiếu → document-wiki</text>
+  <path d="M515 902 H565" fill="none" stroke="#526A84" stroke-width="4" marker-end="url(#arrow)"/>
+  <path d="M1025 902 H1075" fill="none" stroke="#1C9B8A" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <rect x="70" y="1000" width="1460" height="145" rx="20" fill="#E8EEF4"/>
+  <text x="100" y="1040" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="750" fill="#17345B">FOLLOW-UP THEO CHANGE LIFECYCLE</text>
+  <rect x="100" y="1060" width="620" height="58" rx="14" fill="#FFFFFF"/>
+  <text x="125" y="1085" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="650" fill="#244C78">Change open → sửa cùng folder</text>
+  <text x="125" y="1107" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#344B65">Plan legacy open → sửa file plan cũ</text>
+  <rect x="760" y="1060" width="740" height="58" rx="14" fill="#FFFFFF"/>
+  <text x="785" y="1085" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="650" fill="#176B61">Đã archive → brainstorm-feature phân loại việc mới;</text>
+  <text x="785" y="1107" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#344B65">bounded có thể không có folder; architectural tạo folder mới</text>
+</svg>
