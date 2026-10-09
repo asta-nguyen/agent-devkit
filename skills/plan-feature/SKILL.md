@@ -1,12 +1,14 @@
 ---
 name: plan-feature
-description: Use when feature design is approved and coding has not started for a non-trivial feature, behavior change, API change, or cross-file implementation.
+description: Use when an approved feature design needs an execution plan before coding, or an open change needs revision for a non-trivial behavior, API, or cross-file change.
 ---
 
 # Plan Feature
 
-Turn an approved design into a short execution plan before editing code. Save
-the plan at
+Turn an approved design into a short execution plan before editing code. For a
+change folder, save `tasks.md` beside its `design.md` under
+`docs/agent-devkit/changes/<folder>/`. For a legacy design with no change
+folder, save the plan at
 `docs/agent-devkit/plans/YYYY-MM-DD-<slug>-plan.md`. Follow the shared artifact
 naming rule in `using-devkit` (read it if it is not loaded). Create the folder
 only when writing the plan.
@@ -19,6 +21,12 @@ only when writing the plan.
    affected source,
    callers, and tests. Otherwise map planned files and interfaces from the
    approved design; state that callers and tests do not exist yet.
+   Apply the change lifecycle in `using-devkit`: revise an open change's
+   `tasks.md` in place; for new architectural work after a change is archived,
+   use a new approved design and change folder. An open legacy plan is revised
+   in place (same file, decision log, and approval gate); do not recreate it, and
+   start a new plan only when the old one is complete. Keep completed tasks and
+   results historical; add new work as a new task only while the change is open.
    Extract only exact constraints from the approved design that bind more than
    one task. Do not infer constraints from convention or preference.
 2. Map out which files will be created or modified and what each one is
@@ -81,9 +89,7 @@ only when writing the plan.
    behavior they verify. Do not add tasks for speculative abstractions.
 6. Do not add `review-and-verify` as an implementation task. After all plan
    tasks are complete, `implement-task` owns the final review and verification.
-   If the feature is new or changes user-visible behavior, instruct the user to
-   invoke `document-wiki` after verification.
-7. Add this section to every plan:
+7. Add this section to every plan or `tasks.md`:
 
    ```md
    ## Approval Gate
@@ -97,19 +103,25 @@ only when writing the plan.
    None.
    ```
 
-   Set `Required: yes` when the plan changes public APIs, data schemas,
+   Set `Required: yes` when the work changes public APIs, data schemas,
    dependencies, CI, or more than a small set of files; its initial status is
    always `pending`. Otherwise set `Required: no` and `Status: not-required`.
-   Approval of the design/spec, including an instruction to implement given
-   before this plan existed, never changes a required gate from `pending`.
-8. Save the complete plan at the required path. Include `## Approved design`
-   with a link to the exact approved design, immediately followed by
-   `## Global Constraints`. Copy only exact cross-task constraints from the
-   design; write `None.` when there are none. Include `## Impact map` using
-   exactly the seven fields in `read-codebase-context` step 5. Do not add a
-   second design/spec pointer. Add that plan link to the design's `## Execution`
-   section, then add both artifacts to `docs/agent-devkit/INDEX.md` (`## Designs`
-   and `## Plans`). Follow the shared process-artifact link and wiki-boundary
+   A legacy plan in `plans/` also carries `Execution: open | complete`; a
+   change's `tasks.md` omits it, because completion is the archive move.
+   Approval never marks execution complete. Approval of the design, including an
+   instruction to implement given before the plan existed, never changes a
+   required gate from `pending`.
+8. Save the complete plan. Include `## Approved design` with a relative link to
+   the exact approved design, immediately followed by `## Global Constraints`.
+   Copy only exact cross-task constraints from the design; write `None.` when
+   there are none. Include `## Impact map` using exactly the seven fields in
+   `read-codebase-context` step 5. Do not add a second design/spec pointer. For a
+   change folder, `tasks.md` links to its sibling `design.md`, the folder is
+   already linked under `## Changes` in `docs/agent-devkit/INDEX.md`, and there
+   is no `## Execution` backlink. For a legacy design, add the plan link to the
+   design's `## Execution` section and add both artifacts to
+   `docs/agent-devkit/INDEX.md` (`## Designs` and `## Plans`). Follow the shared
+   process-artifact link and wiki-boundary
    rules in `using-devkit` (read them if they are not loaded). For a planned
    entry point or flow that does not exist yet, keep the seven fields and write
    `Entry: no existing source; planned entry: <approved file + symbol>` and
@@ -125,7 +137,7 @@ only when writing the plan.
    `Required: yes`, stop without editing application code. After the user
    explicitly approves the complete plan, update `Status: pending` to
    `Status: approved` and tell the user to invoke `implement-task`; that
-   approval is the gate, so do not ask again. If an approved plan changes
+   approval is the gate, so do not ask again. If an open approved plan changes
    materially, append the user-confirmed change to `## Decision Log`, reset its
    `Required` and `Reason` from the new impact, set required plans to
    `Status: pending`, and present them again. For
@@ -163,7 +175,9 @@ polish, or uneven detail that does not create ambiguity.
 4. **Artifact links** — do the index, design, and plan links resolve? Does the
    design link only to wiki pages actually read as context?
 5. **Approval gate** — do impact and status match the required criteria? Is a
-   required gate still pending until the complete plan is approved?
+   required gate still pending until the complete plan is approved? Does a legacy
+   plan have `Execution: open`, does a revised open plan keep it open, and does
+   a change's `tasks.md` omit `Execution`?
 6. **Minimal design** — can any proposed file, abstraction, dependency, or
    configuration be removed or replaced by existing, standard-library, native,
    or already-installed behavior without weakening an approved requirement?

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { AgentDevkitPlugin } from "../.opencode/plugins/agent-devkit.js";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const validatorPath = path.join(repoRoot, "skills/document-wiki/scripts/validate-llm-wiki.mjs");
 const skillsRoot = path.join(repoRoot, "skills");
 for (const entry of fs.readdirSync(skillsRoot, { withFileTypes: true })) {
   if (!entry.isDirectory()) continue;
@@ -100,5 +101,148 @@ assert.match(
   fs.readFileSync(path.join(repoRoot, "RELEASE_DESCRIPTION.md"), "utf8"),
   new RegExp(`^# agent-devkit ${escapedReleaseVersion}$`, "m"),
 );
+
+function writeWikiFixture(root, { index, pages = {}, files = {} }) {
+  const wikiRoot = path.join(root, "docs/llm");
+  fs.mkdirSync(wikiRoot, { recursive: true });
+  fs.writeFileSync(path.join(wikiRoot, "INDEX.md"), index);
+  for (const [name, content] of Object.entries(pages)) fs.writeFileSync(path.join(wikiRoot, name), content);
+  for (const [name, content] of Object.entries(files)) {
+    const target = path.join(root, name);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.writeFileSync(target, content);
+  }
+}
+
+function runWikiValidator(root) {
+  const result = spawnSync(process.execPath, [validatorPath, root], { encoding: "utf8" });
+  assert.equal(result.error, undefined, result.error?.message);
+  return { status: result.status, output: `${result.stdout}${result.stderr}` };
+}
+
+function wikiIndex({ prefixes = "| PAY | Payments |", retired = "", extraLinks = "" } = {}) {
+  const fencedExample = "```md\n[missing](fenced-example.md)\n[[legacy]]\n```\n";
+  return `# Codebase Wiki\n\n## Requirement prefixes\n\n| Prefix | Domain |\n| --- | --- |\n${prefixes}\n\n## Retired requirement IDs\n\n${retired}\n\n## Pages\n\n[Payments](payments.md#payments) · [refund](payments.md#pay-refund-cap) · [Payments][payments] · [external](https://example.com)\n\n[wrapped]\n(payments.md#payments)\n\n[payments]: payments.md#payments\n${extraLinks}\n${fencedExample}`;
+}
+
+function requirement(id, { evidence = "src/refund.mjs", scenario = "complete" } = {}) {
+  const scenarioLines = scenario === "complete"
+    ? "- GIVEN a captured payment\n- WHEN a refund is requested\n- THEN the request is checked"
+    : "- GIVEN a captured payment\n- WHEN a refund is requested";
+  const evidenceLine = evidence.split(", ").map((file) => `\`${file}\``).join(", ");
+  return `### ${id}\n\nThe system SHALL check the refund request.\n\n#### Scenario: refund checked\n\n${scenarioLines}\n\nEvidence: ${evidenceLine}\n\n`;
+}
+
+function validatorFixtureChecks() {
+  const fixture = fs.mkdtempSync(path.join(os.tmpdir(), "devkit-wiki-validator-"));
+  try {
+    const emptyRoot = path.join(fixture, "empty");
+    writeWikiFixture(emptyRoot, { index: "# Codebase Wiki\n" });
+    const empty = runWikiValidator(emptyRoot);
+    assert.equal(empty.status, 0, empty.output);
+    assert.match(empty.output, /0 errors/);
+
+    const noIndexRoot = path.join(fixture, "no-index");
+    fs.mkdirSync(path.join(noIndexRoot, "docs/llm"), { recursive: true });
+    const noIndex = runWikiValidator(noIndexRoot);
+    assert.equal(noIndex.status, 1, noIndex.output);
+    assert.match(noIndex.output, /required wiki index does not exist/);
+
+    const symlinkRoot = path.join(fixture, "symlink");
+    writeWikiFixture(symlinkRoot, { index: "# Codebase Wiki\n" });
+    const linkedPage = path.join(symlinkRoot, "docs/llm/linked.md");
+    const externalPage = path.join(symlinkRoot, "outside.md");
+    fs.writeFileSync(externalPage, "# Outside\n");
+    fs.symlinkSync(externalPage, linkedPage, "file");
+    const symlink = runWikiValidator(symlinkRoot);
+    assert.equal(symlink.status, 1, symlink.output);
+    assert.match(symlink.output, /symbolic links under docs\/llm\//);
+
+    const sources = "## Sources\n\n- `src/refund.mjs`\n- `tests/refund.test.mjs`\n";
+    const files = { "src/refund.mjs": "export {};\n", "tests/refund.test.mjs": "assert.ok(true);\n" };
+    const validRoot = path.join(fixture, "valid");
+    writeWikiFixture(validRoot, {
+      index: wikiIndex(),
+      pages: {
+        "payments.md": `# Payments\n\n## Requirements\n\n${requirement("PAY-refund-cap", { evidence: "src/refund.mjs, tests/refund.test.mjs" })}${sources}`,
+        "LOG.md": "[missing](legacy-target.md)\n",
+      },
+      files,
+    });
+    const valid = runWikiValidator(validRoot);
+    assert.equal(valid.status, 0, valid.output);
+    assert.match(valid.output, /0 errors, 0 warnings/);
+
+    const warningRoot = path.join(fixture, "warning");
+    writeWikiFixture(warningRoot, {
+      index: wikiIndex(),
+      pages: {
+        "payments.md": `# Payments\n\n## Requirements\n\n${requirement("PAY-refund-cap")}${requirement("PAY-refund-capture")}\n${sources}`,
+      },
+      files,
+    });
+    const warning = runWikiValidator(warningRoot);
+    assert.equal(warning.status, 0, warning.output);
+    assert.match(warning.output, /WARNING .*near-duplicate requirement slug/);
+    assert.match(warning.output, /0 errors, 1 warning/);
+
+    const invalidRoot = path.join(fixture, "invalid");
+    const invalidRequirements = [
+      requirement("PAY-refund-cap"),
+      requirement("PAY-dup"),
+      requirement("PAY-dup"),
+      requirement("PAY-retired"),
+      requirement("INV-unregistered"),
+      requirement("PAY-zeta"),
+      requirement("BILL-alpha"),
+      requirement("PAY-outside", { evidence: "../outside.mjs" }),
+      requirement("PAY-missing", { evidence: "src/missing.mjs" }),
+      requirement("PAY-bad-format", { scenario: "missingThen" }),
+      requirement("PAY-Upper-Slug"),
+    ].join("");
+    writeWikiFixture(invalidRoot, {
+      index: wikiIndex({
+        prefixes: "| PAY | Payments |\n| PAY | Duplicate |\n| BILL | Payments |\n| BAD-LOWER | |",
+        retired: "- `PAY-retired`",
+        extraLinks: "[missing](missing.md#nope) · [bad anchor](payments.md#missing) · [process](../agent-devkit/specs/missing.md) · [[legacy]] · [ghost][ghost]\n",
+      }),
+      pages: {
+        "payments.md": `# Payments\n\n## Requirements\n\n${invalidRequirements}${sources}\n### PAY-outside-section\n`,
+        "duplicate.md": `# Duplicate\n\n## Requirements\n\n${requirement("PAY-refund-cap")}${sources}`,
+      },
+      files,
+    });
+    const invalid = runWikiValidator(invalidRoot);
+    assert.equal(invalid.status, 1, invalid.output);
+    assert.match(invalid.output, /ERROR docs\/llm\/INDEX\.md:\d+:/);
+    assert.match(invalid.output, /ERROR docs\/llm\/payments\.md:\d+:/);
+    for (const expected of [
+      /invalid requirement ID\/heading/,
+      /requirement-shaped heading outside ## Requirements/,
+      /duplicate requirement ID PAY-dup/,
+      /duplicate requirement ID PAY-refund-cap; first defined in docs\/llm\/duplicate\.md/,
+      /retired requirement ID is reused: PAY-retired/,
+      /unregistered requirement prefix: INV/,
+      /repeated prefix: PAY/,
+      /repeated domain: Payments/,
+      /malformed prefix registry row/,
+      /a Requirements page must use only one prefix/,
+      /requirements are not sorted by ID/,
+      /Evidence path escapes the repository root/,
+      /Evidence path does not exist: src\/missing.mjs/,
+      /Evidence path is not listed in ## Sources/,
+      /scenario needs a THEN line/,
+      /Markdown link target does not exist: missing.md/,
+      /Markdown link anchor not found: payments.md#missing/,
+      /must not link to process artifacts/,
+      /legacy \[\[\.\.\.\]\] links are not allowed/,
+      /undefined Markdown reference link: ghost/,
+    ]) assert.match(invalid.output, expected);
+  } finally {
+    fs.rmSync(fixture, { recursive: true, force: true });
+  }
+}
+
+validatorFixtureChecks();
 
 console.log("plugin smoke checks passed");

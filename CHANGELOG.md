@@ -2,6 +2,22 @@
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-10-10
+
+### Added
+
+- Track plan execution with `Execution: open | complete`; final review marks a
+  plan complete, and follow-up work routes through `brainstorm-feature`.
+- Write wiki feature pages as requirements with stable `<PREFIX>-<slug>` IDs,
+  scenarios, and source evidence, registered in a `## Requirement prefixes`
+  table in `docs/llm/INDEX.md`.
+- Package each change to `docs/llm/` requirements as one folder under
+  `docs/agent-devkit/changes/<folder>/` with `design.md`/`tasks.md`
+  (Architectural) and a `delta.md` when a requirement needs `ADDED`,
+  `MODIFIED`, or `REMOVED`; archive a verified delta into `docs/llm/`.
+- Bundle a dependency-free requirements validator with `document-wiki` and
+  run its valid and invalid wiki fixtures in `npm test`.
+
 ## [0.6.0] - 2026-10-04
 
 ### Fixed

@@ -25,10 +25,11 @@ coding-agent context and an LLM-facing codebase wiki in sync.
 - Preserve user changes and do not rewrite unrelated files.
 - Follow the team's one-branch/PR-per-task workflow; worktrees are optional.
   This does not override existing commit or push approval rules.
-- For new spec, plan, decision, estimate, or handoff files, use
-  `YYYY-MM-DD-<issue-id>-<slug>` before any existing type suffix when an issue
-  ID appears in the task or a related artifact, including its filename. Without
-  one, keep the existing format; never infer an ID or rename an existing file.
+- For new change folders and for new spec, plan, decision, estimate, or handoff
+  files, use `YYYY-MM-DD-<issue-id>-<slug>` before any existing type suffix when
+  an issue ID appears in the task or a related artifact, including its
+  filename. Without one, keep the existing format; never infer an ID or rename
+  an existing artifact.
 - When resolving conflicts in `docs/agent-devkit/INDEX.md` or
   `docs/llm/INDEX.md`, preserve links from every task and verify all targets
   after the merge.

@@ -142,11 +142,19 @@ You must complete each phase before proceeding to the next.
 8. **Run relevant existing tests and checks** for regressions. The final
    `review-and-verify` gate runs repository-mandated full commands when they
    exist; do not invent a test suite.
-9. Call the available Skill entry whose local name is `review-and-verify` to
-   review the diff against the
-   verify plan from step 3 and run fresh verification. Tell the user to invoke
-   `document-wiki` after verification only when the fix changes observable
-   behavior or reveals stale wiki documentation. An existing page that
+9. When the fix changes a requirement `docs/llm/` manages, write `delta.md` in a
+   change folder before review, using the delta format, ID/Baseline/Evidence,
+   ownership, and self-review rules in `brainstorm-feature`'s
+   `## Change folder and delta` section, and index the folder under `## Changes`
+   in `docs/agent-devkit/INDEX.md`; a fix that only restores correctly
+   documented behavior writes no delta. If the target page still uses
+   `## Business rules`, ask the user to select it, then convert it through
+   `document-wiki` before writing the delta; stop if it is marked
+   `verification limit`. Then call the
+   available Skill entry whose local name is `review-and-verify` to review the
+   diff against the verify plan from step 3 and run fresh verification. Tell the
+   user to invoke `document-wiki` after verification only when the fix changes
+   observable behavior or reveals stale wiki documentation. An existing page that
    contradicts the fix remains a blocker until refreshed. Do not update the
    wiki when it already correctly describes the intended behavior and the fix
    only restores code to that behavior.
