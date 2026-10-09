@@ -1,0 +1,232 @@
+assets/guide-vi-routing.svg
+  s_335ed271739061::t_b7629735c3283a 78
+  s_335ed271739061::t_0314ccbe3cd219 1-77,79-92
+.cursor-plugin/marketplace.json
+  s_335ed271739061::t_f5fe87fb53ad4e 14
+GUIDE.vi.md
+  s_335ed271739061::t_742e0025abf652 287
+  s_335ed271739061::t_f5fe87fb53ad4e 289
+  s_acaf668468df60::t_691242891656fb 293
+  s_acaf668468df60::t_554caf6e88b4fb 301-302
+  s_acaf668468df60::t_78965080fc414f 389-396
+  s_335ed271739061::t_e29be1721eee87 148
+  s_335ed271739061::t_398f16f3e8b82d 303,305,333-347,369-377,402,406,418
+  s_acaf668468df60::t_255661fb70c6ec 307
+  s_335ed271739061::t_eaf7efcb0ee54f 186,349
+  s_0ef323cc08511e::t_55bf31ab3bf029 1-3,25-54,58-146,202,217-251,277,291,320,384,398,436-450
+  s_335ed271739061::t_92540dd94d88bd 55-57
+  s_97de2cdec01994::t_90cb672591dac9 304,306
+  s_97de2cdec01994::t_5eb8b44637a14c 400-401,403-404,408-409,411-417,419-432
+  s_335ed271739061::t_6a24ebb2a69f2f 13-14,19-21,156-184,188-200
+  s_335ed271739061::t_044aedd672c5f2 17,204,410
+  s_335ed271739061::t_1d603f0b3fedeb 15-16
+  s_335ed271739061::t_d6b9a3f8febab5 18
+  s_335ed271739061::t_96e0d9ef80e3b7 149-151,153-155
+  s_335ed271739061::t_6857a97776b51c 185
+  s_335ed271739061::t_dcf650e5900d40 187
+  s_0ef323cc08511e::t_c69a04191f9778 252-254,274-276
+  s_335ed271739061::t_fa6e2574c79a19 288
+  s_acaf668468df60::t_91b550215ca425 294-296,298-300
+  s_335ed271739061::t_7f2b413e7e945a 348
+  s_335ed271739061::t_bfb30dd038c890 350-352,366-368
+  s_0ef323cc08511e::t_00f73119a86571 451-453
+  s_335ed271739061::t_bd970acf244b6b 4-12,22-24,147,152,201,203,205-216,255-273,278-286,290,292,297,308-319,321-332,353-365,378-383,385-388,397,399,405,407,433-435,454-458
+.devin-plugin/plugin.json
+  s_335ed271739061::t_f5fe87fb53ad4e 3
+RELEASE_DESCRIPTION.md
+  s_335ed271739061::t_630abf58a84646 1,3-5,9-17,21
+  s_335ed271739061::t_57913179e95054 22
+skills/plan-feature/SKILL.md
+  s_acaf668468df60::t_8222589c8167a4 178-180
+  s_acaf668468df60::t_10188e51e6004b 8-11
+  s_acaf668468df60::t_2a9d7441d4c33f 92,106,109-113
+  s_acaf668468df60::t_4a6fdf215bf37e 24-25
+  s_acaf668468df60::t_152af0e6d8c0f0 3
+  s_acaf668468df60::t_dff7b3243a2181 26-29
+  s_acaf668468df60::t_a59360a718059d 114-124
+skills/brainstorm-feature/SKILL.md
+  s_acaf668468df60::t_6e2590861cef88 57
+  s_acaf668468df60::t_a0d439ef7a37af 102
+  s_335ed271739061::t_b0cb1dd88dad94 106-109
+  s_acaf668468df60::t_e386e451597d67 117-122
+  s_acaf668468df60::t_094463a6432c59 272-275
+  s_acaf668468df60::t_1a70ce6886ee0c 150-152
+  s_97de2cdec01994::t_f5bf754126e7be 156-158
+  s_97de2cdec01994::t_90cb672591dac9 135
+  s_acaf668468df60::t_dac17f0a1d612e 26,33-35,37
+  s_acaf668468df60::t_6204b4fbc0cc76 36
+  s_acaf668468df60::t_5932b9aa3fda9d 126,133,139-149,153-155,159-168,181,184-185,207,209,213,215,223-228,233-256
+  s_acaf668468df60::t_346a4256a5b97c 103-104
+  s_acaf668468df60::t_32fda0a48eebf4 27-29
+  s_acaf668468df60::t_c7e2c3513af412 105,110-116,123-125,127-132,134,136-138,169-180,182-183,186-206,208,210-212,214,216-222,229-232
+skills/implement-task/SKILL.md
+  s_acaf668468df60::t_641731681a3cca 116,120-121
+  s_acaf668468df60::t_62db9a6d0faa25 147-150
+  s_acaf668468df60::t_bf3664a33b8311 20-21
+  s_acaf668468df60::t_b16775a5d280cb 33-35
+  s_acaf668468df60::t_a4d0069faa3fdf 117-119
+  s_acaf668468df60::t_c9852bb48616ee 32,36,43-47
+skills/systematic-debugging/SKILL.md
+  s_acaf668468df60::t_2c46351af4f77e 145,154-157
+  s_acaf668468df60::t_49c1c94c867373 146-153
+skills/estimate-feature/SKILL.md
+  s_acaf668468df60::t_1fadca1d4e778c 51-56
+  s_acaf668468df60::t_1148b4a8916c92 13-14
+  s_acaf668468df60::t_7d296ad0204f25 82-87
+  s_335ed271739061::t_817f1ffab8e16d 98-100
+  s_acaf668468df60::t_3c80aa72e80b4f 18-19
+skills/using-devkit/SKILL.md
+  s_acaf668468df60::t_359d70734c5c2d 91,94-95
+  s_acaf668468df60::t_ff98c0c7ad4c64 21-23
+  s_acaf668468df60::t_3983d3cf37746a 39-44,50-57
+  s_acaf668468df60::t_f4467002d90f0f 45-48
+  s_acaf668468df60::t_2b2015194bc9a0 58-67
+  s_acaf668468df60::t_d6555b590a4e8e 92-93
+  s_acaf668468df60::t_19bc64f8ab0808 49
+skills/brainstorm-feature/references/spec-self-review.md
+  s_acaf668468df60::t_aa3afd17da7912 16-19,21-22
+  s_acaf668468df60::t_4c5403e66c1b58 3-15,20,23
+README.vi.md
+  s_335ed271739061::t_67ab5223ec3f6c 47
+  s_acaf668468df60::t_064ee12f9b907b 277
+  s_97de2cdec01994::t_9bf256e5f83b51 278-280
+  s_acaf668468df60::t_b8eb804a5b0563 166
+  s_335ed271739061::t_742e0025abf652 37-38
+  s_0ef323cc08511e::t_4109589c8a862d 42-43
+  s_acaf668468df60::t_e13cc95dbdf781 309-310,316-318
+  s_acaf668468df60::t_536e5e8f9b0468 311-313
+assets/guide-vi-truth-model.svg
+  s_335ed271739061::t_0314ccbe3cd219 1-62
+skills/context-handoff/SKILL.md
+  s_acaf668468df60::t_8bebf31f55e435 27-28
+  s_acaf668468df60::t_ac0c90766d49d3 65-69
+package.json
+  s_335ed271739061::t_f5fe87fb53ad4e 3
+AGENTS.md
+  s_335ed271739061::t_57913179e95054 28
+  s_335ed271739061::t_b89a147cd69504 30-31
+  s_335ed271739061::t_b8ebcfc04ea57c 29
+  s_335ed271739061::t_43c2e8c65d8239 32
+.cursor-plugin/plugin.json
+  s_335ed271739061::t_f5fe87fb53ad4e 3
+skills/document-wiki/SKILL.md
+  s_acaf668468df60::t_149fff95492887 119,121-122
+  s_acaf668468df60::t_61d0088162b133 120
+  s_acaf668468df60::t_cae792a203f409 123-124
+  s_acaf668468df60::t_ec14dc96d2ba0d 153-158
+  s_335ed271739061::t_b010ed84b87677 164,166-168
+  s_335ed271739061::t_92540dd94d88bd 165
+  s_acaf668468df60::t_becada8fd5eaa2 175-180
+skills/setup-codebase/SKILL.md
+  s_acaf668468df60::t_ca0f607218a2cb 22-24
+skills/review-and-verify/SKILL.md
+  s_335ed271739061::t_b010ed84b87677 103-105,205-206,208-209
+  s_acaf668468df60::t_d895f47be5e583 102
+  s_335ed271739061::t_92540dd94d88bd 207
+  s_acaf668468df60::t_557a146a144ad5 39-46,50-57,61,122
+  s_acaf668468df60::t_6b02ea5fa59c36 58-60,62-65,72-91,93-101,106-121,123-124
+  s_acaf668468df60::t_7b6e17ad12774b 92
+  s_acaf668468df60::t_d186e546fd0676 66-71
+  s_acaf668468df60::t_9926c2c378a453 47-49
+skills/document-wiki/scripts/validate-llm-wiki.mjs
+  s_335ed271739061::t_d2902ed4e5f103 1-513
+README.md
+  s_97de2cdec01994::t_9bf256e5f83b51 276-277
+  s_acaf668468df60::t_0b0497057c5c1a 319-320
+  s_acaf668468df60::t_c6c694a1705e65 274-275
+  s_335ed271739061::t_67ab5223ec3f6c 46
+  s_acaf668468df60::t_f792e6bc88fab0 324,326,330-332,336
+  s_335ed271739061::t_742e0025abf652 38-39
+skills/document-wiki/references/evidence-matrix-and-page-template.md
+  s_acaf668468df60::t_39a8ea752cfd37 107-109
+tests/plugin-smoke.mjs
+  s_97de2cdec01994::t_8c3808ea89d757 191,217-218
+  s_97de2cdec01994::t_16af1263228e9b 205,228
+  s_97de2cdec01994::t_48e2108057031f 151-160
+  s_97de2cdec01994::t_95121de6b4b2c0 2
+  s_97de2cdec01994::t_c91df760ebce49 124,145-150,168,210,221
+  s_97de2cdec01994::t_479d60abc64bfc 223
+  s_97de2cdec01994::t_78738cee58661f 211
+  s_97de2cdec01994::t_d988061a67c721 105-123,126-131,134-144,161-166,169-186,188-190,192-204,206-209,212-216,219-220,222,224-227,229-247
+  s_97de2cdec01994::t_41413fbc648563 125
+  s_97de2cdec01994::t_11049a84d0257e 132-133,167
+  s_97de2cdec01994::t_2f1a18c00910c0 187
+  s_335ed271739061::t_d2902ed4e5f103 10
+.claude-plugin/plugin.json
+  s_335ed271739061::t_f5fe87fb53ad4e 3
+CHANGELOG.md
+  s_335ed271739061::t_f5fe87fb53ad4e 5-6,18-19
+  s_acaf668468df60::t_15bda35d5682f1 14-17
+.claude-plugin/marketplace.json
+  s_335ed271739061::t_f5fe87fb53ad4e 12
+GUIDE.md
+  s_acaf668468df60::t_11c09c044cb691 697
+  s_0ef323cc08511e::t_db68da375317b1 16-21
+  s_acaf668468df60::t_9b7cf9ce9bd4b9 432-434,442-449,451,459
+  s_acaf668468df60::t_2cdb48565e0e49 377,379-380
+  s_97de2cdec01994::t_90cb672591dac9 378,694,696
+  s_0ef323cc08511e::t_d01442052aa097 818
+  s_0ef323cc08511e::t_a1d973f66f88b0 641-690,698-709
+  s_335ed271739061::t_742e0025abf652 37-39
+  s_acaf668468df60::t_2df61c2c6f1845 253
+  s_acaf668468df60::t_d5078299aaca30 691-692
+  s_acaf668468df60::t_542e2f5fee3df7 202
+  s_97de2cdec01994::t_9bf256e5f83b51 693,695
+  s_acaf668468df60::t_4396d1fc166f8e 285
+  s_335ed271739061::t_92540dd94d88bd 84-86
+  s_acaf668468df60::t_cc3066fb3b6395 406-411,414-417
+EVALS.md
+  s_335ed271739061::t_4c34f685eeace0 799-801
+  s_335ed271739061::t_b0cb1dd88dad94 829-831,845-847
+  s_97de2cdec01994::t_41160227f152df 865-890
+  s_acaf668468df60::t_805238e561b56c 803-812,862,864
+  s_acaf668468df60::t_7b0a5e8ef20fb0 817-828,832-844,848-861,863
+  s_97de2cdec01994::t_f5bf754126e7be 813-816,891-899
+  s_335ed271739061::t_2b6e7bdf999307 802
+.codex-plugin/plugin.json
+  s_335ed271739061::t_f5fe87fb53ad4e 3
+CONTRIBUTING.md
+  s_335ed271739061::t_742e0025abf652 34-36
+assets/guide-vi-requirement-anatomy.svg
+  s_0ef323cc08511e::t_48fb0fdf158955 1-76
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2f79e08ef5262784c8e5b2c980a93198cade0b4f",
+  "prompts": {},
+  "sessions": {
+    "s_0ef323cc08511e": {
+      "agent_id": {
+        "tool": "windsurf",
+        "id": "cumbersome-shingle",
+        "model": "unknown"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    },
+    "s_335ed271739061": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a11e76-2c8d-76a0-86e7-4c37d8ba005a",
+        "model": "gpt-6-sol"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    },
+    "s_97de2cdec01994": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a12129-c878-7281-93db-b1495afb6516",
+        "model": "gpt-6-luna"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    },
+    "s_acaf668468df60": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ee17863adfferp47qekdaNeOKQ",
+        "model": "deepseek-flash"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
