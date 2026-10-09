@@ -36,6 +36,18 @@ Before reviewing requirements, read the active spec and plan, including its
 `## Decision Log`, plus any task-linked decision file. A persisted decision is
 requirement evidence, but it does not override a pending approval gate;
 conversation recall alone is not review evidence.
+Only mark completion when this is the final review of that plan, every task is
+implemented, and every required verification passes. Do not mark an old plan
+complete merely because it was read. For a passing final review:
+
+- If the plan has `## Approval Gate`, add or set `Execution: complete` there,
+  including when the field is missing.
+- If it has no `## Approval Gate`, add `## Completion` with
+  `Execution: complete`.
+
+Verify the edit before reporting `Status: pass`. If work or required
+verification remains, leave the plan open and report the gap under
+`Spec gaps`. Approval status alone is not completion evidence.
 
 ## Git safety invariants
 

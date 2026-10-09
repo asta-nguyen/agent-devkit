@@ -1,6 +1,6 @@
 ---
 name: plan-feature
-description: Use when feature design is approved and coding has not started for a non-trivial feature, behavior change, API change, or cross-file implementation.
+description: Use when an approved feature design needs an execution plan before coding, or an open plan needs revision for a non-trivial behavior, API, or cross-file change.
 ---
 
 # Plan Feature
@@ -19,6 +19,11 @@ only when writing the plan.
    affected source,
    callers, and tests. Otherwise map planned files and interfaces from the
    approved design; state that callers and tests do not exist yet.
+   Inspect plans linked from the design and apply the plan lifecycle in
+   `using-devkit`: revise an open plan in place; for new architectural work
+   after completion, use a new approved design and create a new plan. Keep
+   completed tasks and results historical; add new work as a new task when the
+   plan is still open.
    Extract only exact constraints from the approved design that bind more than
    one task. Do not infer constraints from convention or preference.
 2. Map out which files will be created or modified and what each one is
@@ -91,6 +96,7 @@ only when writing the plan.
    Required: yes | no
    Reason: <public API, data schema, dependency, CI, broad file impact, or low-risk scope>
    Status: pending | approved | not-required
+   Execution: open | complete
 
    ## Decision Log
 
@@ -100,6 +106,7 @@ only when writing the plan.
    Set `Required: yes` when the plan changes public APIs, data schemas,
    dependencies, CI, or more than a small set of files; its initial status is
    always `pending`. Otherwise set `Required: no` and `Status: not-required`.
+   Set `Execution: open` on a new plan. Approval never marks execution complete.
    Approval of the design/spec, including an instruction to implement given
    before this plan existed, never changes a required gate from `pending`.
 8. Save the complete plan at the required path. Include `## Approved design`
@@ -125,7 +132,7 @@ only when writing the plan.
    `Required: yes`, stop without editing application code. After the user
    explicitly approves the complete plan, update `Status: pending` to
    `Status: approved` and tell the user to invoke `implement-task`; that
-   approval is the gate, so do not ask again. If an approved plan changes
+   approval is the gate, so do not ask again. If an open approved plan changes
    materially, append the user-confirmed change to `## Decision Log`, reset its
    `Required` and `Reason` from the new impact, set required plans to
    `Status: pending`, and present them again. For
@@ -163,7 +170,8 @@ polish, or uneven detail that does not create ambiguity.
 4. **Artifact links** — do the index, design, and plan links resolve? Does the
    design link only to wiki pages actually read as context?
 5. **Approval gate** — do impact and status match the required criteria? Is a
-   required gate still pending until the complete plan is approved?
+   required gate still pending until the complete plan is approved? Does a new
+   plan have `Execution: open`, and does a revised open plan keep it open?
 6. **Minimal design** — can any proposed file, abstraction, dependency, or
    configuration be removed or replaced by existing, standard-library, native,
    or already-installed behavior without weakening an approved requirement?

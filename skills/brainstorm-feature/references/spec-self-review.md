@@ -7,6 +7,11 @@ link and wiki-boundary rules too. The spec's `## Related context` may link only
 to existing `docs/llm/` pages read during brainstorming; write `None` when
 there was no verified wiki context.
 
+For a follow-up to a completed plan, require a `## Previous work` section with
+relative Markdown links to the prior spec and plan. Verify that both targets
+exist. Keep these links out of `## Related context`, which is only for verified
+wiki pages.
+
 Every architectural spec must include a top-level `## Impact map` section from
 `read-codebase-context` with these exact fields, including the source baseline:
 

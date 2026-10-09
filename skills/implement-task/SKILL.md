@@ -37,6 +37,11 @@ description: Use when the user has approved a bounded change or feature plan and
    - For a legacy plan with no gate, inspect its impact. Public API, data schema,
      dependency, CI, or broad file changes require approval before proceeding.
 
+   Apply the plan lifecycle in `using-devkit`: a completed plan and its design
+   are historical, so route new work through `brainstorm-feature`. Use an open
+   plan for its remaining tasks. For legacy plans without `Execution`, inspect
+   completion evidence before treating them as active.
+
    Approval given before the plan existed does not satisfy a required gate.
    Without a plan, require an approved bounded design from `brainstorm-feature`;
    otherwise tell the user to invoke `brainstorm-feature` before editing. An
@@ -130,9 +135,9 @@ When implementation needs a user answer before it can continue:
    Confirmed by user: YYYY-MM-DD
    ```
 
-4. If the answer materially changes an approved design or plan, update the
-   affected artifact and re-evaluate the plan's approval gate. When the new
-   impact requires approval, set `Required: yes`, update `Reason`, set
+4. If the answer materially changes an active approved design or open plan,
+   update the affected artifact and re-evaluate the plan's approval gate. When
+   the new impact requires approval, set `Required: yes`, update `Reason`, set
    `Status: pending`, and stop for approval. If a bounded task expands beyond
    its approved design, tell the user to invoke `brainstorm-feature` instead of
    silently widening scope.

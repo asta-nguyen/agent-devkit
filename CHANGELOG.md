@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Added
+
+- Track plan execution with `Execution: open | complete`; final review marks a
+  plan complete, and follow-up work routes through `brainstorm-feature`.
+
 ## [0.6.0] - 2026-10-04
 
 ### Fixed

@@ -655,6 +655,12 @@ Estimate this plan in hours for a developer using an AI coding agent.
 - **Plans carry approved constraints forward.** `## Global Constraints` copies
   cross-task rules from the approved design, or says `None.`; approved edge
   cases map to concrete tasks and checks.
+- **Completed plans stay historical.** New plans start with `Execution: open`;
+  `review-and-verify` marks them `complete` only after all tasks pass final
+  review.
+  Later requirements are classified as new work: bounded changes need no plan,
+  while architectural changes get a new spec and plan. An open plan is revised
+  in place and keeps its original filename.
 - **Low-impact ambiguity does not stall implementation.** The agent may record
   a session-only technical ruling only when every viable choice is reversible
   within the current task and preserves observable behavior.

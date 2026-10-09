@@ -44,7 +44,10 @@ downgrades mid-task.
    `read-codebase-context` to establish the affected code path before asking
    questions. Otherwise, state
    that the project is new and establish scope from the user's request; there
-   is no code path to trace.
+   is no code path to trace. For follow-up work, read related specs and plans
+   and apply the plan lifecycle in `using-devkit` before classifying the new
+   request. A completed plan is evidence of prior scope, not approval for new
+   scope.
 2. If the project is too large for a single spec, help the user decompose into
    sub-projects: what are the independent pieces, how do they relate, what
    order should they be built? Then brainstorm the first sub-project through
@@ -93,9 +96,9 @@ downgrades mid-task.
    Do not write production code while material decisions remain unresolved.
 6. After approval, follow the selected path:
    - Spike: investigate and report a recommendation; keep probe code throwaway.
-   - Bounded: tell the user to invoke `implement-task`; do not create a plan
-     file.
-   - Architectural: create `docs/agent-devkit/specs/` if needed, write and
+   - Bounded: tell the user to invoke `implement-task`.
+   - Architectural: create
+     `docs/agent-devkit/specs/` if needed, write and
      self-review the spec, present it, and wait for approval before creating or
      updating `docs/agent-devkit/INDEX.md` with a link to the exact file. Then tell the
      user to invoke `plan-feature`. Approval of the spec authorizes creation of
@@ -106,6 +109,12 @@ downgrades mid-task.
      `AGENTS.md` or application source, tell the user to invoke
      `setup-codebase` first so it can create the initial repository contract
      from the approved spec.
+
+For follow-up work, apply the plan lifecycle in `using-devkit`. If the related
+plan is open, do not create a spec; tell the user to invoke `plan-feature` to
+revise that plan in place. After a plan is complete, bounded follow-ups need no
+spec; architectural follow-ups create a new spec with prior spec and plan links
+under `## Previous work`.
 
 Keep the design proportionate. For a one-line fix with an unambiguous expected
 result, the design may be one or two sentences, but wait for explicit approval

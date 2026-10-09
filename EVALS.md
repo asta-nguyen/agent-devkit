@@ -754,6 +754,31 @@ verified just because the session continues. Verify the plugin's root
 consumer to its own repository contract. Do not apply devkit's Markdown-only
 or no-build-system policies to the consumer's application.
 
+## 48. Completed plan receives a new requirement
+
+Use a disposable repository with the real skills loaded from this repository.
+Run these cases:
+
+- **a. Review pass:** all tasks are implemented and tests pass. Final review
+  sets `Execution: complete` and reports `Status: pass`.
+- **b. Review fail:** break `src/add.mjs` (for example, implement subtraction).
+  Final review leaves `Execution: open` and reports the gap.
+- **c. Completed plan follow-up:** request a bounded addition such as `sub`.
+  `brainstorm-feature` leaves completed tasks and results unchanged and creates
+  no plan.
+- **d. Open plan follow-up:** leave a task unfinished and request new behavior.
+  `plan-feature` edits the same plan file, preserves its name, adds a task, and
+  keeps `Execution: open`.
+- **e. Legacy plan:** remove `Execution` from a completed plan with an
+  `## Approval Gate`. Final review adds the field there. Also verify that a
+  legacy plan without `## Approval Gate` gets `## Completion` with
+  `Execution: complete`.
+
+For an architectural follow-up, verify that the new spec links prior artifacts
+with resolving relative Markdown links under `## Previous work`. A failed final
+review must not mark a plan complete. Record the plan diff and agent response
+for each case.
+
 ### Executed consistency checks (2026-10-04)
 
 - **47 — real Devin CLI 3000.11.3 session:** a temporary local plugin with an
@@ -784,3 +809,11 @@ not available.
 | 41 — stale index positions | OpenEZ, FFF, `rg` (used OpenEZ + `rg`) | real | Pass — after editing the indexed route file, current positions came from `rg` and direct reads; OpenEZ context returned no line positions | N/A — host did not report |
 | 42 — untracked diff gap | OpenEZ, FFF, `rg` (used OpenEZ + `rg`) | real | Pass — `diff_context` omitted untracked files as changed entries; `git status --short` and `rg` found the caller and config references | N/A — host did not report |
 | 43 — rg-only fallback | `rg` only (OpenEZ/FFF treated as absent) | simulated | Pass — `rg` and direct source reads found the caller and references; no retry or install suggestion | N/A — host did not report |
+
+### Execution attempts (2026-10-09)
+
+- **48 — Devin CLI 3000.11.3 (`9c803229faa4`):** scenario a stopped before
+  agent execution because `devin --permission-mode dangerous -p` refused
+  `/private/tmp/lifecycle.Q89h` as untrusted. No plan diff or agent response
+  was produced; scenarios b–e were not run. No trust configuration was
+  changed. The temporary fixture was confirmed deleted.

@@ -33,6 +33,26 @@ Read context before changing files: run `read-codebase-context`, or
 - Process artifacts stay under `docs/agent-devkit/`: never put them in
   `docs/llm/` or link to them from `docs/llm/`.
 
+## Plan lifecycle
+
+`Approval Gate` status records approval, not implementation. New plans have
+`Execution: open`; after all tasks pass final `review-and-verify`,
+that skill marks `Execution: complete` in the plan's `## Approval Gate`, or adds
+`## Completion` when the plan has no such section. For a legacy plan without
+this field, treat completed task results or an explicit spec completion statement
+as historical scope; inspect remaining tasks and final verification evidence
+before reusing the plan. Do not infer completion from `Status: approved`.
+
+For new work after a plan is complete, keep its design scope, tasks, and
+results as history. Classify the request again with `brainstorm-feature`:
+bounded work needs no new plan; architectural work gets a new spec that links
+the prior artifacts under `## Previous work`, then a new plan linked to that
+spec.
+Correct factual errors in old artifacts when needed, but do not add new
+requirements to the completed design or tasks. While a plan is open, revise
+that same file without renaming it and preserve completed task results;
+material changes still use its decision log and approval gate.
+
 ## Team Git workflow
 
 Use one branch/PR per task; worktrees are optional. Keep repository and user
@@ -56,6 +76,7 @@ and verify all targets. Do not add locks or coordination tools.
 | Bug or possible bug | `systematic-debugging` |
 | Per-task AI estimate, when requested | `estimate-feature` |
 | Turn an approved architectural design into an execution plan | `plan-feature` |
+| Revise an open plan | `plan-feature` |
 | Implement an approved design or plan | `implement-task` → `review-and-verify` |
 
 The explicit-change row applies only after `brainstorm-feature` verifies
