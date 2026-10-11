@@ -258,8 +258,7 @@ protected boundaries remain intact.
 
 Start the final response with three short lines in the user's language: result
 (what is done and whether final review passed), missing check (or none), and
-next action (who does what, how, and what result would pass; or none). For a
-Vietnamese response, label them `Kết quả`, `Còn thiếu`, `Việc tiếp theo`.
+next action (who does what, how, and what result would pass; or none).
 The agent first attempts setup and checks available from the repository. If
 only the user can run a required check, give app-level steps and the expected
 result; ask for access or assets only after identifying what the agent cannot
