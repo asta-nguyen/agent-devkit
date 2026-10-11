@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+## [0.7.1] - 2026-10-11
+
+### Fixed
+
+- Resume an archive when the wiki already matches its delta but the merge
+  marker is missing, or when only some delta blocks have merged. Leave
+  conflicting wiki blocks untouched for review.
+- Make final review reports state the result, missing check, and next action
+  with a clear owner; remove the repeated wiki-impact report after implementation.
+
 ## [0.7.0] - 2026-10-10
 
 ### Added

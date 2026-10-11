@@ -1,22 +1,21 @@
-# agent-devkit 0.7.0
+# agent-devkit 0.7.1
 
-This release adds a source-grounded requirements wiki, change folders, and an
-archive workflow. A bundled validator checks published wiki requirements,
-links, IDs, and evidence paths.
+This patch clarifies final review reports and lets a change archive resume
+when its wiki delta is already merged or only partly merged.
 
 ## Changes
 
-- Describe verified behavior in `docs/llm/` with stable requirement IDs,
-  `SHALL` statements, scenarios, and source/test evidence.
-- Keep new work in one change folder. After final review, merge its delta into
-  the wiki when present and move the folder to `changes/archive/`.
-- Bundle the dependency-free wiki validator with `document-wiki`; run it after
-  wiki edits and before archiving a merged delta.
-- Include valid and invalid wiki fixtures in the plugin smoke test. The
-  validator can also be run from an installed skill folder against a project.
-- Add a detailed Vietnamese team guide with workflow and artifact diagrams.
+- Verify wiki blocks and merge side effects before adding a missing
+  `Merged into docs/llm/` marker.
+- Apply only pending delta blocks during a partial merge. Stop when a wiki
+  block conflicts with both the baseline and approved replacement.
+- Start final review reports with the result, missing check, and next action,
+  including who will perform it and what outcome passes.
+- Remove the duplicate wiki-impact report from `implement-task`.
 
 ## Verification
 
-- `npm test` passes the plugin smoke checks, including validator fixtures.
+- `npm test` passes the plugin smoke checks.
+- Temporary sample repositories covered a fully merged wiki without a marker
+  and a partial merge; both archived with valid links and wiki validation.
 - `git diff --cached --check` passes for the staged release.

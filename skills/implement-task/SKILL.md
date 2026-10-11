@@ -162,7 +162,3 @@ When implementation needs a user answer before it can continue:
    the smallest relevant check, and call the available Skill entry whose local
    name is `review-and-verify` once more. If the second review still fails, stop
    and report the remaining blockers; do not claim completion.
-
-## Documentation impact
-
-The final response repeats the wiki-impact block from `review-and-verify`.

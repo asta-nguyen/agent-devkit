@@ -845,8 +845,9 @@ run these cases and record the change folder, delta, and wiki diff:
 - **Duplicate `ADDED` behavior:** a new ID that repeats behavior already
   covered by another requirement fails the duplicate-behavior check; final
   review reports `Status: fail` and keeps the change open for reconciliation.
-- **Repeated or partial archive:** a rerun after a full merge applies nothing
-  the second time; a partially merged wiki stops for reconciliation.
+- **Repeated or partial archive:** a rerun after a full merge does not reapply
+  blocks and adds a missing marker after verification; a partial merge applies
+  only pending blocks and side effects. A conflicting block stops the archive.
 - **Sources:** a `MODIFIED` with a new `Evidence:` path adds it to `## Sources`,
   and a path is dropped only when no remaining claim relies on it.
 - **Links:** links from `tasks.md` to `design.md`, from change files to

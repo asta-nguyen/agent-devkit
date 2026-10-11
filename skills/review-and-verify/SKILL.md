@@ -76,14 +76,16 @@ The change is complete only after step 5 passes: the wiki, the moved folder,
    `REMOVED` IDs are absent and listed as retired. A `MODIFIED`/`REMOVED` block
    matching neither its baseline nor the after-merge state was changed by another
    branch: never overwrite or delete it. The `Merged into docs/llm/` marker is a
-   trace, not the only evidence:
-   - No marker and every block in the before-merge state: merge (step 3).
-   - Marker present and every block in the after-merge state: skip to step 4.
-   - Any other combination (some blocks merged, a marker without a full merge, a
-     block in neither state): stop, report each block's state, and ask the user
-     to reconcile. Never apply the whole delta a second time.
-3. **Merge once.** Apply the delta, then add `Merged into docs/llm/: YYYY-MM-DD`
-   under the `delta.md` title.
+   trace, not the only evidence. When every block is either before or after
+   merge, apply only the before-merge blocks and complete any missing merge
+   side effects in step 3, regardless of whether the marker exists. When every
+   block is already after merge, verify the side effects and add the missing
+   marker in step 4; never apply the whole delta again. If a block matches
+   neither state, stop the archive, report its exact difference, and inspect
+   the approved decisions and source. Ask the user only if the correct behavior
+   remains unclear; do not overwrite a conflicting wiki block.
+3. **Finish the merge.** Apply only blocks still before merge and complete
+   missing side effects for all blocks:
    - `ADDED`: insert the `Requirement:` block into `Page:` in ID order. For a new
      page, create it with every section of the `document-wiki` template; a
      section the change cannot support with source evidence states an open
@@ -100,12 +102,14 @@ The change is complete only after step 5 passes: the wiki, the moved folder,
      when no remaining claim on that page relies on it.
 4. **Verify the wiki.** Every block is in the after-merge state, every page
    created by the merge is linked from `docs/llm/INDEX.md`, and the requirement
-   checks in `document-wiki` pass on every changed page. If this review changed
+   checks in `document-wiki` pass on every changed page. Check `## Sources`,
+   retired IDs, and links affected by the delta. If this review changed
    `docs/llm/`, run the wiki validator as described below before moving the
-   folder. On failure, do not move
-   the folder, report the failing item, and keep `Status: fail`; fix the wiki,
-   code, or `delta.md` (updating `docs/llm/` to match a changed delta) and rerun
-   `review-and-verify`, which starts again at step 1.
+   folder. On failure, do not move the folder, report the failing item, and
+   keep `Status: fail`; fix the wiki, code, or `delta.md` (updating `docs/llm/`
+   to match a changed delta) and rerun `review-and-verify`, which starts again
+   at step 1. After these checks pass, add `Merged into docs/llm/: YYYY-MM-DD`
+   under the `delta.md` title if it is missing.
 5. **Move and relink.** Before moving, compute every link that will change:
    relative links inside the folder's files that point outside it, and links
    anywhere in the repository that point into it, found by searching all files,
@@ -251,6 +255,17 @@ score: fewer lines are useful only when approved behavior, readability, and
 protected boundaries remain intact.
 
 ## Review result
+
+Start the final response with three short lines in the user's language: result
+(what is done and whether final review passed), missing check (or none), and
+next action (who does what, how, and what result would pass; or none). For a
+Vietnamese response, label them `Kết quả`, `Còn thiếu`, `Việc tiếp theo`.
+The agent first attempts setup and checks available from the repository. If
+only the user can run a required check, give app-level steps and the expected
+result; ask for access or assets only after identifying what the agent cannot
+obtain. If the change is still open, state plainly that it moves to
+`changes/archive/` only after final review passes. Keep supporting details in
+the result block below; do not repeat the same finding in extra prose.
 
 End every review with this exact result block:
 
