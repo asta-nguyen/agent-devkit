@@ -1,0 +1,19 @@
+skills/review-and-verify/SKILL.md
+  s_335ed271739061::t_ae69aab7f24cad 261
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "230b85ec5dcd42415342de542c9f0943bf10faa4",
+  "prompts": {},
+  "sessions": {
+    "s_335ed271739061": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a11e76-2c8d-76a0-86e7-4c37d8ba005a",
+        "model": "gpt-6-sol"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
