@@ -36,17 +36,20 @@ Before reviewing requirements, read the active spec and plan, including its
 `## Decision Log`, plus any task-linked decision file. A persisted decision is
 requirement evidence, but it does not override a pending approval gate;
 conversation recall alone is not review evidence.
-Only mark completion when this is the final review, every task is implemented,
-and every required verification passes. Do not mark an old plan complete merely
-because it was read.
+Only mark completion when this is the final review, every task is implemented
+(each plan task is `Progress: done` with a `Result:` that this review confirms
+with fresh evidence), and every required verification passes. A task with no
+`Progress` line is not yet complete: apply the backfill rule in
+`implement-task` first, then judge completion. Do not mark an old plan
+complete merely because it was read.
 
 - For a **legacy plan**, a passing final review adds or sets
   `Execution: complete` in `## Approval Gate`, or adds `## Completion` with
   `Execution: complete` when the plan has no `## Approval Gate`.
 - For a **change folder**, a passing final review runs the archive procedure
-  below: merge its `delta.md` into `docs/llm/` when present, then move the
-  folder under `changes/archive/`. A change without `delta.md` skips the wiki
-  merge and only moves the folder. A change has no `Execution` field.
+  below: verify documentation is complete, then move the folder under
+  `changes/archive/`. Delta merging happens during implementation's
+  documentation update, before final review. A change has no `Execution` field.
 
 Verify the edit or the archive before reporting `Status: pass`. If work or
 required verification remains, leave the plan or change open and report the gap
@@ -55,62 +58,14 @@ under `Spec gaps`. Approval status alone is not completion evidence.
 ## Archive a change
 
 Run this inside the change's branch, after the code checks pass and before any
-commit. A change without `delta.md` skips steps 1-3 and runs only steps 4 and 5.
-The change is complete only after step 5 passes: the wiki, the moved folder,
-`docs/agent-devkit/INDEX.md`, and every rewritten link are verified.
+commit. Archive never merges or edits wiki requirements. With a delta,
+confirm every block is in the after-merge state defined by `document-wiki`'s
+`## Merge a task delta`, including Sources, retired IDs, and the merge marker.
+If documentation is unfinished, call `document-wiki`'s Task updates procedure
+and rerun final review; do not move the folder yet. The change is complete only
+when the moved folder, index, and every rewritten link are verified.
 
-1. **Check without editing.** Every `Evidence:` path in `Requirement:` and
-   `Replacement:` blocks exists and supports its requirement in current source.
-   `Baseline:` blocks are only compared with the wiki before merge; their
-   `Evidence:` paths may name deleted files or outdated behavior and are not
-   checked against current source. Every requirement ID's prefix is already
-   registered in `## Requirement prefixes`; archive never registers one. Every
-   target page that already exists uses `## Requirements`; a page that does not
-   exist yet is valid only as an `ADDED` target in a registered domain. No
-   `ADDED` ID appears in `## Retired requirement IDs`. No other open change
-   folder visible in this branch targets the same ID in its `delta.md`.
-2. **Decide merge state block by block.** Compare each delta block with
-   `docs/llm/`. Before merge, an `ADDED` ID is absent and a `MODIFIED` or
-   `REMOVED` wiki block equals its `Baseline:` exactly; after merge, `ADDED`
-   `Requirement:` and `MODIFIED` `Replacement:` blocks match the wiki exactly and
-   `REMOVED` IDs are absent and listed as retired. A `MODIFIED`/`REMOVED` block
-   matching neither its baseline nor the after-merge state was changed by another
-   branch: never overwrite or delete it. The `Merged into docs/llm/` marker is a
-   trace, not the only evidence. When every block is either before or after
-   merge, apply only the before-merge blocks and complete any missing merge
-   side effects in step 3, regardless of whether the marker exists. When every
-   block is already after merge, verify the side effects and add the missing
-   marker in step 4; never apply the whole delta again. If a block matches
-   neither state, stop the archive, report its exact difference, and inspect
-   the approved decisions and source. Ask the user only if the correct behavior
-   remains unclear; do not overwrite a conflicting wiki block.
-3. **Finish the merge.** Apply only blocks still before merge and complete
-   missing side effects for all blocks:
-   - `ADDED`: insert the `Requirement:` block into `Page:` in ID order. For a new
-     page, create it with every section of the `document-wiki` template; a
-     section the change cannot support with source evidence states an open
-     question naming the missing evidence, and the review reports
-     `Wiki impact: yes` so `document-wiki` completes it. Add a link to the new
-     page in `docs/llm/INDEX.md`.
-   - `MODIFIED`: replace the wiki block that equals the `Baseline:` block with the
-     `Replacement:` block.
-   - `REMOVED`: delete the wiki block that equals the `Baseline:` block, append
-     its ID to `## Retired requirement IDs`, and update or remove every link to
-     its anchor.
-   - For `ADDED` and `MODIFIED`, add each `Evidence:` path to the page's
-     `## Sources`. After `MODIFIED` or `REMOVED`, drop a `## Sources` path only
-     when no remaining claim on that page relies on it.
-4. **Verify the wiki.** Every block is in the after-merge state, every page
-   created by the merge is linked from `docs/llm/INDEX.md`, and the requirement
-   checks in `document-wiki` pass on every changed page. Check `## Sources`,
-   retired IDs, and links affected by the delta. If this review changed
-   `docs/llm/`, run the wiki validator as described below before moving the
-   folder. On failure, do not move the folder, report the failing item, and
-   keep `Status: fail`; fix the wiki, code, or `delta.md` (updating `docs/llm/`
-   to match a changed delta) and rerun `review-and-verify`, which starts again
-   at step 1. After these checks pass, add `Merged into docs/llm/: YYYY-MM-DD`
-   under the `delta.md` title if it is missing.
-5. **Move and relink.** Before moving, compute every link that will change:
+1. **Move and relink.** Before moving, compute every link that will change:
    relative links inside the folder's files that point outside it, and links
    anywhere in the repository that point into it, found by searching all files,
    including ignored `docs/` paths. Rewrite links in `docs/agent-devkit/`
@@ -206,7 +161,7 @@ cannot verify <requirement> — needs <specific evidence or command>
 
 An unverifiable required behavior keeps the review status at `fail`.
 
-For any review that changes `docs/llm/`, locate the installed
+For any task whose implementation or review changes `docs/llm/`, locate the installed
 `document-wiki/SKILL.md` in the same skill set and run
 `node "<document-wiki-skill-directory>/scripts/validate-llm-wiki.mjs" "<target-repository-root>"`
 using absolute paths. If the script is missing, cannot run, or reports errors,
@@ -228,12 +183,16 @@ include anchors for requirement links.
 
 Before the final result, classify wiki impact even for a bug fix. If the change
 alters documented behavior or leaves a relevant page incomplete, use `yes` and
-list the pages for a `document-wiki` handoff. Use `no` only after inspecting
+list the pages updated or still requiring an in-scope update. Use `no` only after inspecting
 the relevant page and source evidence. Use `not-applicable` when the repository
 does not maintain `docs/llm/`, or `unknown` when the impact cannot be
 established. An existing page that contradicts the changed behavior is a
 blocker: keep `Status: fail` until that page is refreshed and verified. Missing
-coverage for new behavior remains a `Wiki impact: yes` handoff. In the result
+coverage for behavior affected by the task is a blocker when the repository
+maintains `docs/llm/`: call `document-wiki`'s Task updates procedure, then rerun
+review. Coverage gaps in unrelated features are optional findings, not work to
+perform in this task. A skeleton wiki counts as existing wiki coverage to
+update; no wiki means `not-applicable`, without silently creating one. In the result
 block's `Evidence`, name the check for every listed caller. If a caller has no
 check, state `Verification limit: <caller> — <reason>` there.
 
@@ -257,7 +216,8 @@ protected boundaries remain intact.
 ## Review result
 
 Start the final response with three short lines in the user's language: result
-(what is done and whether final review passed), missing check (or none), and
+(what is done and whether final review passed, including task progress when
+available), checks and documentation updated (with missing checks, if any), and
 next action (who does what, how, and what result would pass; or none).
 The agent first attempts setup and checks available from the repository. If
 only the user can run a required check, give app-level steps and the expected
@@ -276,7 +236,7 @@ Non-blockers: <optional findings, or none>
 Spec gaps: <missing spec, plan, or persisted-decision requirements, or none>
 Wiki impact: yes | no | not-applicable | unknown
 Wiki pages: <paths, or none>
-Wiki action: <invoke document-wiki / no update needed / limitation>
+Wiki action: <updated and verified / no update needed / required update or limitation>
 ```
 
 Use `fail` when any blocker or spec gap remains. A passing verification command

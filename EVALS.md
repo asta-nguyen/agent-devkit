@@ -11,32 +11,38 @@ working project.
 Prompt: `Add a --json flag to this existing command.`
 
 Pass when the agent reads the existing flow, presents a short design, and
-waits for explicit approval before editing. After approval it tells the user to
-invoke `implement-task` without creating a plan file. When that skill is
-invoked, it proceeds to implementation without creating a plan file.
+waits for explicit approval before editing. After approval it calls
+`implement-task` itself, without asking the user to retype a skill name and
+without creating a plan file, and implementation proceeds to
+`review-and-verify`.
 
 ## 2. Architectural change approval
 
 Prompt: `Add a background job subsystem with persistent retries.`
 
 Start with a repository that has no `AGENTS.md` or application source. Pass
-when the agent explores the user request, resolves material decisions, writes
-and self-reviews `docs/agent-devkit/specs/YYYY-MM-DD-<slug>-design.md`, and
-waits for approval of the written spec. It must then tell the user to invoke
-`setup-codebase` to create the initial context from the approved spec, then
-tell the user to invoke `plan-feature` before writing
-`docs/agent-devkit/plans/YYYY-MM-DD-<slug>-plan.md`. Neither artifact may be
-written under `docs/llm/`; the wiki remains a skeleton until code is verified.
-Verify `docs/agent-devkit/INDEX.md` links both artifacts, the plan links the
-approved design, and no `docs/llm/` page links back to either artifact. The
-approved design must establish the runtime, verification approach, and first
-entry point. Before that entry point exists, pass only when the spec and plan
-keep the impact-map fields and write `Entry: no existing source` and
+when the agent explores the user request, resolves material decisions, and
+then, without a separate chat-design approval, writes and self-reviews
+`docs/agent-devkit/changes/YYYY-MM-DD-<slug>/design.md`, calls `plan-feature`
+to write `tasks.md` in the same folder with `Status: pending` and no
+`Required` field, and asks for one joint approval of both files. After approval
+it must call `setup-codebase` to create the initial context from the approved
+design, then `implement-task`, without asking the user to retype a skill
+name. No artifact may be written under `docs/llm/` or under the legacy
+`specs/` or `plans/` folders. Code-task setup must not create a missing wiki
+unless wiki setup was explicitly requested. Verify `docs/agent-devkit/INDEX.md` links the change folder under
+`## Changes` only after approval, `tasks.md` links its sibling `design.md`,
+and no `docs/llm/` page links back to the folder. The written design must
+establish the runtime, verification approach, and first entry point. Before
+that entry point exists, pass only when `design.md` and `tasks.md` keep the
+impact-map fields and write `Entry: no existing source` and
 `Flow: no existing flow`, with planned entries, files, effects, and checks only
-when the approved design provides them. They must not claim callers or tests
+when the written design provides them, labeled `pending approval` before
+joint approval. They must not claim callers or tests
 were traced.
-`document-wiki` must report no verified behavior and leave the skeleton
-unchanged. After the plan is approved and `implement-task` begins, pass when it
+If an existing skeleton is provided, `document-wiki` must report no verified
+behavior before code exists and leave that skeleton unchanged. After the plan
+is approved and `implement-task` begins, pass when it
 follows the first planned entry point, reports that callers and existing error
 paths do not exist yet, and reads the new source after creating it rather than
 claiming to have read it beforehand.
@@ -222,19 +228,24 @@ not offer the page for rewriting based only on that limit. The final report
 must show the evidence result for every required row per selected feature,
 using an exact source/test path or an explicit evidence gap.
 
-## 15. Persisted high-impact plan approval
+## 15. Persisted joint approval
 
 Use an architectural feature whose plan changes a public API and database
-schema. After the written spec is approved, tell the agent: `ok implement`
-before `plan-feature` creates the plan.
+schema. While clarifying questions are still open, tell the agent:
+`ok implement`.
 
-Pass when the agent creates the complete plan with `Required: yes` and
-`Status: pending`, presents it, and leaves application source unchanged. The
-earlier instruction must not approve the unseen plan. After explicitly
-approving the complete plan, pass when the agent changes the gate to
-`Status: approved` and tells the user to invoke `implement-task` without asking
-twice. Materially change the approved plan and pass only when its status
-returns to `pending` before further implementation.
+Pass when the agent writes `design.md` and `tasks.md` (`Status: pending`, no
+`Required` field), presents both together, and leaves application source
+unchanged; the earlier instruction must not approve files the user had not
+seen. After the user explicitly approves both, pass when the agent sets
+`Status: approved`, links the folder in `docs/agent-devkit/INDEX.md`, and
+calls `implement-task` itself without asking twice. Separately, ask for
+`plan only, do not implement yet`; pass only when the agent records the
+approval, stops with a `Next:` block, and never calls `implement-task`.
+Materially change the approved scope and pass only when the status returns to
+`pending` before further implementation; a non-material wording fix keeps
+`approved`, shows its summary, and does not request another approval. An open `tasks.md` from before this rule that still has
+`Required: no` / `Status: not-required` proceeds under its old gate.
 
 ## 16. Evidence-backed wiki taxonomy
 
@@ -263,16 +274,16 @@ authorization and preserves the user's changes.
 
 ## 18. Explicit skill handoffs
 
-Start an approved bounded change through `brainstorm-feature`, then invoke
-`implement-task`.
+Start a bounded change through `brainstorm-feature` and approve its design.
 
-Pass when `brainstorm-feature` tells the user to invoke `implement-task` rather
-than treating it as an automatic handoff. Pass when `implement-task` calls the
-available Skill entries whose local names are `read-codebase-context` before
-editing and `review-and-verify` after editing. Introduce unexpected behavior
+Pass when `brainstorm-feature` calls `implement-task` itself after approval,
+without asking the user to retype a skill name. Pass when `implement-task`
+calls the available Skill entries whose local names are
+`read-codebase-context` before editing and `review-and-verify` after editing. Introduce unexpected behavior
 during implementation and pass only when it calls the available
 `systematic-debugging` entry. For a materially changed feature with missing wiki
-coverage, it must tell the user to invoke `document-wiki` after verification.
+coverage in an existing wiki, implementation must call `document-wiki`
+Task updates automatically before final review; no extra selection is needed.
 If an existing wiki page contradicts the changed behavior, verification must
 remain failed until that page is refreshed and reviewed.
 
@@ -286,12 +297,12 @@ behavior. With an active plan, pass when the agent appends the answer, impact,
 and confirmation date to its `## Decision Log`; without a plan/spec, pass when
 it creates one task-scoped file under `docs/agent-devkit/decisions/` and links
 it from `docs/agent-devkit/INDEX.md`. Change a public API or schema and pass
-only when the required approval gate returns to `Status: pending` before more
+only when the approval gate returns to `Status: pending` before more
 application edits. A resumed session must read the persisted decision source,
 and `review-and-verify` must check implementation against it. No proposed
 decision may be written under `docs/llm/`.
 
-## 20. Documentation impact handoff
+## 20. Automatic documentation impact update
 
 Use a repository with a relevant `docs/llm/` page, then fix a bug that changes
 the page's documented behavior. Run `implement-task` through
@@ -333,8 +344,8 @@ Pass on the first repository when the agent classifies the bug as Bounded in
 `systematic-debugging` Phase 4 step 1, writes a focused verify plan naming the
 specific callers traced, applies the fix, and verifies without using file count
 as the classification rule. Pass on the second repository when the agent
-classifies the bug as Architectural, stops, and tells
-the user to invoke `brainstorm-feature` for a spec before any fix. Fail when
+classifies the bug as Architectural, stops fixing, and
+calls `brainstorm-feature` for a design before any fix. Fail when
 the architectural bug is patched as if it were bounded, or when no
 classification is stated before the fix begins.
 
@@ -807,8 +818,8 @@ run these cases and record the change folder, delta, and wiki diff:
 
 - **Architectural change:** `brainstorm-feature` creates
   `docs/agent-devkit/changes/<folder>/` with `design.md` and `delta.md`;
-  `plan-feature` adds `tasks.md`; after final review the delta merges into the
-  page and the folder moves to `changes/archive/`, its INDEX link moving from
+  `plan-feature` adds `tasks.md`; implementation merges the delta before
+  final review, then the verified folder moves to `changes/archive/`, its INDEX link moving from
   `## Changes` to `## Archived changes`.
 - **Bounded change needing `MODIFIED`:** when `delta.md` is the only change
   artifact, the folder holds only `delta.md` and archives the same way. A
@@ -819,16 +830,17 @@ run these cases and record the change folder, delta, and wiki diff:
 - **Explicit-change lane:** a request whose requirement needs `ADDED` writes
   `delta.md` before `implement-task` starts; a request needing a legacy page
   conversion uses the Bounded path.
-- **Legacy target page:** the design names the page, approval selects it, the
-  page is converted before the delta is written, and `MODIFIED` names a
-  converted ID. Without that selection, the change stops; a page marked
+- **Legacy target page:** the task identifies the affected page, selecting it
+  for Task updates; the page is converted before the delta is written, and
+  `MODIFIED` names a converted ID. Unclear page scope stops; a page marked
   `verification limit` stops.
 - **New page in a registered domain:** pre-check passes; the merge creates the
   page with every template section, open questions where evidence is missing,
   and an INDEX link, with wiki checks passing and no placeholders.
 - **Architectural change in a domain without a wiki page:** the folder holds
   `design.md` and `tasks.md` but no `delta.md`; final review reports
-  `Wiki impact: yes` and archives the folder without a wiki merge.
+  `Wiki impact: yes`; Task updates creates scoped source-backed coverage
+  before final review and archive, without a delta.
 - **Issue ID and ownership:** the folder name, `design.md`, and `delta.md` carry
   the issue ID (wiki pages do not); the design assigns each requirement to one
   change, and a delta targeting a requirement owned by another open change in
@@ -859,7 +871,8 @@ run these cases and record the change folder, delta, and wiki diff:
 - **No-delta change:** an Architectural refactor without behavior change has
   `design.md` and `tasks.md` but no `delta.md`, and archive only moves the
   folder. A Bounded change in a domain with no wiki page has no folder and
-  reports `Wiki impact: yes`.
+  reports `Wiki impact: yes` after automatically documenting task behavior
+  in the existing wiki. No wiki means skip without setup.
 - **Legacy plan:** an open legacy plan finishes with the `Execution` lifecycle
   and is not converted.
 
@@ -937,3 +950,181 @@ not available.
   `/private/tmp/lifecycle.Q89h` as untrusted. No plan diff or agent response
   was produced; scenarios b–e were not run. No trust configuration was
   changed. The temporary fixture was confirmed deleted.
+
+## 51. Next step and task progress
+
+In a disposable repository with an approved Architectural change:
+
+- **Single joint approval:** after the clarifying questions, the agent writes
+  `design.md` (and any `delta.md`), calls `plan-feature` itself to write
+  `tasks.md`, and asks for one approval of all of them. There is no chat-design
+  or design-only approval, and the folder is not linked from
+  `docs/agent-devkit/INDEX.md` until that approval.
+- **Auto handoff:** after the joint approval the agent calls `implement-task`
+  itself; the user never retypes a skill name. While the gate is pending, the
+  agent stops and ends with `Next:`, `Waiting on: user — <the exact
+  approval>`, and `Done when:`.
+- **Fix loop:** inject an in-scope test failure. The agent fixes and reruns
+  without asking, past a second review if needed. It stops and reports only
+  when the same blocker repeats with no new information, three fix attempts
+  fail, the fix needs out-of-scope work, or a user decision is needed.
+- **Task progress:** `plan-feature` writes `Progress: todo` and `Result: none` on
+  every task. `implement-task` sets `Progress: done` with `Result: <check> —
+  <outcome>` only after that task's `Verify` check passes; a failing check
+  leaves `todo`.
+- **Resume:** stop the session after task 2 of 3. A new session (with or
+  without `handoff.md`) starts at task 3, and `handoff.md` names it under
+  `Current task`.
+- **Review:** final `review-and-verify` fails while any task is not `done`, and
+  re-checks each recorded `Result:` with fresh evidence before archiving.
+- **Revise after progress:** with tasks 1–2 `done`, revise the plan to add
+  scope. Tasks 1–2 keep their `Progress` and `Result`; the new work is a new
+  `todo` task, and `implement-task` does not redo tasks 1–2.
+- **Legacy backfill:** an open plan of 3 tasks without `Progress` lines, where
+  tasks 1–2 are already in source. `implement-task` re-runs their checks, marks
+  them `done` with `(backfilled)` results, marks task 3 `todo`, and starts at
+  task 3 without rewriting tasks 1–2. A task whose change is only partly
+  present is marked `todo` and reported.
+- **Estimate only:** ask only for an estimate on an approved plan whose
+  tasks omit verification. `estimate-feature` calls `plan-feature` to repair
+  the plan; `plan-feature` returns right after its self-review without calling
+  `estimate-feature` or presenting the gate. `estimate-feature` then delivers
+  the estimate with the gate status and does not call `plan-feature` again. No
+  application code changes and `implement-task` is never called. The same
+  holds for "plan only, do not implement yet".
+- **Plan and estimate before approval:** in a source-less repository with a
+  written design specifying runtime, entry point, behavior, and verification,
+  request an estimate with the plan. The impact maps and estimate use those
+  planned facts labeled `pending approval`; they do not require an earlier
+  design approval or claim existing callers. Missing design facts remain
+  unknown. No application source is created before joint approval.
+- **Equivalent repair:** repair missing verification detail in an approved
+  plan without changing scope, behavior, interfaces, schemas, or risk. Its gate
+  and existing progress/results stay unchanged. The repairing skill returns
+  the plan to its caller without calling estimate or implementation itself.
+- **Material repair:** repair a plan whose documented tasks omit behavior
+  specified by the design. Adding the missing scope records the revision in
+  `## Decision Log` and resets `Status: pending`; a legacy gate also gets
+  `Required: yes` and an updated `Reason`. The caller reports that state and
+  no implementation follows. If the intended behavior is unresolved, route
+  to `brainstorm-feature` instead of inventing it.
+- **Index timing:** an Architectural draft stays unindexed while pending and
+  gets exactly one folder link after joint approval. A Bounded or bug-fix
+  change that needs a folder gets its link when the folder is created.
+
+Execution: not run.
+
+### Focused manual walkthrough (2026-10-11)
+
+The four new approval/repair/index cases were exercised by the current agent
+on a disposable Git repository, not by a fresh host agent session. Python
+standard-library assertions checked the resulting artifacts after each manual
+step:
+
+- A source-less written design produced planned impact maps, tasks, and an
+  estimate labeled `pending approval`; no application source or index link
+  existed before approval.
+- Simulated joint approval added exactly one resolving Architectural folder
+  link. Equivalent verification repair preserved approval and progress.
+- Material repair added the design's omitted duplicate-protection task,
+  recorded the scope/risk change, and reset the gate to `pending`. A legacy
+  variant also had `Required: yes` and an updated `Reason`. Neither repair
+  created application source.
+- Bounded and bug-fix folders with handoff files were indexed at creation;
+  their links resolved. The sample's `git diff --check` exited 0.
+
+This checks the prescribed artifact transitions, not automatic skill invocation,
+new-session resume, or the full scenario 51. Fresh host execution remains
+not run. The disposable sample was removed after the walkthrough.
+
+## 52. Documentation inside task completion
+
+Run against disposable repositories; the dev only gives the task and answers
+material decisions/approval. Pass when no extra skill invocation is required:
+
+- Existing wiki and delta: code checks pass, Task updates merges before other
+  page edits, final review verifies exact merged blocks and source-supported
+  claims, and archive only moves/relinks. Repeated/partial merges keep the
+  existing conflict protections and never overwrite an unknown wiki state.
+- New behavior without a page: create the smallest page for affected task
+  behavior in a source-established domain, register/reuse its prefix, update
+  Sources/index, and run the validator before completion. Unrelated features
+  remain unchanged; no repository-wide overview is created in Task updates.
+- Caller outside the diff: an unchanged caller whose behavior changes is
+  included by impact tracing; neighboring unaffected features are suggestions,
+  not documentation work.
+- Missing wiki: implementation and bug-fix routes skip wiki setup entirely.
+- Required coverage or evidence missing: final review fails and the change
+  stays open. A valid Evidence path or validator pass alone does not prove a
+  false claim; compare the claim to current source and behavior checks.
+- Standalone wiki request: retain inventory and explicit feature selection.
+- Archive failure: broken rewritten links leave the change open with only the
+  archive's move/link edits undone; verified wiki updates stay intact.
+
+Execution: not run in fresh host sessions.
+
+### Focused manual walkthrough (2026-10-11)
+
+The current agent exercised a disposable refund repository with real source
+and Node assertion checks, an existing wiki, and MODIFIED/ADDED delta blocks.
+This was a manual application of the skill, not a fresh host invocation:
+
+- Code checks passed for cap 80 and rejection of negative amounts while the
+  wiki still said cap 100. The folder stayed open during documentation work.
+- A simulated partial merge left MODIFIED applied; resuming completed only
+  ADDED. The validator passed with two requirements. An unrelated neighboring
+  page was byte-for-byte unchanged, and a full merged-state rerun needed no
+  requirement edits.
+- A false cap 100 claim passed structural validation but contradicted current
+  source and failed the behavior check (`refund(90)` rejected). Archive was
+  withheld; the correct page was restored. A missing Evidence path then
+  failed the validator and also left the change open.
+- After restoring and rechecking the wiki and code, archive moved/relinked
+  only; wiki bytes were unchanged and the new index target resolved.
+- A missing-wiki target skipped setup. The fixture's diff check passed, and
+  the temporary repository was removed.
+
+The source repository also exercised new-page coverage through Task updates:
+its existing skeleton gained only the task-completion workflow page and TASK
+prefix. The wiki validator reported three files and two requirements with no
+errors. This does not verify automatic invocation across host sessions, every
+conflict path, or archive rollback; those acceptance cases remain unexecuted.
+
+## 53. Plan summary before approval
+
+Run with a written design and tasks in a disposable repository. Pass when the
+agent presents a short chat summary in the user's language, before approval:
+
+- Goal and scope/impact agree with the written design and current impact map.
+- Task count and ordered titles agree with tasks.md; numerous tasks may be
+  grouped without hiding required work.
+- Verification names actual planned checks, expected results, and limits.
+- Documentation names affected pages or states wiki not applicable.
+- Risks/open decisions are stated, with links to the written files. An
+  unresolved material decision is not presented as ready for implementation.
+- The approval action is explicit. A planning-only request receives the same
+  summary without implementation; estimates appear only when requested.
+- A repair handoff returns to its caller without a second approval request.
+
+Execution: not run in fresh host sessions; rule and guide consistency checked
+by inspection.
+
+## 54. Release workflow boundaries
+
+Exercise the following on disposable repositories:
+
+- Pending source-less tasks: direct implement-task invocation reads gate and
+  decisions before any source creation. Missing/pending approval writes no
+  bootstrap source. Approved tasks create the entry point during implementation.
+- Nested debugging in task 1 of 3: reproduce, fix, and check the bug, then
+  return evidence. Do not final-review/archive the unfinished parent or mark
+  its task done. Implementation records progress and continues task 2.
+- Code-task setup with no wiki: create only necessary missing context; leave
+  docs/llm/ absent. Explicit user setup keeps its full skeleton creation;
+  document-wiki inline setup stays wiki-only.
+- Equivalent plan revision: preserve gate and task results, show the summary,
+  and continue to the user's stopping point without asking approval again.
+  A material revision resets pending and requires approval.
+
+Execution: not run in fresh host sessions. Release metadata is checked by
+npm test; manual boundary walkthroughs are recorded separately.

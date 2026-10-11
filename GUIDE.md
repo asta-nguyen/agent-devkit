@@ -200,7 +200,7 @@ FFF is never required. Without it, skills use `rg` and reach the same results.
 | Skill | When to use | Summary |
 |---|---|---|
 | `brainstorm-feature` | A new, ambiguous request or a request that changes product behavior | Classifies Spike / Bounded / Architectural, asks clarifying questions, and presents a design; routes Spike to investigation, Bounded to implementation, and Architectural through a change folder. Only eligible exact-scope changes skip waiting after impact checks. |
-| `plan-feature` | After design approval and before a non-trivial feature | Specifies behavior, interfaces, named test cases, and verification without writing function or test code; persists the impact map and approval gate. |
+| `plan-feature` | Right after an architectural `design.md` is written, or to revise an open change | Writes `tasks.md` (the plan): behavior, interfaces, named test cases, verification, and progress, without function or test code; presents design and tasks for one joint approval. |
 | `estimate-feature` | When a PM or BA explicitly requests an estimate | Estimates an hours range for each plan task with confidence and rationale. Runs only when requested. |
 | `implement-task` | An approved bounded design or an approved architectural plan exists | Traces code, applies the 6-step implementation ladder, and verifies each non-trivial change; `review-and-verify` owns the final wiki-impact block. |
 | `systematic-debugging` | Any technical issue: bug, test failure, build failure, or performance problem | Investigates root cause, classifies the bug, writes a verify plan, then fixes bounded bugs or hands architectural bugs off for design. |
@@ -216,7 +216,7 @@ FFF is never required. Without it, skills use `rg` and reach the same results.
 
 | Skill | When to use | Summary |
 |---|---|---|
-| `document-wiki` | The repo has no LLM wiki, only a skeleton, or missing, unverified, or source-contradictory feature docs | Builds a domain map from source, creates the baseline overview, waits for feature selection, and writes deep pages. Every claim needs a source path. |
+| `document-wiki` | Task documentation needs updating, or standalone wiki work is requested | Task updates selects affected behavior automatically in an existing wiki. Standalone wiki work inventories and waits for feature selection. Every claim needs source evidence. |
 
 Deep pages use only categories established by evidence: `architecture/` for
 system structure, `domains/` for state and requirements, `workflows/` for
@@ -228,49 +228,55 @@ created only when a real page needs them.
 
 ## 4. Standard Workflow — Idea to Production
 
-An exact, low-risk, non-bug change may proceed without waiting only when
-`brainstorm-feature` confirms that the impact map stays inside the user's named
-scope and no protected boundary is affected.
+For you, the flow has three parts: **understand the task → implement → review
+and finish**. Checks, documentation, delta merging, and archive are internal
+work; you answer material questions and approve the solution when needed.
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│  NEW REQUEST                                                 │
-│                                                              │
-│  ┌──────────────────────┐                                    │
-│  │ brainstorm-feature   │  Classify + clarify + design       │
-│  └──────────┬───────────┘                                    │
-│             │                                                │
-│     ┌───────┴───────┐                                        │
-│     ▼               ▼                                        │
-│  Spike          Bounded / Architectural                      │
-│  (answer)           │                                        │
-│                ┌────┴────────┐                               │
-│                ▼             ▼                               │
-│           Bounded       Architectural                        │
-│           (chat design)    │                                 │
-│                │     ┌─────┴──────┐                          │
-│                │     ▼            ▼                          │
-│                │  setup-codebase  write design               │
-│                │     │            │                          │
-│                │     │     plan-feature                      │
-│                │     │            │                          │
-│                │     │     estimate-feature (optional)       │
-│                │     │            │                          │
-│                └─────┴────────────┘                          │
-│                        │                                     │
-│                        ▼                                     │
-│                 implement-task                              │
-│                        │                                     │
-│                        ▼                                     │
-│                 review-and-verify                           │
-│                        │                                     │
-│                        ▼                                     │
-│                 document-wiki                               │
-│                        │                                     │
-│                        ▼                                     │
-│                   USER COMMITS                              │
-└─────────────────────────────────────────────────────────────┘
-```
+The agent classifies every task, states the class so you can override it, and
+follows its row. You only step in at the approvals shown. After an approval
+the agent calls the next skill itself, and every stop ends with a
+`Next / Waiting on / Done when` block.
+
+| Task | Flow |
+|---|---|
+| Spike or bug question ("can we…?", "is this a bug?") | Investigate → report a recommendation or evidence; no code |
+| Clear, small change | Context + impact check → code → check → review |
+| Bounded feature | Settle open decisions → **approve short chat design** → code → check → review |
+| Bounded bug | Reproduce → trace root cause → check fails → fix → check passes → review |
+| Architectural feature or bug | Clarify → write `design.md` + `tasks.md` → **one joint approval** → code → check each task → review |
+
+- When in doubt, the heavier row wins; hidden complexity moves a task up,
+  never down.
+- A clear, small change must meet all four: you stated the exact change and
+  result; the impact check keeps every caller, test, config, and wiki page in
+  that scope; it touches no public API, schema, dependency, CI, security
+  boundary, or data-loss risk; and it is not a bug. Otherwise it is Bounded.
+- `design.md` explains the solution and behavior; `tasks.md` is the plan
+  (steps, verification, progress). There is no separate plan file.
+- Before approval, the agent summarizes the goal, scope/impact, ordered tasks,
+  verification, documentation, and risks/open decisions in chat, with links to
+  the detailed files. It states what approval permits; planning-only requests
+  get the same summary without starting code.
+- Code-task setup creates necessary context without creating a missing wiki.
+  Approval and decisions are checked before new-project source creation.
+  Debugging called inside implementation returns evidence to its caller;
+  equivalent revisions keep approval without another approval request.
+- One approval authorizes implementation through final review. The agent asks
+  again only when scope, behavior, an interface, a schema, or risk changes
+  materially. In-scope check failures are fixed and rerun; the agent stops
+  only when a blocker repeats with no new information, fails three fix
+  attempts, needs out-of-scope work, or needs your decision.
+- Implementation updates documentation for affected behavior automatically
+  when `docs/llm/` exists. It merges any delta before other content edits;
+  final review verifies code and documentation, then archives and checks links.
+  Missing required coverage blocks completion. Without a wiki, skip updates
+  without creating one. You review the diff and commit.
+- `estimate-feature` runs before the joint approval only when you ask for an
+  estimate; "estimate only" or "plan only" never starts implementation.
+- Planning and estimation may use a written design with planned assumptions
+  labeled `pending approval`. A repair returns to its caller, preserving the
+  gate for equivalent edits and resetting it to `pending` for material changes.
+  Architectural drafts enter the index only after joint approval.
 
 ### Quick routing
 
@@ -371,8 +377,8 @@ Add a --json flag to this existing command.
    ```
 
 5. **STOP** and wait for explicit approval.
-6. After approval, tell the user to invoke `implement-task`, which calls
-   `review-and-verify` after implementation.
+6. After approval, call `implement-task` directly (no need to retype a skill
+   name); it calls `review-and-verify` after implementation.
 
 **No spec file or tasks file is created.** A short chat design is enough. When a
 documented `docs/llm/` requirement needs `ADDED`, `MODIFIED`, or `REMOVED`,
@@ -399,39 +405,38 @@ Add a background job subsystem with persistent retries.
    - "Which job queue: Redis, database, or in-memory?"
    - "Retry policy: exponential backoff or fixed interval?"
    - "Do we need a job monitoring dashboard?"
-3. Scan only applicable edge-case branches, explain non-obvious omissions, and
-   present a design covering scope, architecture, interfaces, error cases, and
-   verification. Recommend one clear solution when the choice is
-   straightforward; present two or three options only when trade-offs matter.
-4. After design approval, create the change folder
-   `docs/agent-devkit/changes/2026-08-17-bg-jobs/`, write `design.md` there, and
-   write `delta.md` for any documented requirement the change alters or adds.
-5. Self-review the design and delta for placeholders, consistency, scope, and
-   ambiguity.
-6. Wait for user approval of the written design and delta.
-7. If the repo lacks `AGENTS.md`, tell the user to invoke `setup-codebase`
-   first.
-8. Tell the user to invoke `plan-feature`, which writes `tasks.md` beside
-   `design.md` in the same folder with ordered tasks. The tasks copy approved
-   cross-task rules into `## Global Constraints` and map each approved edge case
-   to a task and verification check.
-9. Run `estimate-feature` before plan approval only if the user requested an
+3. Scan only applicable edge-case branches and explain non-obvious omissions.
+   Recommend one clear solution when the choice is straightforward; present
+   two or three options only when trade-offs matter.
+4. Once decisions are settled, create the change folder
+   `docs/agent-devkit/changes/2026-08-17-bg-jobs/` and write the design
+   (scope, architecture, interfaces, error cases, verification) straight to
+   `design.md`, plus `delta.md` for any documented requirement the change
+   alters or adds. Self-review both.
+5. Call `plan-feature`, which writes `tasks.md` beside `design.md` with ordered
+   tasks. The tasks copy cross-task rules from the design into
+   `## Global Constraints` and map each edge case to a task and verification
+   check. `tasks.md` starts at `Status: pending`.
+6. Run `estimate-feature` before the approval only if the user requested an
    estimate; an estimate never authorizes implementation.
-10. Because the plan changes public APIs, schemas, dependencies, CI, or a broad
-   set of files, save it with `Required: yes` / `Status: pending`, present it,
-   and wait for explicit plan approval. Spec approval does not approve an
-   execution plan that did not yet exist.
-11. After approval, update the plan to `Status: approved`.
-12. After approval, tell the user to invoke `implement-task` for each plan
-    task. It may record a session-only `Ruling R<n>` for a reversible,
+7. Present `design.md`, `tasks.md`, and `delta.md` together and wait for one
+   approval; revise the files in place until approved. An "ok implement" said
+   before these files were presented does not count.
+8. After approval, set `Status: approved` and link the folder in
+   `docs/agent-devkit/INDEX.md`. If the repo lacks `AGENTS.md`, call
+   `setup-codebase` first.
+9. Call `implement-task`. It works through tasks in order,
+    marking each `Progress: done` with a `Result:` once its `Verify` check
+    passes, so any session can see where work stopped. It may record a
+    session-only `Ruling R<n>` for a reversible,
     behavior-equivalent implementation detail; consequential choices still
     require user clarification or approval.
-13. `implement-task` calls `review-and-verify` for diff review, tests, and the
+10. `implement-task` calls `review-and-verify` for diff review, tests, and the
     complexity pass. Findings cite `path:line`; unverifiable requirements fail
     under `Spec gaps` as `cannot verify` with the missing evidence named.
-14. `review-and-verify` archives the change: it merges `delta.md` into
-    `docs/llm/` and moves the folder to `changes/archive/`. Tell the user to
-    invoke `document-wiki` only for wiki coverage outside the delta.
+11. Before final review, implementation calls `document-wiki` Task updates
+    to merge `delta.md` and finish affected documentation. Final review then
+    checks both code and docs; archive only moves the folder and repairs links.
 
 **Artifact structure:**
 
@@ -456,7 +461,7 @@ docs/
     architecture/
       overview.md
     operations/
-      background-jobs.md              # after the archived delta merges
+      background-jobs.md              # updated before final review
 ```
 
 ---
@@ -514,7 +519,8 @@ Fix this failure quickly.
 - Run relevant existing tests and checks; do not set up a test runner solely
   for this fix.
 - Run `review-and-verify`. Refresh any existing wiki page that contradicts the
-  fix before claiming completion; hand off missing new coverage to `document-wiki`.
+  fix before claiming completion; automatically document missing task coverage
+  before final review when the wiki exists.
 
 **Red flags — stop and return to Phase 1:**
 
@@ -731,16 +737,17 @@ category folders appear only when a real page needs them.
   request seems clear, the agent should classify it and present a design.
 - **The approval gate is mandatory.** The agent must STOP and wait for you to
   say "yes" before implementation.
-- **High-impact plans have their own persisted gate.** Approval of a spec does
-  not approve an unseen plan. After the complete plan is approved, its status
-  changes from `pending` to `approved`; the agent must not ask twice.
+- **Architectural work has one persisted gate.** You approve `design.md` and
+  `tasks.md` together; an earlier "ok" does not approve files you have not
+  seen. After approval, `tasks.md` changes from `Status: pending` to
+  `approved`; the agent must not ask twice.
 - **User clarifications become explicit decisions.** Implementation-only
   choices stay in the current session. Observable behavior or requirement
   changes go into the active plan/spec `## Decision Log`; bounded tasks without
   one create a task-scoped file under `docs/agent-devkit/decisions/`. Material
-  changes reset required plan approval to `pending`.
+  changes reset the approval to `pending`.
 - **Plans carry approved constraints forward.** `## Global Constraints` copies
-  cross-task rules from the approved design, or says `None.`; approved edge
+  cross-task rules from the design, or says `None.`; edge
   cases map to concrete tasks and checks.
 - **Completed plans stay historical.** New plans start with `Execution: open`;
   `review-and-verify` marks them `complete` only after all tasks pass final
@@ -768,7 +775,8 @@ category folders appear only when a real page needs them.
 - **Every implementation reports wiki impact.** A behavior-changing bug fix or
   feature uses `Wiki impact: yes` and lists affected pages. An existing page
   that contradicts the change blocks completion until `document-wiki`
-  refreshes it; missing coverage is a handoff. `no` requires inspected page
+  refreshes it; missing task coverage also blocks completion. Implementation
+  calls Task updates automatically; standalone wiki work still needs selection. `no` requires inspected page
   and source evidence.
 - **Review checks recorded conventions.** Matching scopes use the most specific
   rule; violations cite `path:line`, while repositories without conventions

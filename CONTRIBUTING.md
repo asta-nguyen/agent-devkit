@@ -40,8 +40,8 @@ Guidelines:
   sanctioned exception to fewest-files when they keep rarely used branches out
   of every invocation. Keep them within the skill folder and smoke-check each
   mentioned `references/...` path.
-- **Chain explicitly.** If a skill hands off to another, name it (e.g.
-  `**REQUIRED SUB-SKILL:** Use review-and-verify`).
+- **Chain explicitly.** Name and call the next skill directly. Repair handoffs
+  return to their caller; only the owning route performs final review/archive.
 - **Red flags.** Include only rationalizations the skill body does not already
   answer; omit the section when its rows would repeat body rules.
 - **No placeholders.** Every step must contain actual content an agent can
@@ -53,8 +53,10 @@ Guidelines:
 - `PILOT.md` — trial plan. Update when the evaluation process changes.
 - `EVALS.md` — acceptance scenarios. Add a scenario when you add or materially
   change a skill.
-- `README.md` — project overview. Update the skill list and routing guide when
-  skills are added or retired.
+- `README.md` and `README.vi.md` — project overview, skill list, and routing.
+  Keep both languages and both GUIDE files consistent with current behavior.
+- `CHANGELOG.md` and `RELEASE_DESCRIPTION.md` — release scope and fresh
+  verification evidence. Distinguish manual walkthroughs from fresh host runs.
 
 ### Bug fixes and improvements
 
@@ -80,6 +82,24 @@ Guidelines:
    - What changed and why.
    - Which skill(s) or documentation are affected.
    - How you tested (which EVALS scenario, or what manual test you ran).
+
+## Preparing a release
+
+1. Update package.json, the four platform plugin manifests, and the Claude and
+   Cursor marketplace plugin versions together. Marketplace files with no
+   version field keep their current schema.
+2. Move release changes from Unreleased into a dated version section and
+   update RELEASE_DESCRIPTION.md for that version. Refresh README/README.vi,
+   GUIDE/GUIDE.vi, PILOT, and acceptance scenarios for changed behavior.
+3. Run `npm test` for plugin loading, reference paths, version consistency,
+   release headers, and wiki validator fixtures. Run `git diff HEAD --check`.
+   When wiki content changed, also run the installed document-wiki validator
+   on the actual target repository and check claims against source.
+4. Record which acceptance scenarios ran, how they ran, and what remains
+   unverified. Do not describe a manual artifact walkthrough as a fresh host
+   session. Final review must pass before declaring release readiness.
+5. Leave the working tree for user review. Release preparation does not
+   authorize a commit, tag, push, or publication.
 
 ## Style conventions
 

@@ -2,12 +2,25 @@
 
 [Tiếng Việt](README.vi.md)
 
-Evidence-first, spec-driven workflow toolkit for coding agents — with semantic
-code retrieval, token-aware context flow, and hard review gates.
+Task-driven coding skills: the agent reads the repository, clarifies material
+decisions, implements, checks, updates affected documentation, and reviews.
 
-Turn a vague request into a traceable change:
+**Understand the task → implement → review and finish.**
 
-![Five stages from context retrieval to verification](assets/readme-workflow.png)
+Version 0.8.0 — see [changes](CHANGELOG.md) and [release notes](RELEASE_DESCRIPTION.md).
+
+You do not need to memorize skill names. Describe the task:
+
+```text
+Implement this task end to end. Clarify unresolved behavior and edge cases,
+summarize the plan before approval, then code, verify, update affected docs,
+and review. Ask when a material decision is needed. Do not commit.
+```
+
+Small exact changes can proceed after impact checks. Bounded features use a
+short chat solution; Architectural work uses design.md and tasks.md with one
+joint approval. The agent calls the next skill itself. Detailed guidance:
+[English](GUIDE.md) · [Vietnamese](GUIDE.vi.md).
 
 ## Core capabilities
 
@@ -159,9 +172,9 @@ read-codebase-context                  # understand code before changing it
 context-handoff                        # checkpoint unfinished work before pausing
 document-wiki                          # document existing app features
 lean-audit                             # audit whole-repo simplicity; report only
-brainstorm-feature → plan-feature      # architectural work: save spec then plan
+brainstorm-feature → plan-feature      # design.md + tasks.md → one joint approval
 estimate-feature                       # optional per-task AI-assisted estimate
-implement-task → review-and-verify     # review, fix blockers once, review again
+implement-task → review-and-verify     # code, checks, affected docs, final review
 systematic-debugging                   # investigate before fixing bugs
 ```
 
@@ -272,9 +285,9 @@ FFF is never required. Without it, skills use `rg` and reach the same results.
 | Skill | Purpose |
 |---|---|
 | `brainstorm-feature` | Classify scope, clarify and get design approval; route Spike to investigation, Bounded to implementation, and Architectural through a change folder. |
-| `plan-feature` | Write `tasks.md` in an Architectural change folder; legacy plans stay under `docs/agent-devkit/plans/`. |
+| `plan-feature` | Write `tasks.md` beside `design.md`, summarize the plan, and present one joint approval; legacy plans keep their existing location/gate. |
 | `estimate-feature` | Optionally estimate every task in an Architectural change or legacy plan in AI-assisted engineering hours. |
-| `implement-task` | Execute approved change tasks or a legacy plan: trace code, make the smallest change, verify, then flag wiki coverage. |
+| `implement-task` | Execute approved tasks, record progress/results, check code, and automatically update affected documentation before final review. |
 | `systematic-debugging` | Find root cause, classify the bug, define verification, then fix bounded bugs or hand architectural bugs off for design. |
 | `review-and-verify` | Iron Law: no completion claims without fresh evidence. Diff review, code review reception, red flags. |
 
@@ -288,7 +301,7 @@ FFF is never required. Without it, skills use `rg` and reach the same results.
 
 | Skill | Purpose |
 |---|---|
-| `document-wiki` | Build a source-grounded domain baseline, then let the user choose undocumented features or confirmed content gaps. |
+| `document-wiki` | Automatically update affected behavior in an existing wiki during a task; standalone requests retain baseline inventory and feature selection. |
 
 Deep pages use evidence-backed folders only when needed: `architecture/` for
 system structure, `domains/` for state and requirements, `workflows/` for
@@ -313,28 +326,22 @@ creates only missing, project-specific context files. It also appends missing
 
 ### 2. Implement a feature from scratch
 
+```text
+Clarify behavior and relevant edge cases from repository evidence
+  → Architectural: write design.md + tasks.md (+ delta.md when needed)
+  → Summarize goal, scope, tasks, verification, documentation, and risks
+  → One joint approval
+  → Code each task, check, record progress/results
+  → Automatically update affected docs in an existing wiki; merge delta first
+  → Final review of code and docs
+  → Archive/relink after passing review; report evidence
 ```
-brainstorm-feature        → clarify scope, get design approval
-  ↓
-changes/<folder>/         → Architectural: design.md (+ delta.md when a
-                            requirement needs ADDED/MODIFIED/REMOVED)
-  ↓
-setup-codebase            → new projects only: create initial contract
-  ↓
-plan-feature              → tasks.md beside design.md
-  ↓
-estimate-feature          → optional: estimate.md in the change folder
-  ↓
-implement-task            → code, verify, run checks
-  ↓
-review-and-verify         → pass/fail report with evidence and blockers;
-                            on pass, archive: merge delta.md into docs/llm/ and
-                            move the folder to changes/archive/
-  ↓
-fix blockers once, then review again; stop if still failing
-  ↓
-document-wiki             → refresh wiki coverage outside the delta
-```
+
+The agent handles these actions internally. You answer material questions and
+approve the solution when needed. It continues in-scope fixes while they make
+progress and stops for stalled fixes or new scope/decisions. Code-task setup
+creates necessary missing context without silently creating a wiki. Standalone
+wiki setup remains separate; a planning-only request does not start code.
 
 ### 3. Debug a bug
 
@@ -346,6 +353,10 @@ systematic-debugging          → investigate and classify
                               ↓
                               review-and-verify
 ```
+
+When implementation calls debugging for an active task, debugging returns its
+fix/check evidence to that task. The parent implementation owns final review
+and archive.
 
 ### 4. Document an existing app
 
