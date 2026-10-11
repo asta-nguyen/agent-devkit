@@ -14,8 +14,6 @@ Ba loại tài liệu cần phân biệt:
 | Tasks trong `docs/agent-devkit/changes/<folder>/tasks.md` | Sẽ implement bằng task nào và kiểm tra ra sao? | Design đã duyệt và source hiện tại |
 | Wiki trong docs/llm/ | Hệ thống hiện đang hoạt động thế nào? | Source và test đã kiểm chứng |
 
-![Chart phân biệt design là ý định, source/test là bằng chứng implementation, và wiki là behavior hiện tại đã xác minh](assets/guide-vi-truth-model.png)
-
 *Design ghi ý định; source và test chứng minh implementation; wiki mô tả behavior hiện tại đã có evidence.*
 
 Design và tasks mô tả công việc dự kiến. Chúng không chứng minh behavior đã được release. Spec/plan cũ vẫn nằm trong `docs/agent-devkit/specs/` và `plans/`. Wiki chỉ ghi behavior có bằng chứng từ source/test; không chép ý tưởng chưa implement vào wiki.
@@ -95,7 +93,7 @@ Nếu thiếu using-devkit, skill tham chiếu nó phải dừng và báo thiế
 |---|---|---|
 | Không rõ nên dùng quy trình nào | using-devkit | Định tuyến sang skill sở hữu |
 | Hiểu code path, caller, test hoặc impact | read-codebase-context | Sơ đồ entry → caller/callee → test và evidence |
-| Repo mới hoặc thiếu context | setup-codebase | Tạo context file/wiki skeleton còn thiếu |
+| Repo mới hoặc thiếu context | setup-codebase | Tạo context cần thiết; chỉ tạo wiki khi người dùng yêu cầu setup wiki/repository trực tiếp |
 | Ý tưởng mới hoặc yêu cầu còn mơ hồ | brainstorm-feature | Phân loại, làm rõ, đề xuất design và xin approval |
 | Design kiến trúc đã duyệt, cần task để implement | plan-feature | Plan chi tiết, Approval Gate và verification |
 | Bắt đầu code theo design/plan đã duyệt | implement-task | Thay đổi code theo task và ghi evidence |
@@ -107,7 +105,7 @@ Nếu thiếu using-devkit, skill tham chiếu nó phải dừng và báo thiế
 | Audit over-engineering toàn repo | lean-audit | Finding có evidence; chỉ report, không tự fix |
 | Cần code intelligence/OpenEZ | setup-openez | Cài hoặc refresh khi cần và được duyệt |
 
-Các mũi tên trong workflow nghĩa là phải handoff theo thứ tự. Handoff thường là agent báo người dùng gọi skill kế tiếp; cú pháp tự gọi skill tùy host. Đừng bỏ qua approval gate vì thấy đã có spec hoặc user đã nói “làm đi” trước khi plan high-impact được viết.
+Các mũi tên trong workflow nghĩa là phải handoff theo thứ tự. Sau khi người dùng duyệt, agent tự gọi skill kế tiếp (xem phần 6); người dùng không cần gõ tên skill. Cập nhật wiki liên quan là phần của implementation: agent tự gọi Task updates, không cần người dùng gọi skill hay chọn lại trang trong scope. Đừng bỏ qua approval gate vì thấy đã có design hoặc user đã nói “làm đi” trước khi `design.md` và `tasks.md` được trình bày.
 
 ### Mẫu yêu cầu team có thể dùng
 
@@ -143,9 +141,30 @@ changed files, remaining work và next action rồi dừng.
 
 ## 6. Luồng feature từ yêu cầu đến triển khai
 
-![Chart định tuyến từ yêu cầu qua Spike, Bounded hoặc Architectural tới implementation, review và wiki](assets/guide-vi-routing.png)
+**Với dev: hiểu task → thực hiện → review và hoàn tất.** Code, check và tài liệu nằm trong thực hiện; merge delta, validator, archive và sửa link là checklist nội bộ. Người dùng chỉ trả lời quyết định và duyệt giải pháp khi cần.
 
-*Mọi nhánh có implementation đều qua review-and-verify. Final review archive change folder khi có; document-wiki xử lý wiki coverage ngoài delta.*
+Sau khi người dùng duyệt, agent tự gọi skill kế tiếp; người dùng không cần gõ lại tên skill. Agent chỉ dừng ở approval gate, khi cần câu trả lời, khi cần người dùng tự làm (ví dụ restart client), hoặc khi vòng sửa lỗi bị kẹt. Mỗi lần dừng hay chuyển bước, agent kết thúc bằng khối:
+
+~~~text
+Next: <skill hoặc hành động, hoặc none>
+Waiting on: agent | user — <cần duyệt/trả lời/làm gì>
+Done when: <kết quả quan sát được để xong bước kế>
+~~~
+
+| Loại việc | Flow |
+|---|---|
+| Spike / hỏi về bug ("có làm được không?", "có phải bug không?") | Điều tra → báo kết luận hoặc bằng chứng; không sửa code |
+| Rõ, nhỏ | Context + impact check → code → check → review |
+| Bounded feature | Chốt quyết định còn mở → **duyệt giải pháp ngắn trong chat** → code → check → review |
+| Bounded bug | Reproduce → trace root cause → check fail → fix → check pass → review |
+| Architectural (feature hoặc bug) | Làm rõ → viết `design.md` + `tasks.md` → **duyệt chung một lần** → code → check từng task → review |
+
+- "Rõ, nhỏ" phải đủ 4 điều kiện: người dùng nói rõ thay đổi và kết quả; impact check cho thấy mọi caller/test/config/wiki nằm trong phạm vi; không đụng API, schema, dependency, CI, security hay rủi ro mất dữ liệu; và không phải bug. Thiếu một điều kiện thì là Bounded.
+- `design.md` giải thích giải pháp và behavior; `tasks.md` chính là plan (bước triển khai, verification, progress). Không có file plan riêng.
+- Trước khi xin duyệt, agent tóm tắt trong chat: mục tiêu, scope/impact, task theo thứ tự, cách verify, tài liệu cần cập nhật và rủi ro/quyết định còn mở; kèm link file chi tiết và nói rõ duyệt để code hay chỉ dừng ở planning. Yêu cầu plan-only cũng nhận tóm tắt, không tự bắt đầu code.
+- Setup trong task code không tự dựng wiki. Bootstrap chỉ tạo source sau khi kiểm tra approval/decision; debugging giữa implementation trả evidence về caller, không final review/archive plan còn dở. Revision tương đương giữ approval, không hỏi duyệt lại.
+- Một lần duyệt cho phép code tới final review. Agent chỉ xin duyệt lại khi scope, behavior, interface, schema hoặc rủi ro thay đổi material. Check fail trong scope thì agent tự sửa và chạy lại; chỉ dừng khi cùng một blocker lặp lại mà không có thông tin mới, sửa 3 lần không được, cần làm ngoài scope, hoặc cần người dùng quyết định.
+- Phân vân thì chọn dòng nặng hơn; lộ độ phức tạp thì nâng lên, không bao giờ hạ xuống. Agent tự cập nhật tài liệu bị ảnh hưởng trước final review; review pass thì archive và kiểm tra link. Không có `docs/llm/` thì bỏ qua wiki, không tự dựng. Người dùng tự commit.
 
 ### Spike
 
@@ -167,21 +186,23 @@ Chỉ dùng explicit-change lane khi yêu cầu chỉ rõ file/symbol, kết qu�
 
 ### Architectural
 
-Dùng khi tạo subsystem mới, thay interface mà nhiều phần phụ thuộc, hoặc thay boundary giữa components. Agent làm rõ scope và behavior, trình bày design để xin duyệt. Sau approval, brainstorm-feature tạo change folder với `design.md`, thêm `delta.md` khi requirement trong wiki cần đổi, tự kiểm tra các file và link folder trong `docs/agent-devkit/INDEX.md`. plan-feature viết `tasks.md` cùng folder.
+Dùng khi tạo subsystem mới, thay interface mà nhiều phần phụ thuộc, hoặc thay boundary giữa components. Agent làm rõ scope và behavior. Khi các quyết định đã chốt, brainstorm-feature ghi thẳng design vào `design.md` trong change folder, thêm `delta.md` khi requirement trong wiki cần đổi, tự kiểm tra rồi gọi plan-feature viết `tasks.md` cùng folder. Agent trình bày cả `design.md`, `tasks.md` (và `delta.md`) để người dùng duyệt chung một lần; không có bước duyệt design riêng. Sau approval, agent link folder trong `docs/agent-devkit/INDEX.md` và bắt đầu implement.
 
 ~~~text
 Tôi muốn thêm payment reconciliation cho nhiều provider. Dùng brainstorm-feature,
-làm rõ behavior, failure/retry và boundary; trình bày design để tôi duyệt, rồi
-ghi design.md trong change folder và dùng plan-feature lập tasks.md. Chưa implement.
+làm rõ behavior, failure/retry và boundary; ghi design.md và tasks.md trong
+change folder để tôi duyệt chung. Chưa implement.
 ~~~
 
-Approval của design cho phép tạo `tasks.md`; nó không thay approval của plan high-impact. Nếu `tasks.md` có `Required: yes`, gate bắt đầu bằng `Status: pending` và agent dừng trước khi sửa application code. Người dùng cần duyệt toàn bộ tasks. Material change trên change hoặc plan legacy đang open có thể khiến approval gate quay về pending.
+`tasks.md` mới luôn bắt đầu ở `Status: pending`, không còn field `Required`. Agent dừng trước khi sửa application code cho tới khi người dùng duyệt chung design và tasks; câu "làm đi" nói trước khi thấy các file này không tính là duyệt. Material change trên change hoặc plan legacy đang open khiến approval gate quay về pending. Plan legacy và `tasks.md` cũ vẫn giữ `Required` như trước.
+
+Planning và estimate được dùng design đã viết với giả định ghi rõ `pending approval`; chưa được code trước approval. Repair trả về caller, giữ gate khi sửa tương đương và reset `pending` khi đổi material. Architectural draft chỉ được index sau joint approval; Bounded/bug-fix có folder thì index khi tạo folder.
 
 ## 7. Change folder và vòng đời plan legacy
 
-`tasks.md` (hoặc plan legacy) là danh sách công việc, không phải chỗ viết sẵn code. Mỗi task cần nói rõ file/symbol, interface, behavior cần đổi và cách verify. Tasks phải bao phủ edge case đã được duyệt; nếu còn quyết định làm thay đổi behavior hoặc scope, quay lại brainstorm-feature.
+`tasks.md` (hoặc plan legacy) là danh sách công việc, không phải chỗ viết sẵn code. Mỗi task cần nói rõ file/symbol, interface, behavior cần đổi và cách verify, kèm `Progress: todo | done` và `Result:`. implement-task chỉ đặt `done` và ghi `Result:` sau khi check `Verify` của task pass, nên session nào mở ra cũng biết đang dừng ở task nào. Khi sửa plan, task cũ giữ nguyên `Progress`/`Result`; phần bổ sung thành task mới. Plan cũ chưa có field này thì implement-task đối chiếu source và chạy lại check để điền `Progress` trước khi làm tiếp, không làm lại task đã xong. Tasks phải bao phủ edge case đã được duyệt; nếu còn quyết định làm thay đổi behavior hoặc scope, quay lại brainstorm-feature.
 
-Change mới nằm trực tiếp dưới `docs/agent-devkit/changes/` khi còn open. `tasks.md` có `## Approval Gate` và `## Decision Log` nhưng không có field `Execution`. Sau khi mọi task và verification bắt buộc pass, `review-and-verify` merge `delta.md` vào wiki khi có delta, rồi chuyển folder sang `changes/archive/` và cập nhật INDEX cùng các link. Bước archive đánh dấu change complete; change không có delta vẫn được chuyển folder sau final review.
+Change mới nằm trực tiếp dưới `docs/agent-devkit/changes/` khi còn open. `tasks.md` có `## Approval Gate` và `## Decision Log` nhưng không có field `Execution`. Trong implementation, `document-wiki` merge delta và cập nhật tài liệu liên quan. Sau khi mọi task, tài liệu và verification bắt buộc pass final review, `review-and-verify` chuyển folder sang `changes/archive/` và cập nhật INDEX cùng các link. Bước archive đánh dấu change complete; change không có delta vẫn được chuyển folder sau final review.
 
 Plan legacy trong `docs/agent-devkit/plans/` có `## Approval Gate` dùng `Status` và `Execution: open | complete`. `Status` cho biết plan đã được duyệt để thi hành chưa; `Execution` cho biết final review của chính plan đã hoàn tất chưa. Chỉ final review-and-verify của plan đó mới đặt `Execution: complete` sau khi mọi task đã implement và mọi verification bắt buộc pass.
 
@@ -201,7 +222,7 @@ Ví dụ: hôm nay có thêm yêu cầu “hỗ trợ sub” sau khi change hôm
 
 ## 8. Implement và review
 
-implement-task đọc AGENTS, `design.md`, `tasks.md`, `delta.md` liên quan, context và source trước khi sửa; với việc legacy, đọc spec/plan cũ. Nó chỉ thực hiện scope được duyệt và task còn lại. Khi phát hiện behavior ngoài dự kiến hoặc yêu cầu mới, agent dừng để phân loại/approval lại; không âm thầm nới scope. Quyết định trong change ghi vào `decisions.md`; material change cũng cập nhật Decision Log và approval gate của `tasks.md`. Việc ngoài change dùng artifact quyết định phù hợp.
+implement-task đọc AGENTS, `design.md`, `tasks.md`, `delta.md` liên quan, context và source trước khi sửa; với việc legacy, đọc spec/plan cũ. Nó chỉ thực hiện scope được duyệt, làm lần lượt từ task đầu tiên chưa `done`. Khi phát hiện behavior ngoài dự kiến hoặc yêu cầu mới, agent dừng để phân loại/approval lại; không âm thầm nới scope. Quyết định trong change ghi vào `decisions.md`; material change cũng cập nhật Decision Log và approval gate của `tasks.md`. Việc ngoài change dùng artifact quyết định phù hợp.
 
 Sau implementation, dùng review-and-verify. Đây là review theo diff và yêu cầu, không chỉ là chạy test:
 
@@ -210,13 +231,15 @@ Sau implementation, dùng review-and-verify. Đây là review theo diff và yêu
 3. Đọc toàn bộ output, kể cả warning và failure.
 4. Tìm spec gap khi chưa đủ evidence; ghi rõ lệnh hoặc bằng chứng còn thiếu.
 5. Kiểm tra stale docs, caller, boundary bảo mật, error handling và scope ngoài plan.
-6. Phân loại ảnh hưởng tới wiki. Nếu wiki mô tả behavior đã đổi nhưng chưa được refresh, ghi handoff và chưa báo pass.
+6. Phân loại ảnh hưởng tới wiki. Nếu tài liệu trong scope còn thiếu hoặc sai, agent tự gọi Task updates để cập nhật và verify; chưa báo pass trước khi xong.
 
 Review kết thúc bằng result block có Status, Evidence, Blockers, Non-blockers, Spec gaps, Wiki impact, Wiki pages và Wiki action. Chỉ nói pass khi tất cả yêu cầu và verification bắt buộc có evidence mới. Verification chưa chạy hoặc không thể chạy không được đổi thành pass; ghi cụ thể cannot verify và lý do.
 
 ## 9. Wiki và format Requirements
 
-document-wiki chỉ ghi behavior đã kiểm chứng từ source/test. Trước khi viết trang sâu, agent lập domain map và feature inventory, xác định coverage, rồi trình bày trang chưa có hoặc có content gap đã xác minh để người dùng chọn. Khi wiki trống/skeleton, skill tự tạo baseline overview; việc đó không tự động cho phép tạo trang sâu cho mọi feature.
+Khi được implementation/review gọi, document-wiki dùng Task updates: tự chọn behavior bị ảnh hưởng theo scope, diff và caller trace; merge delta trước, sửa hoặc bổ sung trang liên quan, verify rồi trả về caller. Không document feature lân cận, không tự tạo wiki khi chưa có. Chỉ hỏi khi behavior, domain boundary hoặc scope chưa rõ.
+
+Với yêu cầu wiki độc lập, document-wiki chỉ ghi behavior đã kiểm chứng từ source/test. Trước khi viết trang sâu, agent lập domain map và feature inventory, xác định coverage, rồi trình bày trang chưa có hoặc có content gap đã xác minh để người dùng chọn. Khi wiki trống/skeleton, skill tự tạo baseline overview; việc đó không tự động cho phép tạo trang sâu cho mọi feature.
 
 Feature page dùng ## Requirements thay cho ## Business rules khi trang được tạo mới hoặc refresh. Mỗi requirement có dạng:
 
@@ -247,8 +270,6 @@ test/refund.test.ts
 ~~~
 
 Đây là ví dụ minh họa format, không phải evidence của code trong repository này.
-
-![Chart cấu tạo requirement gồm ID, một SHALL, scenario, evidence, Sources và prefix registry](assets/guide-vi-requirement-anatomy.png)
 
 *Requirement có ID ổn định, behavior rõ, scenario kiểm tra được và evidence trỏ về source/test.*
 
@@ -284,9 +305,9 @@ Ví dụ link từ trang khác:
 [PAY-refund-cap](../domains/payments.md#pay-refund-cap)
 ~~~
 
-document-wiki chạy `scripts/validate-llm-wiki.mjs` trong folder skill sau khi ghi wiki để kiểm source paths, Sources, relative links và anchors, ID trùng, prefix registry, thứ tự ID, SHALL/scenario và evidence. review-and-verify chạy lại script sau khi merge delta, trước khi archive. Agent vẫn tự kiểm duplicate behavior và việc evidence có thật sự hỗ trợ requirement. Một test pass không đủ để chứng minh các phần ngữ nghĩa đó.
+document-wiki chạy `scripts/validate-llm-wiki.mjs` trong folder skill sau khi ghi wiki để kiểm source paths, Sources, relative links và anchors, ID trùng, prefix registry, thứ tự ID, SHALL/scenario và evidence. review-and-verify chạy lại script cho wiki đã đổi trong task, trước khi archive. Agent vẫn tự kiểm duplicate behavior và việc evidence có thật sự hỗ trợ requirement. Một test pass không đủ để chứng minh các phần ngữ nghĩa đó.
 
-Thiết kế chia bốn phần: truth layer (format Requirements), change folder, archive merge delta vào wiki, và validator script. Validator nằm trong `skills/document-wiki/scripts/` và nhận root của project đích làm tham số; CI của project chỉ chạy nó nếu team cấu hình thêm.
+Thiết kế chia bốn phần: truth layer (format Requirements), change folder, merge delta trong implementation và archive sau review, và validator script. Validator nằm trong `skills/document-wiki/scripts/` và nhận root của project đích làm tham số; CI của project chỉ chạy nó nếu team cấu hình thêm.
 
 ## 10. Những folder nào xuất hiện?
 
@@ -346,7 +367,7 @@ shop-api/
 
 Đây là snapshot sau final review: design và tasks đã được tạo trước implementation, code và test đã đổi, delta đã merge vào wiki và folder đã chuyển sang `archive/`. Cây trên giả định host đã expose skills qua plugin nên không có `.agents/skills/`.
 
-Khi còn open, một change nằm trong `docs/agent-devkit/changes/<folder>/`; `review-and-verify` merge `delta.md` vào `docs/llm/` rồi chuyển folder sang `changes/archive/`. “Code changes” vẫn là các file trong Git diff — ví dụ `src/payments/refund.ts` và `test/payments/refund.test.ts`; `tasks.md`/`delta.md` ghi task và evidence, còn wiki page (`docs/llm/`) chỉ đổi sau khi delta đã verify và merge.
+Khi còn open, một change nằm trong `docs/agent-devkit/changes/<folder>/`; `document-wiki` merge `delta.md` vào `docs/llm/` trước final review; `review-and-verify` chỉ chuyển folder sang `changes/archive/` và sửa link sau khi review pass. “Code changes” vẫn là các file trong Git diff — ví dụ `src/payments/refund.ts` và `test/payments/refund.test.ts`; `tasks.md`/`delta.md` ghi task và evidence, còn wiki page (`docs/llm/`) chỉ đổi sau khi delta đã verify và merge.
 
 Nếu team cài skills trực tiếp trong project thay vì dùng plugin, `shop-api` có thêm cây này:
 
@@ -367,7 +388,7 @@ shop-api/
 ### So sánh hai yêu cầu trong cùng project
 
 - Nếu `shop-api` chỉ thêm flag `includeArchived` vào flow hiện có, đó là Bounded request không gắn với change hay plan legacy đang open. Nếu requirement trên wiki cần đổi, agent ghi `delta.md` trong change folder; nếu không có artifact cần ghi, không tạo folder. Sau đó implement và review.
-- Nếu thêm subsystem refund hoặc đổi payment boundary, đó là Architectural work. `design.md` và `tasks.md` nằm cùng change folder; `delta.md` chỉ xuất hiện khi requirement wiki cần đổi. Sau final review, folder chuyển sang `changes/archive/` và delta được merge vào `docs/llm/` khi có.
+- Nếu thêm subsystem refund hoặc đổi payment boundary, đó là Architectural work. `design.md` và `tasks.md` nằm cùng change folder; `delta.md` chỉ xuất hiện khi requirement wiki cần đổi. Delta được merge và tài liệu được cập nhật trước final review; sau khi review pass, folder chuyển sang `changes/archive/`.
 - Nếu có change open liên quan, follow-up sửa đúng folder đó. Plan legacy open vẫn sửa đúng file plan cũ. Sau khi archive hoặc plan legacy complete, việc mới đi lại qua brainstorm-feature.
 
 ### Folder chỉ xuất hiện khi có lý do
@@ -387,10 +408,10 @@ Yêu cầu: “Thêm giới hạn hoàn tiền không vượt quá số tiền �
 
 1. using-devkit định tuyến task. read-codebase-context tìm route/caller, service, state và test hiện có.
 2. brainstorm-feature xác định đây là thay đổi trong flow payments hiện hữu hay thay contract/subsystem. Nếu Bounded, agent làm design ngắn và chờ duyệt; nếu cần, viết `delta.md`. Nếu Architectural, agent làm design đầy đủ, tạo change folder với `design.md` và `delta.md`.
-3. Với Architectural path, plan-feature viết `tasks.md` cạnh `design.md`: nơi kiểm tra amount, cách cập nhật error response, test cho valid/invalid cases, cùng verification. Gate high-impact trong `tasks.md` là pending cho tới khi người dùng duyệt.
+3. Với Architectural path, plan-feature viết `tasks.md` cạnh `design.md`: nơi kiểm tra amount, cách cập nhật error response, test cho valid/invalid cases, cùng verification. Gate trong `tasks.md` là pending cho tới khi người dùng duyệt chung design và tasks.
 4. implement-task chỉ thực hiện task được duyệt; thêm/sửa test và ghi rõ verification.
 5. review-and-verify review diff, chạy test bắt buộc, xác nhận giới hạn và error path. Nếu fail, ghi blocker/spec gap, không archive.
-6. Khi pass, review-and-verify archive change: merge `delta.md` vào `docs/llm/` (nếu có) rồi chuyển folder sang `changes/archive/`; change không có delta chỉ move folder. document-wiki chỉ cần cho coverage ngoài delta. Nếu chưa có evidence thì ghi open question, không ghi requirement.
+6. Implementation tự gọi document-wiki Task updates để merge delta và hoàn tất tài liệu trong scope trước final review. Chỉ khi code, docs và checks pass mới archive; thiếu evidence cho behavior bắt buộc thì chưa complete.
 7. Change không có `Execution` field; completion là bước archive. Open legacy plan vẫn dùng `Execution`.
 
 Ví dụ change open còn task chưa xong: yêu cầu mới quay lại sửa đúng folder (`tasks.md`/`delta.md`). Nếu change đã archive, yêu cầu mới được brainstorm-feature phân loại lại; không sửa history.
@@ -399,7 +420,7 @@ Ví dụ change open còn task chưa xong: yêu cầu mới quay lại sửa đ�
 
 **“User đã duyệt design, vậy code luôn được chưa?”**
 
-Chưa chắc. Design approval cho phép lập `tasks.md`. Gate `Required: yes` trong `tasks.md` phải được duyệt riêng trước khi implement.
+Với Bounded, được: duyệt giải pháp trong chat là đủ. Với Architectural, chỉ khi người dùng đã duyệt chung `design.md` và `tasks.md` (`Status: approved`); một câu "ok" trước khi thấy `tasks.md` chưa tính.
 
 **“Test pass thì change complete chưa?”**
 
@@ -440,7 +461,7 @@ Không báo pass. Ghi cannot verify với evidence/command cụ thể còn thi�
 - Mỗi code change có test/check phù hợp và output mới đã đọc đầy đủ chưa?
 - Diff có thay đổi ngoài scope, thiếu caller/error path hoặc phá protected boundary không?
 - Nếu plan còn open, task mới được thêm đúng file; nếu complete, lịch sử có được giữ nguyên không?
-- Nếu behavior đã thay đổi, wiki impact đã được phân loại và document-wiki handoff đã rõ chưa?
+- Nếu có wiki và behavior bị ảnh hưởng, tài liệu trong scope đã được agent cập nhật và verify trước completion chưa?
 - Wiki requirement có ID, SHALL, scenario, evidence, source paths và prefix registry đúng không?
 - Folder/artifact nào cũng có lý do; không tạo placeholder, LOG mới hoặc tracking system thứ hai?
 - review-and-verify có result block rõ Evidence, Blockers, Spec gaps và Wiki action chưa?

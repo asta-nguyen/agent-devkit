@@ -16,6 +16,12 @@ OpenEZ, change `.gitignore`, or execute the remaining setup steps. In direct
 mode, run step 4's preflight before step 3 writes anything. This guard must run
 before any write.
 
+When called automatically for a code task by `using-devkit`, `brainstorm-feature`,
+or `plan-feature`, create only necessary missing repository context. Skip wiki
+skeleton creation unless the user explicitly requested wiki setup. An existing
+wiki remains available for Task updates. This task call is distinct from the
+wiki-only inline call above; direct user setup requests keep the full procedure.
+
 1. Check the exact status of `AGENTS.md`, `CLAUDE.md`, `CONVENTIONS.md`,
    `docs/llm/`, and `.gitignore`. Read every existing context or conventions
    file before writing anything. If the repository has no application source
@@ -53,7 +59,9 @@ before any write.
      ```
    - `CLAUDE.md`: a short repository-specific pointer to `AGENTS.md`; include
      extra instructions only when local evidence establishes them.
-   - `docs/llm/`: create the wiki skeleton with `AGENTS.md` and `INDEX.md`.
+   - `docs/llm/`: for direct setup or wiki-only inline calls, create the wiki
+     skeleton with `AGENTS.md` and `INDEX.md`; skip for a code-task call without
+     an explicit wiki-setup request.
      The generated `AGENTS.md` must match `document-wiki`'s current-source
      verification rules, distinguish verification limits from confirmed
      content gaps, and state that any existing log is legacy, not read or

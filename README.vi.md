@@ -2,12 +2,25 @@
 
 [English](README.md)
 
-Bộ workflow spec-driven, evidence-first cho coding agent — có semantic code
-retrieval, luồng context tiết kiệm token và các review gate rõ ràng.
+Bộ skill làm task cho coding agent: đọc repository, làm rõ quyết định cần
+thiết, code, check, cập nhật tài liệu liên quan và review.
 
-Biến một yêu cầu mơ hồ thành thay đổi có thể trace:
+**Hiểu task → thực hiện → review và hoàn tất.**
 
-![Năm bước từ truy hồi context đến verify](assets/readme-workflow-vi.png)
+Version 0.8.0 — xem [changelog](CHANGELOG.md) và [release notes](RELEASE_DESCRIPTION.md).
+
+Không cần nhớ tên skill. Chỉ cần giao task:
+
+```text
+Làm task này từ đầu đến cuối. Làm rõ behavior và edge cases còn mở,
+tóm tắt plan để duyệt, rồi code, verify, cập nhật tài liệu liên quan và review.
+Hỏi khi cần quyết định material. Không commit.
+```
+
+Thay đổi nhỏ, chính xác có thể làm sau impact check. Bounded feature duyệt
+giải pháp ngắn trong chat; Architectural dùng design.md và tasks.md, duyệt
+chung một lần. Agent tự gọi skill tiếp theo. Hướng dẫn chi tiết:
+[Tiếng Việt](GUIDE.vi.md) · [English](GUIDE.md).
 
 ## Năng lực chính
 
@@ -163,9 +176,9 @@ read-codebase-context                  # hiểu code trước khi thay đổi
 context-handoff                        # checkpoint khi phải tạm dừng
 document-wiki                          # document feature hiện có
 lean-audit                             # audit simplicity toàn repo; chỉ report
-brainstorm-feature → plan-feature      # công việc architectural: design → tasks
+brainstorm-feature → plan-feature      # design.md + tasks.md → duyệt chung một lần
 estimate-feature                       # estimate AI-assisted tùy chọn
-implement-task → review-and-verify     # implement, review và verify
+implement-task → review-and-verify     # code, check, tài liệu liên quan, final review
 systematic-debugging                   # điều tra trước khi fix bug
 ```
 
@@ -275,9 +288,9 @@ FFF không bắt buộc. Không có FFF, các skill dùng `rg` và vẫn đạt 
 | Skill | Mục đích |
 |---|---|
 | `brainstorm-feature` | Phân loại scope, làm rõ và xin design approval; Spike đi tới điều tra, Bounded tới implement, Architectural qua change folder. |
-| `plan-feature` | Viết `tasks.md` trong change Architectural đã duyệt; plan legacy vẫn ở vị trí cũ. |
+| `plan-feature` | Viết `tasks.md` cạnh `design.md`, tóm tắt plan và xin duyệt chung một lần; plan legacy giữ vị trí/gate cũ. |
 | `estimate-feature` | Estimate task trong change Architectural hoặc plan legacy khi được yêu cầu. |
-| `implement-task` | Thực thi task của change đã duyệt hoặc plan legacy; trace code, implement và verify. |
+| `implement-task` | Thực thi task đã duyệt, ghi progress/result, check code và tự cập nhật tài liệu liên quan trước final review. |
 | `systematic-debugging` | Tìm root cause, phân loại bug rồi fix hoặc hand off để design. |
 | `review-and-verify` | Review diff, chạy check và không claim hoàn tất nếu thiếu evidence mới. |
 
@@ -291,7 +304,7 @@ FFF không bắt buộc. Không có FFF, các skill dùng `rg` và vẫn đạt 
 
 | Skill | Mục đích |
 |---|---|
-| `document-wiki` | Xây domain baseline từ source, sau đó chọn feature chưa có trang hoặc có content gap đã xác minh. |
+| `document-wiki` | Tự cập nhật behavior bị task ảnh hưởng trong wiki hiện có; yêu cầu wiki độc lập vẫn dùng baseline inventory và chọn feature. |
 
 Deep pages chỉ dùng category có evidence: `architecture/` cho system structure,
 `domains/` cho state và requirements, `workflows/` cho user/operator flow,
@@ -304,18 +317,21 @@ Deep pages chỉ dùng category có evidence: `architecture/` cho system structu
 ### Feature mới
 
 ```text
-brainstorm-feature → làm rõ scope, phân loại và xin design approval
-  ├─ Spike          → điều tra và report
-  ├─ Bounded        → (delta.md nếu requirement cần ADDED/MODIFIED/REMOVED)
-  │                 → implement-task → review-and-verify
-  └─ Architectural  → changes/<folder>/ (design.md; delta.md nếu cần)
-                    → plan-feature (tasks.md) → implement-task
-                    → review-and-verify (archive)
+Làm rõ behavior và edge cases liên quan từ source
+  → Architectural: viết design.md + tasks.md (+ delta.md khi cần)
+  → Tóm tắt mục tiêu, scope, tasks, verify, tài liệu và rủi ro
+  → Duyệt chung một lần
+  → Code từng task, check, ghi progress/result
+  → Tự cập nhật tài liệu trong wiki hiện có; merge delta trước
+  → Final review code và tài liệu
+  → Review pass thì archive/sửa link và báo evidence
 ```
 
-`review-and-verify` archive change: merge `delta.md` vào `docs/llm/` (nếu có) rồi
-chuyển folder vào `changes/archive/`; change không có delta chỉ move folder. Dùng
-`document-wiki` cho coverage ngoài delta. USER COMMITS sau khi review pass.
+Agent tự xử lý các thao tác nội bộ. Người dùng trả lời quyết định material và
+duyệt giải pháp khi cần. Lỗi trong scope được sửa tiếp khi có tiến triển;
+agent dừng khi bị kẹt hoặc cần scope/quyết định mới. Setup trong task code chỉ
+tạo context cần thiết, không tự dựng wiki. Wiki setup là yêu cầu riêng;
+plan-only không tự bắt đầu code. Người dùng review diff rồi commit.
 
 ### Debug bug
 
@@ -327,6 +343,9 @@ systematic-debugging          → điều tra và phân loại
                               ↓
                               review-and-verify
 ```
+
+Khi implementation gọi debugging giữa task, debugging trả fix/check evidence
+về task đó; implementation sở hữu final review và archive.
 
 ### Document app hiện có
 

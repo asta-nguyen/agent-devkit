@@ -1,7 +1,8 @@
 # Spec self-review
 
 Use `docs/agent-devkit/INDEX.md` as the process-artifact index. Link a new
-change folder from `## Changes` (legacy designs stay linked from `## Designs`).
+change folder from `## Changes` after joint approval (legacy designs stay linked
+from `## Designs`).
 Follow the shared artifact naming rule in `using-devkit` (read it if it is not
 loaded). Follow its shared process-artifact link and wiki-boundary rules too. A
 design's `## Related context` may link only to existing `docs/llm/` pages read
@@ -36,16 +37,17 @@ Verified at: <output of `git rev-parse HEAD`, or "no commit exists">
 ```
 
 If the planned entry point or flow does not exist yet, keep these fields and
-write `Entry: no existing source; planned entry: <approved file + symbol>` and
-`Flow: no existing flow; planned flow: <approved flow>`. Use planned files,
-effects, and verification only from the approved design; label unspecified
-behavior `not specified in approved design`. Do not invent callers or present
-planned files as traced source impact.
+write `Entry: no existing source; planned entry: <design file + symbol>` and
+`Flow: no existing flow; planned flow: <design flow>`. Use planned files,
+effects, and verification only from the written design, labeling planned values
+`pending approval` before joint approval. Label unspecified behavior
+`not specified in design`. Do not invent callers or present planned files as
+traced source impact; this map does not authorize implementation.
 
 Capture `Verified at` from the repository's `HEAD` when the map is created. If
 there is no commit, write `no commit exists`; consumers must re-trace existing
 source. If the planned source does not exist yet, they use the source-less map
-rule in `read-codebase-context` and rebuild planned fields from the approved
+rule in `read-codebase-context` and rebuild planned fields from the written
 design instead of tracing a nonexistent flow.
 
 Flag and fix only issues that could change approved behavior, scope, plan
@@ -61,6 +63,7 @@ After writing the spec, review it with fresh eyes:
 3. **Scope check** — confirm it fits one implementation plan or decompose it.
 4. **Ambiguity check** — make each requirement admit one interpretation.
 
-Fix issues inline. Then present the spec and wait for the user's approval
-before creating or updating the index link; after approval, tell the user to
-invoke `plan-feature`.
+Fix issues inline. Then call `plan-feature`; it writes `tasks.md` and presents
+`design.md`, `tasks.md`, and any `delta.md` for one joint approval. There is no
+separate chat or design-only approval, and the index link is created only after
+that approval.

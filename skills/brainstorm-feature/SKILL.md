@@ -30,11 +30,12 @@ out loud so the user can override it:
 
 - **Architectural** — new projects, new subsystems, changes that restructure
   how components fit together or alter interfaces others depend on. Follow the
-  full process: questions, approaches, and a sectioned design. After approval
-  create a change folder under `docs/agent-devkit/changes/` (naming rule in
-  `using-devkit`; read it if it is not loaded), write `design.md` there, and
-  write `delta.md` when the delta condition holds, then tell the user to
-  invoke `plan-feature`.
+  full process: questions and approaches. Once material decisions are settled,
+  write the sectioned design straight to `design.md` in a change folder under
+  `docs/agent-devkit/changes/` (naming rule in `using-devkit`; read it if it is
+  not loaded), plus `delta.md` when the delta condition holds, then call
+  `plan-feature` to write `tasks.md`. The user approves `design.md`,
+  `tasks.md`, and any `delta.md` together, once.
 
 When in doubt between two paths, take the heavier one. Hidden complexity
 discovered mid-task upgrades the path — stop, say so, and step up. Nothing
@@ -95,23 +96,26 @@ downgrades mid-task.
    Do not require a unit-test runner without a concrete need. If the runtime,
    build tool, or first entry point is undecided, continue clarifying before
    presenting the design for approval.
-5. Present the design in short sections and ask for approval before planning.
-   Do not write production code while material decisions remain unresolved.
+5. Get one approval. For a Spike or Bounded task, present the design in chat
+   in short sections and ask for approval. For an Architectural task, skip the
+   chat approval: create the change folder, write `design.md` and any
+   `delta.md`, self-review them, and call `plan-feature`, which writes
+   `tasks.md` and presents all of them for one joint approval. The folder is
+   not indexed before that approval. If a delta targets a legacy
+   `## Business rules` page, use the affected pages named by the task as its
+   selection; after the `document-wiki` Task updates conversion, write
+   `delta.md` and continue. Do not write production code while material
+   decisions remain unresolved.
 6. After approval, follow the selected path:
    - Spike: investigate and report a recommendation; keep probe code throwaway.
    - Bounded: when the delta condition holds, write `delta.md` in a change
-     folder and index it under `## Changes`; then tell the user to invoke
-     `implement-task`.
-   - Architectural: create the change folder, write `design.md`, and write
-     `delta.md` when the delta condition holds. Self-review the design and any
-     delta, add the folder to `docs/agent-devkit/INDEX.md` under `## Changes`,
-     and present the written files. Then tell the user to invoke
-     `plan-feature`. Approval of the design authorizes `tasks.md`, not
-     execution of a high-impact plan that does not yet exist. An instruction
-     such as "implement it" given before the plan exists does not approve a
-     later `Required: yes` plan gate. If the target has no `AGENTS.md` or
-     application source, tell the user to invoke `setup-codebase` first so it
-     can create the initial repository contract from the approved design.
+     folder and index it under `## Changes`; then call `implement-task`.
+   - Architectural: `plan-feature` records the joint approval, indexes the
+     folder, calls `setup-codebase` when the target has no `AGENTS.md` or
+     application source, and then calls `implement-task`.
+
+   Whenever this skill stops for an answer or approval, end with the `Next:`
+   block from `using-devkit`.
 
 For follow-up work, apply the change lifecycle in `using-devkit`. If the
 related change is open, revise its files in place; do not create a new folder:
@@ -139,7 +143,8 @@ one is provided). Files and owners:
 - **Delta condition (the only one):** write `delta.md` only when a requirement
   in `docs/llm/` needs `ADDED`, `MODIFIED`, or `REMOVED`. New behavior needs
   `ADDED` when its domain already has a page; behavior in a domain with no page
-  is outside the change layer — write no delta, and report `Wiki impact: yes`.
+  needs no delta; after code checks, `document-wiki` creates scoped coverage
+  for that behavior before final review.
   Code that restores a correctly documented requirement needs none. A repository
   with no `docs/llm/` writes no delta. This applies the same way to
   Architectural, Bounded, explicit-change, and bug-fix work.
@@ -147,8 +152,10 @@ one is provided). Files and owners:
   table. An Architectural change always has `design.md` and `tasks.md`; a
   Bounded, explicit-change, or bug-fix change has a folder only when it needs a
   file there.
-- **Index:** when a change folder is created, add its link under `## Changes` in
-  `docs/agent-devkit/INDEX.md`; `review-and-verify` moves the link to
+- **Index:** add an Architectural folder under `## Changes` in
+  `docs/agent-devkit/INDEX.md` only after joint approval; keep an unapproved
+  draft unindexed. For Bounded, explicit-change, and bug-fix work, add the link
+  when the folder is created. `review-and-verify` moves the link to
   `## Archived changes` at archive.
 - **Ownership:** the design assigns each affected requirement to exactly one
   change. A delta never targets a requirement assigned to another open change.
@@ -158,11 +165,11 @@ one is provided). Files and owners:
   Requirements and wiki pages carry no issue IDs.
 - **Legacy target pages:** if a page the delta targets still uses
   `## Business rules`, the design names each page to convert, and conversion
-  through `document-wiki` happens before the delta is written. Design approval
-  is the page selection `document-wiki` requires; without an explicit
-  selection, stop. A page marked `[~]` as a `verification limit` cannot be
-  converted: stop and report the missing evidence. A bug fix asks the user to
-  select the page first. A request that needs a conversion is not eligible for
+  through `document-wiki` happens before the delta is written. Pages explicitly
+  identified as affected by the task are selected automatically for Task
+  updates; ask only when their scope or intended behavior is unclear. A page
+  marked `[~]` as a `verification limit` cannot be
+  converted: stop and report the missing evidence. A request that needs a conversion is not eligible for
   the explicit-change lane; use the Bounded path.
 - `design.md` uses the sectioned design and has no `## Execution` link, because
   `tasks.md` shares the folder.

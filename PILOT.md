@@ -54,14 +54,13 @@ You will use agent-devkit for two weeks. The agent chooses a route based on the 
 
 - Small bug in an existing flow: systematic-debugging (investigate and fix)
   → review-and-verify. If investigation reveals an interface, contract, or
-  architectural-boundary change, stop and switch to spec → plan before fixing.
+  architectural-boundary change, stop and switch to design.md + tasks.md before fixing.
 - Small feature in an existing flow: brainstorm-feature (short design in chat)
-  → approval → implement-task → review-and-verify. Do not create a spec or plan file.
+  → approval → implement-task → review-and-verify. Do not create design.md or tasks.md.
 - Exact, low-risk, non-bug change: brainstorm-feature checks the named scope and
   impact map; only an eligible change proceeds to implement-task without waiting.
-- Architectural change: brainstorm-feature writes a spec
-  → approval → plan-feature (approve the plan if its approval gate requires it)
-  → implement-task → review-and-verify.
+- Architectural change: brainstorm-feature writes design.md → plan-feature
+  writes tasks.md → one joint approval → implement-task → review-and-verify.
 
 You do not need to memorize skill names—describe the task and the agent will route it.
 
@@ -116,7 +115,7 @@ features.
 |---|---|
 | Bug fixes (through `systematic-debugging`) | 1–2 bugs |
 | Small features (bounded changes) | 1–2 tasks |
-| `document-wiki` | Once, if there is a new feature |
+| `document-wiki` Task updates | Automatic for affected task behavior in an existing wiki; standalone wiki setup remains optional |
 
 **Do not change the team's normal workflow**—just add the DevKit workflow to it.
 
