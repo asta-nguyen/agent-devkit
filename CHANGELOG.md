@@ -2,6 +2,72 @@
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-10-11
+
+### Changed
+
+- Summarize plans in chat before approval or a planning-only result: goal,
+  scope/impact, ordered tasks, verification, documentation, and risks/decisions,
+  with artifact links and a clear approval action. Repair handoffs still return
+  to their caller without an extra approval presentation.
+- Call the next skill directly after approval instead of asking the user to
+  retype a skill name; stop only at gates, questions, user-only actions, or a
+  stalled fix loop.
+- Separate route handoffs from repair handoffs: a skill called to fix another
+  skill's input (such as `plan-feature` from `estimate-feature`) returns to its
+  caller, and no skill starts implementation unless the user asked for it.
+  A repair `plan-feature` returns right after self-review, skipping the
+  estimate call and approval request; equivalent repairs preserve the gate,
+  while material revisions record the change and reset it to pending.
+  A directly invoked `estimate-feature`
+  presents its own result.
+- Update acceptance scenarios 1, 2, 15, 18, and 22 to the automatic handoff and
+  change-folder workflow.
+- End every stop or handoff with a `Next / Waiting on / Done when` block.
+- Track progress per task in `tasks.md` with `Progress: todo | done` and
+  `Result:`; `implement-task` marks a task done only after its check passes,
+  and handoffs name the current task. Revising a plan keeps existing task
+  progress; open plans written before this field get it backfilled from
+  current source and a fresh check before work resumes.
+- Replace the `using-devkit` routing map and bug classification with one
+  task-flow table (Spike, bug question, exact change, Bounded feature, Bounded
+  bug, Architectural), mirrored in both guides.
+- Architectural work gets one joint approval: `brainstorm-feature` writes
+  `design.md` (and any `delta.md`), calls `plan-feature` to write `tasks.md`,
+  and the user approves them together. A new `tasks.md` gate is only
+  `Status: pending | approved`; `Required`/`not-required` remain for legacy
+  plans and older open `tasks.md`. Re-approval is needed only for material
+  changes to scope, behavior, interfaces, schemas, or risk.
+- Planning and estimation can use written designs before joint approval,
+  labeling planned assumptions as pending approval without treating them as
+  existing source. Architectural draft folders stay unindexed until approval;
+  Bounded and bug-fix folders are indexed when created.
+- Clear, small changes must meet four objective conditions; anything else is
+  Bounded and needs a chat-design approval.
+- Replace the hard "two reviews then stop" limit: in-scope failures are fixed
+  and rerun until a blocker repeats with no new information, three fix
+  attempts fail, the fix needs out-of-scope work, or a user decision is needed.
+- Keep the user flow to understand → implement → review and finish.
+  Implementation automatically updates affected documentation in existing
+  wikis; Task updates uses task scope, diff, and caller evidence without a
+  separate page-selection gate or whole-wiki inventory.
+- Move the safe, resumable delta merge into document-wiki before final review.
+  Missing required task coverage blocks completion; archive only moves and
+  relinks after code and documentation checks pass. No wiki is created during
+  a code task when docs/llm/ is absent.
+- Replace obsolete README and Vietnamese guide charts with the current flow,
+  tables, and examples; remove their unused PNG/SVG assets.
+
+### Fixed
+
+- Check approval, lifecycle, and persisted decisions before any new-project
+  bootstrap writes application source.
+- Nested debugging returns fix/check evidence to implementation instead of
+  trying to final-review or archive an unfinished parent plan.
+- Code-task context setup does not create a wiki unless wiki setup was requested.
+- Equivalent revisions preserve approval and show the plan summary without
+  asking for another approval.
+
 ## [0.7.1] - 2026-10-11
 
 ### Fixed
