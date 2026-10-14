@@ -11,11 +11,12 @@ Never run this optional skill unless the user requests an estimate.
 ## Process
 
 1. Require a completed plan under `docs/agent-devkit/plans/`, or a change's
-   `tasks.md` under `docs/agent-devkit/changes/<folder>/`. If neither exists,
-   call `plan-feature` as a repair handoff only when the user also requested a
-   plan and a written `design.md` exists, then resume this estimate; otherwise
-   stop and request a plan. Never
-   estimate directly from a feature request.
+   `tasks.md` under `docs/agent-devkit/changes/<folder>/`. If neither exists
+   and the user also requested a plan with a written `design.md`, call
+   `plan-feature` as a route handoff: it writes the plan, calls this skill
+   before its approval gate, and presents both together. Otherwise stop and
+   request a plan. Use a repair handoff to `plan-feature` only to fix missing
+   detail in an existing plan. Never estimate directly from a feature request.
 2. Read `AGENTS.md`, the plan or `tasks.md`, the linked design, `delta.md`
    (when present), relevant wiki, source, and tests.
    Call the available Skill entry whose local name is `read-codebase-context`

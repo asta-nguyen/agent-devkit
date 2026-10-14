@@ -321,7 +321,7 @@ Thiết kế chia bốn phần: truth layer (format Requirements), change folder
 | `docs/agent-devkit/INDEX.md` | process | Process artifact đầu tiên được tạo | skill tạo artifact đầu tiên |
 | `docs/agent-devkit/specs/` | process (legacy) | Architectural design được duyệt (việc cũ) | brainstorm-feature |
 | `docs/agent-devkit/plans/` | process (legacy) | Sau khi spec được duyệt (việc cũ) | plan-feature |
-| `docs/agent-devkit/decisions/` | process | Quyết định của việc không thuộc change hay plan/spec active | implement-task |
+| `docs/agent-devkit/decisions/` | process | Quyết định legacy; chỉ đọc, quyết định mới vào `decisions.md` của change | không (legacy) |
 | `docs/agent-devkit/estimates/` | process | Estimate được yêu cầu cho plan legacy | estimate-feature |
 | `docs/agent-devkit/handoffs/` | process | Checkpoint của việc không thuộc change folder | context-handoff |
 | `docs/agent-devkit/changes/<folder>/` | process | Change còn open: Architectural có `design.md` và `tasks.md`, thêm `delta.md` khi cần; Bounded chỉ có `delta.md` khi cần. Bounded không có artifact thì không tạo folder. `estimate.md` cần `tasks.md`; decision và handoff tùy chọn nằm cùng folder | brainstorm-feature, plan-feature, implement-task |
@@ -393,7 +393,7 @@ shop-api/
 
 ### Folder chỉ xuất hiện khi có lý do
 
-- `docs/agent-devkit/decisions/`: việc không thuộc change hay plan/spec active nhưng có quyết định cần lưu. Nếu có change, dùng `decisions.md` trong folder; material change cũng cập nhật Decision Log của `tasks.md`.
+- `docs/agent-devkit/decisions/`: legacy, chỉ đọc. Quyết định mới vào `decisions.md` của change (tạo và index folder nếu chưa có); material change với `tasks.md` đi qua `plan-feature`.
 - `docs/agent-devkit/estimates/`: chỉ khi người dùng yêu cầu estimate cho plan ngoài change folder. Estimate của change nằm cạnh `tasks.md` dưới tên `estimate.md`.
 - `docs/agent-devkit/handoffs/`: checkpoint ngoài change folder; work thuộc change dùng `handoff.md` trong folder.
 - Các category dưới `docs/llm/` như `domains/`, `workflows/`, `integrations/` hoặc `operations/`: chỉ tạo khi có trang wiki thực sự thuộc category đó. `architecture/overview.md` là baseline map khi workflow wiki cần tạo nó.

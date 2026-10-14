@@ -2,6 +2,30 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Add `document-wiki`'s Convert a legacy target page procedure, which
+  `brainstorm-feature`, `systematic-debugging`, and `using-devkit` now call
+  before writing a delta against a `## Business rules` page.
+- Delta merge decides a `REMOVED` block's state by content only, so partial
+  merges recover instead of stopping; failed pre-merge checks now return a
+  blocker to the caller.
+- New persistent decisions go to the change folder's `decisions.md` (indexed
+  when created); `docs/agent-devkit/decisions/` is legacy, read-only.
+- A Bounded approval is recorded durably: an `Approved:` line in `delta.md`,
+  or an `Approval:` line in the handoff; a resumed session without one
+  re-presents the design.
+- A material decision during implementation routes `tasks.md` revisions and
+  re-approval through `plan-feature`, which resumes `implement-task` after
+  approval.
+- A bounded bug whose review fails uses `implement-task`'s fix loop and stop
+  conditions; the Architectural bug handoff uses the `design.md` + `tasks.md`
+  joint approval.
+- `estimate-feature` with no plan hands off to `plan-feature` as a route
+  handoff, so the new plan is presented for approval with its estimate.
+- Document OpenCode version pinning and cache refresh; map OpenCode file edits
+  to `edit`/`write`.
+
 ## [0.8.0] - 2026-10-11
 
 ### Changed

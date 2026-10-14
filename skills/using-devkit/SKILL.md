@@ -106,8 +106,8 @@ exists. After a change is archived, start a new change.
 Keep archived changes, completed legacy plans, and legacy specs as history:
 correct factual errors when needed, but do not add requirements, tasks, or
 results to them. A delta only targets a page already in the `## Requirements`
-format; convert a legacy `## Business rules` page through `document-wiki`
-before the delta names its IDs. The task's explicitly identified affected
+format; convert a legacy `## Business rules` page through `document-wiki`'s
+Convert a legacy target page before the delta names its IDs. The task's explicitly identified affected
 page is its selection; standalone wiki work keeps its own selection gate.
 
 ## Team Git workflow
@@ -153,7 +153,7 @@ Other routes:
 | First visit or missing repository conventions | `setup-codebase` |
 | Set up or refresh OpenEZ when needed and approved | `setup-openez` |
 | Understand affected code and callers | `read-codebase-context` |
-| Revise an open change's `tasks.md` or an open legacy plan | `plan-feature` |
+| Revise an open change's `tasks.md` or an open legacy plan, including a material decision found during implementation | `plan-feature` |
 | Revise an open Bounded change's `delta.md` | `brainstorm-feature` |
 | Resume an approved design, tasks, or legacy plan | `implement-task` → `review-and-verify` |
 | Per-task AI estimate, when requested | `estimate-feature` |

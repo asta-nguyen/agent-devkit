@@ -184,7 +184,8 @@ only when writing the plan.
    and ask for one approval. Stop without editing
    application code. Revise the files in place until the user explicitly
    approves them; then set `Status: approved`, add the folder under
-   `## Changes` in `docs/agent-devkit/INDEX.md`, and continue: call
+   `## Changes` in `docs/agent-devkit/INDEX.md` when it is not already listed
+   (creating the heading if missing), and continue: call
    `setup-codebase` first when the target has no `AGENTS.md` or application
    source, then `implement-task`. That approval is the gate, so do not ask
    again. If the user limited the request to design or planning, record the

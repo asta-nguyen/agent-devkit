@@ -107,8 +107,8 @@ You must complete each phase before proceeding to the next.
      not classify the bug. Proceed to step 2.
    - **Architectural** — the fix changes a shared interface, contract, or
      component boundary, or spans multiple components. Stop fixing and call
-     `brainstorm-feature` to produce a spec, then `plan-feature` for an
-     execution plan, before any fix. Do not patch an architectural bug as if
+     `brainstorm-feature`, which writes `design.md` and has `plan-feature`
+     write `tasks.md` for one joint approval, before any fix. Do not patch an architectural bug as if
      it were bounded; the verify plan in step 3 cannot cover cross-component
      regression surface that was never spec'd. For a repair inside an active
      implementation, return this diagnosis to the caller instead of starting
@@ -161,8 +161,8 @@ You must complete each phase before proceeding to the next.
    `## Change folder and delta` section, and index the folder under `## Changes`
    in `docs/agent-devkit/INDEX.md`; a fix that only restores correctly
    documented behavior writes no delta. If the target page still uses
-   `## Business rules`, use the affected page as the task's selection and convert it through
-   `document-wiki` before writing the delta; stop if it is marked
+   `## Business rules`, convert it through `document-wiki`'s Convert a legacy
+   target page before writing the delta; stop if it is marked
    `verification limit`. After the code checks pass, call `document-wiki`'s
    Task updates procedure when the existing wiki needs an in-scope update or
    delta merge. If no wiki exists, skip without setup. Then call the
@@ -171,7 +171,11 @@ You must complete each phase before proceeding to the next.
    task coverage or a page that contradicts the fix remains a blocker until
    refreshed and verified. Do not update the
    wiki when it already correctly describes the intended behavior and the fix
-   only restores code to that behavior.
+   only restores code to that behavior. If the review returns `Status: fail`,
+   apply `implement-task`'s After implementation step 3: fix in-scope blockers,
+   rerun the check and review, and stop under its stop conditions. A blocker
+   whose fix changes a shared interface, contract, or component boundary
+   reclassifies the bug as Architectural under Phase 4 step 1.
 10. Do not create commits during debugging. Even when the user requests a
     commit, wait until final `review-and-verify` passes.
 11. When debugging stops before review (a Diagnostic investigation result, an

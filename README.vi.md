@@ -133,6 +133,10 @@ Restart OpenCode sau khi đổi config. Plugin đăng ký các skill đi kèm v�
 `using-devkit` vào user message đầu tiên. Adapter hiện nhắm tới OpenCode 1.x;
 OpenCode V2 sẽ cần adapter plugin API riêng khi V2 trở thành release được hỗ
 trợ.
+Để pin một release, thêm tag vào URL (ví dụ `agent-devkit.git#v0.8.0`).
+OpenCode cache mỗi URL trong `~/.cache/opencode/packages/`, nên tag đã pin
+không tự cập nhật: đổi tag để nâng cấp. Với URL không pin, xóa folder cache
+tương ứng rồi restart để lấy bản mới nhất.
 
 ### Cài skill trực tiếp vào project
 

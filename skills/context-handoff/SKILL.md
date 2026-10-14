@@ -39,6 +39,7 @@ Do not create handoffs for short tasks that are already complete.
    ## State
    - Phase: <brainstorm | plan | implement | verify | document>
    - Current task: <first `tasks.md` task not `done`, or none>
+   - Approval: <`tasks.md` gate status | Bounded design approved YYYY-MM-DD — <one-line design> | none>
    - Status: <what is complete and what is in progress>
 
    ## Decisions

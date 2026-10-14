@@ -294,9 +294,9 @@ First, answer an implementation-only choice that changes no observable
 behavior. Pass when the agent restates it as `Decision D<n>` and continues
 without creating an artifact. Then answer a question that changes observable
 behavior. With an active plan, pass when the agent appends the answer, impact,
-and confirmation date to its `## Decision Log`; without a plan/spec, pass when
-it creates one task-scoped file under `docs/agent-devkit/decisions/` and links
-it from `docs/agent-devkit/INDEX.md`. Change a public API or schema and pass
+and confirmation date to its `## Decision Log`; for a change, pass when it
+appends to the change folder's `decisions.md`, creating the folder and its
+`## Changes` link in `docs/agent-devkit/INDEX.md` when none exists. Change a public API or schema and pass
 only when the approval gate returns to `Status: pending` before more
 application edits. A resumed session must read the persisted decision source,
 and `review-and-verify` must check implementation against it. No proposed

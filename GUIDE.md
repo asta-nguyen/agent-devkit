@@ -696,7 +696,7 @@ is global or mandatory: each entry appears only when its condition holds.
 | `docs/agent-devkit/INDEX.md` | process | First process artifact exists | whichever skill creates it |
 | `docs/agent-devkit/specs/` | process (legacy) | Approved architectural design (legacy work) | `brainstorm-feature` |
 | `docs/agent-devkit/plans/` | process (legacy) | After spec approval (legacy work) | `plan-feature` |
-| `docs/agent-devkit/decisions/` | process | Decision for work outside an active change or plan/spec | `implement-task` |
+| `docs/agent-devkit/decisions/` | process | Legacy decisions; read only, new decisions go to a change's `decisions.md` | none (legacy) |
 | `docs/agent-devkit/estimates/` | process | User-requested estimate for a legacy plan | `estimate-feature` |
 | `docs/agent-devkit/handoffs/` | process | Checkpoint for work outside an active change | `context-handoff` |
 | `docs/agent-devkit/changes/<name>/` | process | Open change: Architectural has `design.md` and `tasks.md`, with `delta.md` only when needed; Bounded has `delta.md` only when needed. A Bounded change with no artifact has no folder. Optional `estimate.md` (when `tasks.md` exists), `decisions.md`, and `handoff.md` stay alongside them. | `brainstorm-feature`, `plan-feature`, `implement-task` |
@@ -743,9 +743,10 @@ category folders appear only when a real page needs them.
   `approved`; the agent must not ask twice.
 - **User clarifications become explicit decisions.** Implementation-only
   choices stay in the current session. Observable behavior or requirement
-  changes go into the active plan/spec `## Decision Log`; bounded tasks without
-  one create a task-scoped file under `docs/agent-devkit/decisions/`. Material
-  changes reset the approval to `pending`.
+  changes go into the change's `decisions.md` (creating and indexing the change
+  folder when needed) or a legacy plan/spec `## Decision Log`. Material changes
+  to `tasks.md` go back through `plan-feature`, which resets the approval to
+  `pending`.
 - **Plans carry approved constraints forward.** `## Global Constraints` copies
   cross-task rules from the design, or says `None.`; edge
   cases map to concrete tasks and checks.

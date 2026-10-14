@@ -54,12 +54,16 @@ Steps 1-2 gather context only.
 
    Approval given before the approved files existed does not satisfy a gate.
    Without a plan, require an approved bounded design from `brainstorm-feature`;
-   otherwise call `brainstorm-feature` before editing. An
+   otherwise call `brainstorm-feature` before editing. That approval counts only
+   from the current conversation, a `delta.md` `Approved:` line, or a handoff's
+   `Approval:` line; a resumed session with none of these re-presents the design
+   through `brainstorm-feature`. An
    eligible explicit-change notice from `brainstorm-feature` satisfies this
    bounded-design gate. If implementation uncovers impact outside the user's
    named scope, stop and return to that approval gate before continuing.
-4. Read the active plan/spec's `## Decision Log` and any task-linked decision
-   file listed in `docs/agent-devkit/INDEX.md`. Conversation memory is not a
+4. Read the change's `decisions.md` and `tasks.md` `## Decision Log` when they
+   exist, or a legacy plan/spec's `## Decision Log` and any task-linked legacy
+   decision file listed in `docs/agent-devkit/INDEX.md`. Conversation memory is not a
    durable decision source. If the current conversation contains a newer user
    answer, persist it through the clarification flow below before using it.
 5. After tracing the real flow, apply this implementation ladder in order and
@@ -136,19 +140,15 @@ When implementation needs a user answer before it can continue:
    scope. Do not create an artifact for it.
 3. Persist every answer that changes observable behavior or an approved
    requirement:
-   - When a change folder exists, append the decision to its `decisions.md`
-     (create it on the first persistent decision) and, for a material change
-     when `tasks.md` exists, also update `tasks.md`'s `## Decision Log` and
-     approval gate.
+   - For a change, append the decision to its `decisions.md`. When the folder
+     does not exist yet (a Bounded or explicit change with no delta), create
+     `docs/agent-devkit/changes/YYYY-MM-DD-<issue-id>-<slug>/decisions.md`
+     under the shared naming rule in `using-devkit` and index the folder under
+     `## Changes` in `docs/agent-devkit/INDEX.md`, creating that heading if
+     missing. A material change to an existing `tasks.md` follows step 4.
    - When a legacy plan or spec exists, append the decision to its
-     `## Decision Log`.
-   - For a bounded task with no plan/spec, create a decision file only when
-     the first persistent decision occurs, at
-     `docs/agent-devkit/decisions/YYYY-MM-DD-<slug>.md`. Follow the shared
-     artifact naming rule in `using-devkit` (read it if it is not loaded). Link
-     it under `## Decisions` in `docs/agent-devkit/INDEX.md` and to the task
-     issue or related artifact when one exists, following the shared
-     process-artifact link rule in `using-devkit`.
+     `## Decision Log`. Existing files under `docs/agent-devkit/decisions/`
+     are legacy: read them, but create no new ones.
 
    After persisting the decision, optionally use `memory_write` to store only
    its title and file path; never make memory the only copy. At session start,
@@ -167,13 +167,14 @@ When implementation needs a user answer before it can continue:
    Confirmed by user: YYYY-MM-DD
    ```
 
-4. If the answer materially changes an active approved design, an open change,
-   or an open legacy plan, update the affected artifact and re-evaluate the
-   approval gate. When the change is material (scope, observable behavior,
-   interface, schema, or risk), set `Status: pending` (and, for a legacy plan,
-   reset `Required` and `Reason`), then stop for approval. If a bounded
-   task expands beyond its approved design, call `brainstorm-feature` instead
-   of silently widening scope.
+4. If the answer materially changes scope, observable behavior, an interface,
+   a schema, or risk, stop editing code. For an open `tasks.md` or legacy plan,
+   call `plan-feature` as a route handoff to revise it; `plan-feature` records
+   the decision log entry, resets the gate to pending, presents the revision,
+   and resumes this skill after re-approval. For a change to `design.md` or
+   `delta.md`, or when a bounded task expands beyond its approved design, call
+   `brainstorm-feature` instead of silently widening scope. A non-material
+   answer only needs the decision record from step 3.
 5. Follow the shared process-artifact/wiki boundary in `using-devkit` (read it
    if it is not loaded). Keep `docs/llm/` for verified implemented behavior.
 

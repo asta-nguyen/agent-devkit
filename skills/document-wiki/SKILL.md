@@ -60,6 +60,26 @@ needed. Standalone wiki requests still use the Workflow and its selection gate.
    Implementation and final review own those actions; there is no new artifact
    or user handoff for documentation.
 
+## Convert a legacy target page
+
+Use this when a design or bug fix must write a delta against a page that still
+uses `## Business rules`. It runs before the delta is written and before any
+code exists; the task's named affected page is its selection. Conversion
+changes format only, not behavior, so it needs no other approval.
+
+1. Apply Workflow step 1's instruction preflight and read the page,
+   `docs/llm/INDEX.md`, and the page's current sources and tests.
+2. Verify each existing rule against current source. If any rule cannot be
+   verified, mark the page `[~]` as a `verification limit`, leave it
+   unchanged, and return the exact missing evidence; the caller stops.
+3. Convert the verified page per
+   `references/evidence-matrix-and-page-template.md`, reusing or registering
+   its prefix under Workflow step 8. A rule that is contradicted by source is a
+   `confirmed content gap`: report it to the caller; do not silently fix it.
+4. Run Workflow step 9's link, requirement, and validator checks on the page,
+   then return the new requirement IDs to the caller, which writes `delta.md`
+   against them.
+
 ## Merge a task delta
 
 Use this only when a delta exists and the code checks pass. Without a delta,
@@ -77,11 +97,15 @@ this is the existing merge procedure, including partial-merge recovery.
    exist yet is valid only as an `ADDED` target in a registered domain. No
    `ADDED` ID appears in `## Retired requirement IDs`. No other open change
    folder visible in this branch targets the same ID in its `delta.md`.
+   If any check fails, stop without editing and return the failing item to the
+   caller as a blocker.
 2. **Decide merge state block by block.** Compare each delta block with
    `docs/llm/`. Before merge, an `ADDED` ID is absent and a `MODIFIED` or
    `REMOVED` wiki block equals its `Baseline:` exactly; after merge, `ADDED`
    `Requirement:` and `MODIFIED` `Replacement:` blocks match the wiki exactly and
-   `REMOVED` IDs are absent and listed as retired. A `MODIFIED`/`REMOVED` block
+   a `REMOVED` block's ID is absent from every page. Merge state depends on
+   block content only; retired IDs, `## Sources`, index entries, and links are
+   side effects that step 3 completes. A `MODIFIED`/`REMOVED` block
    matching neither its baseline nor the after-merge state was changed by another
    branch: never overwrite or delete it. The `Merged into docs/llm/` marker is a
    trace, not the only evidence. When every block is either before or after

@@ -103,13 +103,15 @@ downgrades mid-task.
    `tasks.md` and presents all of them for one joint approval. The folder is
    not indexed before that approval. If a delta targets a legacy
    `## Business rules` page, use the affected pages named by the task as its
-   selection; after the `document-wiki` Task updates conversion, write
+   selection; after `document-wiki`'s Convert a legacy target page, write
    `delta.md` and continue. Do not write production code while material
    decisions remain unresolved.
 6. After approval, follow the selected path:
    - Spike: investigate and report a recommendation; keep probe code throwaway.
    - Bounded: when the delta condition holds, write `delta.md` in a change
-     folder and index it under `## Changes`; then call `implement-task`.
+     folder with its `Approved:` line and index it under `## Changes`; then
+     call `implement-task`. Without a folder, the approval lives only in this
+     conversation; `context-handoff` records it if the work pauses.
    - Architectural: `plan-feature` records the joint approval, indexes the
      folder, calls `setup-codebase` when the target has no `AGENTS.md` or
      application source, and then calls `implement-task`.
@@ -165,9 +167,9 @@ one is provided). Files and owners:
   Requirements and wiki pages carry no issue IDs.
 - **Legacy target pages:** if a page the delta targets still uses
   `## Business rules`, the design names each page to convert, and conversion
-  through `document-wiki` happens before the delta is written. Pages explicitly
-  identified as affected by the task are selected automatically for Task
-  updates; ask only when their scope or intended behavior is unclear. A page
+  through `document-wiki`'s Convert a legacy target page happens before the
+  delta is written. Pages explicitly identified as affected by the task are
+  selected automatically; ask only when their scope or intended behavior is unclear. A page
   marked `[~]` as a `verification limit` cannot be
   converted: stop and report the missing evidence. A request that needs a conversion is not eligible for
   the explicit-change lane; use the Bounded path.
@@ -180,6 +182,7 @@ one is provided). Files and owners:
 # Delta
 
 Issue: ENG-123
+Approved: 2026-10-14 — partial refunds allowed up to the remaining amount
 
 ## ADDED Requirements
 
@@ -237,9 +240,12 @@ Baseline:
 
 Delta rules:
 
-- Metadata (`Issue:`, `Page:`, `Search:`, `Previously:`, `Reason:`, and the
-  labels `Requirement:`, `Baseline:`, `Replacement:`) sits outside the
-  four-backtick blocks and is never copied to the wiki. Only a fenced block is a
+- Metadata (`Issue:`, `Approved:`, `Page:`, `Search:`, `Previously:`,
+  `Reason:`, and the labels `Requirement:`, `Baseline:`, `Replacement:`) sits
+  outside the four-backtick blocks and is never copied to the wiki.
+  `Approved: YYYY-MM-DD — <one-line design>` records a Bounded chat approval;
+  Architectural deltas omit it because their gate lives in `tasks.md`;
+  explicit-change and bug-fix deltas omit it too. Only a fenced block is a
   wiki block: it starts at its `### <ID>` heading and is copied and compared
   unchanged. `ADDED` has one `Requirement:` block, `MODIFIED` has `Baseline:`
   and `Replacement:`, and `REMOVED` has one `Baseline:`.

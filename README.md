@@ -129,6 +129,10 @@ add the Git-backed plugin:
 
 Restart OpenCode after changing the config. The plugin registers the bundled
 skills and injects `using-devkit` into the first user message.
+To pin a release, append its tag (for example `agent-devkit.git#v0.8.0`).
+OpenCode caches each URL under `~/.cache/opencode/packages/`, so a pinned tag
+never updates by itself: change the tag to upgrade. For an unpinned URL, delete
+its cached folder there and restart to fetch the latest version.
 The current adapter targets OpenCode 1.x; OpenCode V2 will require its separate
 plugin API adapter when V2 becomes the supported release.
 
