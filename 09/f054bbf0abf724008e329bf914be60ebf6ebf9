@@ -1,0 +1,199 @@
+skills/brainstorm-feature/SKILL.md
+  s_ffd781e045846a::t_5c6f2d81c1047f 3,123-124
+  s_ffd781e045846a::t_a905caff261b93 135,151,163,175
+  s_ffd781e045846a::t_e2d812c5f56590 86-88
+  s_ffd781e045846a::t_525bdadcc1f073 27-28,35-36,100-101,105-111,116-118,141-143,145-150,164-167
+  s_ffd781e045846a::t_63d79b90ae758e 33-34,77-80,103-104
+  s_ffd781e045846a::t_4821d31de13732 122,136-138
+  s_ffd781e045846a::t_e03ec5ad2a3216 153-154
+skills/plan-feature/SKILL.md
+  s_ffd781e045846a::t_32f7165693bb12 8-30,34-57,62-92,94-97,101-106,110-131
+  s_16c1313fc010fd::t_39e48d2e590b10 58-61
+  s_ffd781e045846a::t_5c6f2d81c1047f 3
+tests/plugin-smoke.mjs
+  s_ffd781e045846a::t_b3b8a62e2a02a2 18
+  s_ffd781e045846a::t_a8fd6438678fcd 66,68-72,101,108-115,121-122,130
+  s_ffd781e045846a::t_c9aad3ec3f1209 14-17
+  s_ffd781e045846a::t_16d6fcb0163579 12-13,19-65,67,73,75,78-100,102-107,116-120,123-128,132-159
+  s_ffd781e045846a::t_f27b39ef9d57bf 129,131
+  s_ffd781e045846a::t_693588cf60dc18 160
+skills/setup-codebase/SKILL.md
+  s_ffd781e045846a::t_82df70ca6a76f7 11,13-17
+  s_338a1e41378ce7::t_94c5bd996098b0 22-23
+  s_ffd781e045846a::t_6ec77d18d200ec 105
+skills/estimate-feature/SKILL.md
+  s_ffd781e045846a::t_6ec38b8f8776a1 3,13
+  s_ffd781e045846a::t_19e3880d079000 101
+  s_ffd781e045846a::t_5c6f2d81c1047f 90-91
+  s_ffd781e045846a::t_1f14f3747d057a 23-26
+skills/read-codebase-context/SKILL.md
+  s_ffd781e045846a::t_9143d751ad0f7e 10-11,29
+  s_ffd781e045846a::t_53aca7e8b01969 65-67,94-97
+  s_ffd781e045846a::t_5c6f2d81c1047f 12
+  s_ffd781e045846a::t_31c10fb04acbf8 30
+README.md
+  s_ffd781e045846a::t_ae0b555e1593ad 361
+  s_16c1313fc010fd::t_39e48d2e590b10 20-26,349-355
+skills/document-wiki/references/evidence-matrix-and-page-template.md
+  s_ffd781e045846a::t_092b20e77bed0d 3-4
+skills/brainstorm-feature/references/delta-format.md
+  s_ffd781e045846a::t_092b20e77bed0d 7-8,71
+  s_ffd781e045846a::t_e03ec5ad2a3216 1-6,9-70,72-77,79-111
+  s_ffd781e045846a::t_a905caff261b93 78
+README.vi.md
+  s_16c1313fc010fd::t_39e48d2e590b10 20-25,338-343
+  s_ffd781e045846a::t_ae0b555e1593ad 349
+.agents/skills/writing-skills/SKILL.md
+  s_ffd781e045846a::t_96cd0aac3d7366 109-129
+  s_ffd781e045846a::t_67c22c917b58f0 58,60-64,67,70-71,75,77,79,156-158,160-169,178,187,200
+skills/context-handoff/SKILL.md
+  s_ffd781e045846a::t_033b5e091df682 28-29,41,76-83
+  s_ffd781e045846a::t_e61cabbfcdfc6c 31-32
+  s_ffd781e045846a::t_6751e3546ccae7 24-25
+  s_ffd781e045846a::t_5c6f2d81c1047f 70-71
+skills/systematic-debugging/SKILL.md
+  s_ffd781e045846a::t_03386c7e1e4858 14-15,22-25,29-34,38,40-43,45-55,59-61,65-71,75-85,87-110,112-117,119-121,124-125,127-131,133-138,142-143,146-148,153-154,158-165
+  s_ffd781e045846a::t_5c6f2d81c1047f 122-123,132
+EVALS.md
+  s_ffd781e045846a::t_8e3bc6648440b7 324-326
+  s_ffd781e045846a::t_43654be4a8ed98 1024-1025
+  s_ffd781e045846a::t_2d3e7bdadbcced 105-106,323
+  s_ffd781e045846a::t_c7793d03fe2148 722
+  s_ffd781e045846a::t_8552d710c7f03c 721,945
+  s_ffd781e045846a::t_0aae4db2ffa608 12-13,406,412,714,778,884
+  s_ffd781e045846a::t_b3209a23e440f8 28-31
+  s_ffd781e045846a::t_a9de5468001cb9 9-11,14-27,32-53,63,94,205,313,388,868
+  s_ffd781e045846a::t_cc7eeb05bd4d2d 101-104,207-209,212-225,318-322,349-353,366,368-369,672-677
+skills/brainstorm-feature/references/spec-self-review.md
+  s_ffd781e045846a::t_e03ec5ad2a3216 14-15
+  s_ffd781e045846a::t_a905caff261b93 17-22
+  s_ffd781e045846a::t_5c6f2d81c1047f 3-5
+skills/review-and-verify/SKILL.md
+  s_ffd781e045846a::t_5c1e9afce8d6e1 35-40,125-127
+  s_ffd781e045846a::t_2b496daea962d7 11-12,41-43,59-61,89-90,155-156,167-170,215
+  s_ffd781e045846a::t_6713c8c684867b 184-187,200-204
+  s_ffd781e045846a::t_8deef5ec0ddec3 55,57-58,76-77,120
+  s_ffd781e045846a::t_2440be3a2a0059 8-10,13,33-34,51,56,75,100,128-130,139,141-142,144,149,174-181,183,208-212
+  s_ffd781e045846a::t_e729978e91ad77 25-32,106-115,131-133,145-148,157-158
+  s_ffd781e045846a::t_dad1776d7f85ac 44
+  s_ffd781e045846a::t_dfb80fc2ad3596 21
+  s_ffd781e045846a::t_c73d797f4d7efe 62-74,162-166
+  s_ffd781e045846a::t_1f1489b0841dc6 150-154
+  s_ffd781e045846a::t_50adac58b3c255 205-206
+  s_ffd781e045846a::t_1eb1bcd6da79d8 45-47
+  s_ffd781e045846a::t_d3c83ace26e29a 213
+  s_ffd781e045846a::t_c3544e768867e7 81-82,123-124,214
+  s_ffd781e045846a::t_97d3f68311e60f 207
+skills/implement-task/SKILL.md
+  s_ffd781e045846a::t_a905caff261b93 132
+  s_ffd781e045846a::t_3f663787f6dcbb 14-18,23-28,44-53
+  s_ffd781e045846a::t_9e70062ab5df7c 173-175,177-179
+  s_ffd781e045846a::t_caafd0d3f84001 182-184,190,192
+  s_ffd781e045846a::t_aef9d36f853040 83-86,88-90,94-97
+  s_ffd781e045846a::t_87fbe215ee4764 107-108
+  s_ffd781e045846a::t_0a3057dff3d2f5 191
+  s_ffd781e045846a::t_788d4831330874 36-38,54-78,82,87,99,131,133-135
+  s_ffd781e045846a::t_c6d73e40794672 40,42
+  s_ffd781e045846a::t_ab002ae749c7bf 117,165-168,170
+  s_ffd781e045846a::t_2d7ab5f5916151 127-129
+  s_ffd781e045846a::t_c77e9de388badf 10-12,20-22,103-106,116,118-119,137-139,185-189
+  s_338a1e41378ce7::t_c5f571b1160f77 34-35
+  s_ffd781e045846a::t_adc19472dc10d7 13
+  s_ffd781e045846a::t_b4108427d422b5 39
+  s_ffd781e045846a::t_f27a69d353568b 43
+  s_ffd781e045846a::t_49fa288ee1a276 136
+skills/lean-audit/SKILL.md
+  s_ffd781e045846a::t_82df70ca6a76f7 55-56
+skills/document-wiki/references/inventory-and-report.md
+  s_ffd781e045846a::t_7033dd00ce1e79 32-33
+  s_ffd781e045846a::t_bb657022fad342 1-31,34-61
+skills/plan-feature/references/tasks-template.md
+  s_ffd781e045846a::t_c3f3b57c99bf84 1-4,6-52,54-98
+  s_ffd781e045846a::t_a8fd6438678fcd 5
+  s_16c1313fc010fd::t_39e48d2e590b10 53
+CHANGELOG.md
+  s_338a1e41378ce7::t_2dde1a768b883f 34-37
+  s_ffd781e045846a::t_090957597e9581 7-12
+  s_ffd781e045846a::t_fe42c237064774 5-6,13-33,38-43
+skills/using-devkit/references/legacy.md
+  s_ffd781e045846a::t_c9df1dbe654102 4-7,43-45
+  s_ffd781e045846a::t_f7311c6968bd1e 1-3,8-42,46-59
+skills/document-wiki/references/legacy-conversion.md
+  s_ffd781e045846a::t_d3e7e8c57c0389 1-18
+GUIDE.vi.md
+  s_ffd781e045846a::t_ae0b555e1593ad 5-10,12-18,199
+  s_16c1313fc010fd::t_282a83f15790b9 180
+  s_ffd781e045846a::t_43654be4a8ed98 11
+  s_ffd781e045846a::t_090957597e9581 248
+skills/document-wiki/references/merge-task-delta.md
+  s_ffd781e045846a::t_d3e7e8c57c0389 1-79
+GUIDE.md
+  s_ffd781e045846a::t_0aae4db2ffa608 212,470-471,473-474
+  s_ffd781e045846a::t_5c6f2d81c1047f 472
+  s_ffd781e045846a::t_4cdb2983b018b6 7-13,15-22,522-524,528,657-659,771-776
+  s_16c1313fc010fd::t_282a83f15790b9 282-285
+  s_ffd781e045846a::t_43654be4a8ed98 14
+skills/document-wiki/SKILL.md
+  s_ffd781e045846a::t_a46389cf6d2289 35-36,45-48,55,57-59
+  s_ffd781e045846a::t_5767a98cd1f855 9,184-185
+  s_ffd781e045846a::t_2665bed8be6409 118-119,134-136,141-146,158
+  s_ffd781e045846a::t_7033dd00ce1e79 3,16-17,26,106,122-127
+  s_ffd781e045846a::t_eeb71069f6fe5a 18-22,27-29,32-34,37-44,52-54,56,64-70,74-85,93-96,98-105,107-117,120-121,128-133,137-140,147-157,159-181
+skills/using-devkit/SKILL.md
+  s_ffd781e045846a::t_4388a02f18d00f 16,40,64
+  s_ffd781e045846a::t_f7311c6968bd1e 18
+  s_ffd781e045846a::t_cf1452179b5ef6 36,80,84
+  s_ffd781e045846a::t_e46926271fef62 3
+  s_ffd781e045846a::t_d35c16aea97ac0 69,81-82
+  s_ffd781e045846a::t_a2a4975d858c8b 24-28,35,91,99
+  s_ffd781e045846a::t_4b793e1e8e822e 41-43,52
+  s_ffd781e045846a::t_0e91a27e16ea85 17,88-89
+  s_ffd781e045846a::t_7627b0c3547d77 30-31,33-34,57-58,70,72-74,97-98
+  s_ffd781e045846a::t_8d71373dc839dd 19-23,59-61,66-68,92-96
+  s_ffd781e045846a::t_b04a04463d0f95 56,62,65,71,75-76,100
+  s_ffd781e045846a::t_01cbf868c0b085 29,38-39,90
+  s_ffd781e045846a::t_51fa3a121354b8 8,32,37,101-103
+  s_ffd781e045846a::t_4ea62482ef36fd 63
+  s_ffd781e045846a::t_6753d5129beae0 87
+  s_ffd781e045846a::t_41995ee8583815 86
+  s_ffd781e045846a::t_fae63535f4be95 9
+  s_ffd781e045846a::t_b7a8b837f8306c 13-15
+  s_ffd781e045846a::t_f83e15a76eee36 83
+skills/setup-openez/SKILL.md
+  s_ffd781e045846a::t_5c6f2d81c1047f 25
+  s_ffd781e045846a::t_6ec77d18d200ec 52-54,107-123
+  s_ffd781e045846a::t_b57125f5198eeb 3,27-32,38-39,45-46
+  s_ffd781e045846a::t_3579fb282833d8 124
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "09f054bbf0abf724008e329bf914be60ebf6ebf9",
+  "prompts": {},
+  "sessions": {
+    "s_16c1313fc010fd": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a13993-9a55-7b00-8ad8-e48f7b5ba0a0",
+        "model": "gpt-6-luna"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    },
+    "s_338a1e41378ce7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c89ccc08-1e1e-4aee-bfd6-714e730011e1",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    },
+    "s_ffd781e045846a": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ec6ba6790ffeU7GILmYZNgD1z9",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
