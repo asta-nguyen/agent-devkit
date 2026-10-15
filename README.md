@@ -17,9 +17,13 @@ summarize the plan before approval, then code, verify, update affected docs,
 and review. Ask when a material decision is needed. Do not commit.
 ```
 
-Small exact changes can proceed after impact checks. Bounded features use a
-short chat solution; Architectural work uses design.md and tasks.md with one
-joint approval. The agent calls the next skill itself. Detailed guidance:
+A clear, small change can skip approval only when the request names the exact
+file or symbol and result, impact checks keep every caller, test, config, and
+wiki page in scope, it touches no public API, schema, dependency, CI, security
+boundary, or data-loss risk, and it is not a bug. Otherwise use the Bounded
+feature flow: a short chat solution and approval. Architectural work uses
+design.md and tasks.md with one joint approval. The agent calls the next skill
+itself. Detailed guidance:
 [English](GUIDE.md) · [Vietnamese](GUIDE.vi.md).
 
 ## Core capabilities
@@ -342,16 +346,19 @@ Clarify behavior and relevant edge cases from repository evidence
 ```
 
 The agent handles these actions internally. You answer material questions and
-approve the solution when needed. It continues in-scope fixes while they make
-progress and stops for stalled fixes or new scope/decisions. Code-task setup
-creates necessary missing context without silently creating a wiki. Standalone
-wiki setup remains separate; a planning-only request does not start code.
+approve the solution when needed. It fixes in-scope failures and reruns, then
+stops if the same blocker remains after a fix attempt with no new information,
+after three failed attempts on one blocker (then returns to
+`brainstorm-feature`), or when a fix needs out-of-scope work or a user decision.
+Code-task setup creates necessary missing context without silently creating a
+wiki. Standalone wiki setup remains separate; a planning-only request does not
+start code.
 
 ### 3. Debug a bug
 
 ```
 systematic-debugging          → investigate and classify
-  ├─ Diagnostic investigation → report evidence and stop
+  ├─ Bug question             → report evidence and stop
   ├─ Architectural            → brainstorm-feature → plan-feature
   └─ Bounded                  → verify plan → regression check → fix
                               ↓

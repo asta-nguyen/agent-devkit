@@ -2,6 +2,20 @@
 
 Bản tiếng Việt của [GUIDE.md](GUIDE.md), mở rộng theo hướng training team: cài đặt, bootstrap, cách chọn skill, đi qua các bước từ yêu cầu đến review, hiểu các loại tài liệu được tạo và biết folder nào xuất hiện trong từng workflow. Khi làm task thật, luôn đọc AGENTS.md của project đích và làm theo hướng dẫn đầy đủ của skill đang dùng.
 
+## Cheat sheet
+
+Agent phân loại từng task và nói rõ loại đó; bạn có thể đổi. Bạn duyệt một lần cho mỗi route, rồi review diff và commit.
+
+| Task | Agent làm gì | Bạn duyệt gì | File được tạo |
+|---|---|---|---|
+| Spike hoặc bug question | Điều tra, báo evidence hoặc khuyến nghị | Spike: một cái gật đầu cho những gì sẽ thử; bug question: không | Không có (probe code chỉ là throwaway) |
+| Clear, small change | Kiểm tra impact, code, check, review | Không; agent đăng một notice | Code và test; `delta.md` chỉ khi requirement trong wiki đổi |
+| Bounded feature | Chốt quyết định, đưa design ngắn trong chat | Design trong chat | Code và test; `delta.md` chỉ khi cần |
+| Bounded bug | Tái hiện, tìm root cause, sửa, review | Không, trừ khi expected behavior chưa rõ | Regression check và fix; `delta.md` chỉ khi cần |
+| Architectural feature hoặc bug | Làm rõ, viết `design.md` và `tasks.md` | Một lần duyệt chung `design.md`, `tasks.md` và `delta.md` (nếu có) | Change folder `docs/agent-devkit/changes/<name>/`, archive sau final review |
+
+Mọi điểm dừng kết thúc bằng `Next / Waiting on / Done when`. Plan, spec và decision file legacy chỉ đọc; việc mới dùng change folder.
+
 ## 1. Mô hình làm việc
 
 agent-devkit là bộ playbook Markdown cho coding agent. Skill hướng dẫn agent làm việc theo quy trình; nó không phải thư viện ứng dụng và không tự chạy business logic.
@@ -163,7 +177,7 @@ Done when: <kết quả quan sát được để xong bước kế>
 - `design.md` giải thích giải pháp và behavior; `tasks.md` chính là plan (bước triển khai, verification, progress). Không có file plan riêng.
 - Trước khi xin duyệt, agent tóm tắt trong chat: mục tiêu, scope/impact, task theo thứ tự, cách verify, tài liệu cần cập nhật và rủi ro/quyết định còn mở; kèm link file chi tiết và nói rõ duyệt để code hay chỉ dừng ở planning. Yêu cầu plan-only cũng nhận tóm tắt, không tự bắt đầu code.
 - Setup trong task code không tự dựng wiki. Bootstrap chỉ tạo source sau khi kiểm tra approval/decision; debugging giữa implementation trả evidence về caller, không final review/archive plan còn dở. Revision tương đương giữ approval, không hỏi duyệt lại.
-- Một lần duyệt cho phép code tới final review. Agent chỉ xin duyệt lại khi scope, behavior, interface, schema hoặc rủi ro thay đổi material. Check fail trong scope thì agent tự sửa và chạy lại; chỉ dừng khi cùng một blocker lặp lại mà không có thông tin mới, sửa 3 lần không được, cần làm ngoài scope, hoặc cần người dùng quyết định.
+- Một lần duyệt cho phép code tới final review. Agent chỉ xin duyệt lại khi scope, behavior, interface, schema hoặc rủi ro thay đổi material. Check fail trong scope thì agent tự sửa và chạy lại. Agent dừng nếu cùng blocker vẫn còn sau một lần sửa mà không có thông tin mới, sau ba lần sửa thất bại cho một blocker (khi đó quay lại `brainstorm-feature`), khi cần làm ngoài scope, hoặc khi cần người dùng quyết định.
 - Phân vân thì chọn dòng nặng hơn; lộ độ phức tạp thì nâng lên, không bao giờ hạ xuống. Agent tự cập nhật tài liệu bị ảnh hưởng trước final review; review pass thì archive và kiểm tra link. Không có `docs/llm/` thì bỏ qua wiki, không tự dựng. Người dùng tự commit.
 
 ### Spike
@@ -182,7 +196,7 @@ GET /items. Dùng brainstorm-feature để kiểm tra impact trước, rồi ch�
 design.
 ~~~
 
-Chỉ dùng explicit-change lane khi yêu cầu chỉ rõ file/symbol, kết quả không mơ hồ và impact map chứng minh mọi caller/test/config nằm trong phạm vi. Lane này không dùng cho bug fix hoặc thay đổi API/schema/security.
+Chỉ dùng lane Clear, small change khi yêu cầu chỉ rõ file/symbol, kết quả không mơ hồ và impact map chứng minh mọi caller/test/config nằm trong phạm vi. Lane này không dùng cho bug fix hoặc thay đổi API/schema/security.
 
 ### Architectural
 
@@ -231,7 +245,7 @@ Sau implementation, dùng review-and-verify. Đây là review theo diff và yêu
 3. Đọc toàn bộ output, kể cả warning và failure.
 4. Tìm spec gap khi chưa đủ evidence; ghi rõ lệnh hoặc bằng chứng còn thiếu.
 5. Kiểm tra stale docs, caller, boundary bảo mật, error handling và scope ngoài plan.
-6. Phân loại ảnh hưởng tới wiki. Nếu tài liệu trong scope còn thiếu hoặc sai, agent tự gọi Task updates để cập nhật và verify; chưa báo pass trước khi xong.
+6. Phân loại ảnh hưởng tới wiki. Nếu tài liệu trong scope còn thiếu hoặc sai, review báo blocker với `Status: fail` và `implement-task` gọi Task updates để cập nhật và verify; chưa báo pass trước khi xong.
 
 Review kết thúc bằng result block có Status, Evidence, Blockers, Non-blockers, Spec gaps, Wiki impact, Wiki pages và Wiki action. Chỉ nói pass khi tất cả yêu cầu và verification bắt buộc có evidence mới. Verification chưa chạy hoặc không thể chạy không được đổi thành pass; ghi cụ thể cannot verify và lý do.
 

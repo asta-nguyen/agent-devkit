@@ -2,6 +2,45 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Cut the skills' always-loaded context: all `SKILL.md` files shrink from about
+  130,000 to about 100,000 bytes, and the per-session bootstrap (`using-devkit`)
+  from about 9,700 to 5,900. Part of that content moved, not vanished: the
+  `references/` files grow from about 13,000 to about 29,700 bytes and are read
+  only when their condition holds, so the net saving is smaller than the
+  `SKILL.md` figure. Each skill has one size cap, checked by `npm test`, together
+  with its description (starts "Use when", 100–400 characters) and every
+  cross-skill heading and `references/` link.
+- Each shared rule has one owner and other skills point to it in one line:
+  change lifecycle, naming, indexing, approval, handoff kinds, the `Next` block,
+  no-commit, and the delta condition in `using-devkit`; the implementation ladder
+  and the fix loop in `implement-task`; the `AGENTS.md` code-intelligence block
+  in `setup-openez`. The delta shape and self-review moved to
+  `brainstorm-feature/references/delta-format.md`; the delta merge, legacy page
+  conversion, and wiki inventory/report to `document-wiki/references/`; the
+  `tasks.md` template to `plan-feature/references/tasks-template.md`.
+- `review-and-verify` only reports findings; fixes return to `implement-task`'s
+  loop. Its result starts with the `Next / Waiting on / Done when` lines, and
+  every skill stop uses that block.
+- The fix loop stops after three failed attempts on one blocker, with no
+  "new evidence" extension, and routes back to `brainstorm-feature`.
+- One lane name, "Clear, small change", and one bug-investigation name,
+  "Bug question". `setup-openez` asks before `openez init` and `openez index`.
+  `design.md` has fixed headings (Goal, Scope, Behavior, Edge cases, Interfaces,
+  Verification, Related context) and the impact map lives only in `tasks.md`.
+- `plan-feature` states its entry points: a plan with an estimate is presented
+  together, and a material decision found during implementation resets the gate.
+- Legacy plans, specs, decision files, and `Required`/`Execution` gates are no
+  longer created; an open legacy plan can still be revised and finished, as
+  `using-devkit/references/legacy.md` describes. Their removal is scheduled for
+  v0.10.
+- `.agents/skills/writing-skills` carries the same size budget and the
+  "trigger first, at most one purpose clause" description rule, plus a method to
+  keep or cut wording by measured runs. `EVALS.md` gains a fresh-host harness
+  and marks the Core scenarios. `GUIDE.md` and `GUIDE.vi.md` open with a cheat
+  sheet.
+
 ### Fixed
 
 - Add `document-wiki`'s Convert a legacy target page procedure, which

@@ -17,9 +17,12 @@ tóm tắt plan để duyệt, rồi code, verify, cập nhật tài liệu liê
 Hỏi khi cần quyết định material. Không commit.
 ```
 
-Thay đổi nhỏ, chính xác có thể làm sau impact check. Bounded feature duyệt
-giải pháp ngắn trong chat; Architectural dùng design.md và tasks.md, duyệt
-chung một lần. Agent tự gọi skill tiếp theo. Hướng dẫn chi tiết:
+Clear, small change chỉ bỏ qua approval khi request nêu đúng file hoặc symbol
+và kết quả, impact check giữ mọi caller, test, config, wiki trong scope, không
+đụng public API, schema, dependency, CI, security boundary hay rủi ro mất dữ
+liệu, và không phải bug. Nếu thiếu điều kiện, dùng Bounded: đưa giải pháp ngắn
+trong chat để duyệt. Architectural dùng design.md và tasks.md, duyệt chung một
+lần. Agent tự gọi skill tiếp theo. Hướng dẫn chi tiết:
 [Tiếng Việt](GUIDE.vi.md) · [English](GUIDE.md).
 
 ## Năng lực chính
@@ -332,16 +335,18 @@ Làm rõ behavior và edge cases liên quan từ source
 ```
 
 Agent tự xử lý các thao tác nội bộ. Người dùng trả lời quyết định material và
-duyệt giải pháp khi cần. Lỗi trong scope được sửa tiếp khi có tiến triển;
-agent dừng khi bị kẹt hoặc cần scope/quyết định mới. Setup trong task code chỉ
-tạo context cần thiết, không tự dựng wiki. Wiki setup là yêu cầu riêng;
-plan-only không tự bắt đầu code. Người dùng review diff rồi commit.
+duyệt giải pháp khi cần. Agent sửa lỗi trong scope và chạy lại; dừng nếu cùng
+blocker vẫn còn sau một lần sửa mà không có thông tin mới, sau ba lần sửa lỗi
+không thành công cho một blocker (rồi quay lại `brainstorm-feature`), hoặc khi
+cần mở rộng scope hay hỏi quyết định. Setup trong task code chỉ tạo context cần
+thiết, không tự dựng wiki. Wiki setup là yêu cầu riêng; plan-only không tự bắt
+đầu code. Người dùng review diff rồi commit.
 
 ### Debug bug
 
 ```text
 systematic-debugging          → điều tra và phân loại
-  ├─ Diagnostic investigation → report evidence rồi dừng
+  ├─ Bug question             → report evidence rồi dừng
   ├─ Architectural            → brainstorm-feature → plan-feature
   └─ Bounded                  → verify plan → regression check → fix
                               ↓

@@ -9,19 +9,154 @@ import { AgentDevkitPlugin } from "../.opencode/plugins/agent-devkit.js";
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const validatorPath = path.join(repoRoot, "skills/document-wiki/scripts/validate-llm-wiki.mjs");
 const skillsRoot = path.join(repoRoot, "skills");
-for (const entry of fs.readdirSync(skillsRoot, { withFileTypes: true })) {
-  if (!entry.isDirectory()) continue;
-  const skillDir = path.join(skillsRoot, entry.name);
-  const skillPath = path.join(skillDir, "SKILL.md");
-  if (!fs.existsSync(skillPath)) continue;
-  const content = fs.readFileSync(skillPath, "utf8");
-  for (const [, referencePath] of content.matchAll(/`(references\/[^`\s]+\.md)`/g)) {
-    assert.ok(
-      fs.existsSync(path.join(skillDir, referencePath)),
-      `${entry.name} references missing file ${referencePath}`,
-    );
+
+// One character cap per skill (design: 2026-10-14-skill-context-budget, cap
+// table). Target = cap minus a reserve for approved follow-up additions; both
+// are printed, and only the cap fails. Characters are bytes, as `wc -c` counts
+// them. A skill missing from this map fails, so a new skill gets a deliberate
+// cap. Set ENFORCE_CAPS to false only to report sizes while restructuring.
+const ENFORCE_CAPS = true;
+const SKILL_CAPS = {
+  "using-devkit": { cap: 6000, target: 5900 },
+  "read-codebase-context": { cap: 6000, target: 6000 },
+  "brainstorm-feature": { cap: 11000, target: 11000 },
+  "plan-feature": { cap: 11000, target: 10800 },
+  "implement-task": { cap: 11000, target: 10200 },
+  "document-wiki": { cap: 12000, target: 12000 },
+  "review-and-verify": { cap: 12500, target: 11000 },
+  "systematic-debugging": { cap: 10000, target: 10000 },
+  "setup-codebase": { cap: 9500, target: 9500 },
+  "estimate-feature": { cap: 6500, target: 6500 },
+  "setup-openez": { cap: 6000, target: 6000 },
+  "lean-audit": { cap: 3500, target: 3500 },
+  "context-handoff": { cap: 4000, target: 3900 },
+};
+const ARCHITECTURAL_CHAIN = [
+  "using-devkit",
+  "read-codebase-context",
+  "brainstorm-feature",
+  "plan-feature",
+  "implement-task",
+  "document-wiki",
+  "review-and-verify",
+];
+// Status values that look like skill names but are not.
+const NON_SKILL_TOKENS = new Set(["not-applicable", "not-required"]);
+
+const skillNames = fs.readdirSync(skillsRoot, { withFileTypes: true })
+  .filter((entry) => entry.isDirectory() && fs.existsSync(path.join(skillsRoot, entry.name, "SKILL.md")))
+  .map((entry) => entry.name);
+const skillSet = new Set(skillNames);
+
+function skillMarkdownFiles(name) {
+  const dir = path.join(skillsRoot, name);
+  const files = [path.join(dir, "SKILL.md")];
+  const referencesDir = path.join(dir, "references");
+  if (fs.existsSync(referencesDir)) {
+    for (const file of fs.readdirSync(referencesDir).sort()) {
+      if (file.endsWith(".md")) files.push(path.join(referencesDir, file));
+    }
   }
+  return files;
 }
+
+function headingsOf(skill) {
+  const headings = new Set();
+  for (const file of skillMarkdownFiles(skill)) {
+    let fence = null;
+    for (const line of fs.readFileSync(file, "utf8").split("\n")) {
+      const marker = line.match(/^\s*(`{3,}|~{3,})/)?.[1];
+      if (fence) {
+        if (marker && marker[0] === fence[0] && marker.length >= fence.length) fence = null;
+      } else if (marker) fence = marker;
+      else if (/^#{2,4} /.test(line)) headings.add(line.trimEnd());
+    }
+  }
+  return headings;
+}
+
+function skillChecks() {
+  const failures = [];
+  const report = [];
+  const skillHeadings = new Map(skillNames.map((name) => [name, headingsOf(name)]));
+
+  for (const name of skillNames) {
+    const skillDir = path.join(skillsRoot, name);
+    const skillPath = path.join(skillDir, "SKILL.md");
+    const content = fs.readFileSync(skillPath, "utf8");
+
+    for (const file of skillMarkdownFiles(name)) {
+      const rel = path.relative(repoRoot, file);
+      const text = fs.readFileSync(file, "utf8");
+
+      // (a) Skill names: every hyphenated backticked token is a skill.
+      for (const [, token] of text.matchAll(/`([a-z][a-z0-9]*(?:-[a-z0-9]+)+)`/g)) {
+        if (!skillSet.has(token) && !NON_SKILL_TOKENS.has(token)) {
+          failures.push(`${rel}: \`${token}\` is not a skill name`);
+        }
+      }
+
+      // (b) Cross-skill headings: `<skill>`'s `## Heading`.
+      for (const [full, skill, hashes, heading] of
+        text.matchAll(/`([a-z][a-z0-9-]*)`['\u2019]s\s+`(#{2,4}) ([^`]+)`/g)) {
+        const target = skillHeadings.get(skill);
+        const line = `${hashes} ${heading}`;
+        if (!target) failures.push(`${rel}: ${full.replace(/\s+/g, " ")} names an unknown skill`);
+        else if (!target.has(line)) failures.push(`${rel}: ${skill} has no heading "${line}"`);
+      }
+
+      // (c) references/ links resolve. A `../` link resolves from the file that
+      // contains it (a link into another skill's references is allowed); a bare
+      // `references/x.md` resolves from the skill directory.
+      for (const [, referencePath] of text.matchAll(/(?:`|\()((?:\.\.\/)+[a-z0-9-]+\/references\/[^`)\s#]+\.md|references\/[^`)\s#]+\.md)(?:`|\)|#)/g)) {
+        const target = referencePath.startsWith("../")
+          ? path.join(path.dirname(file), referencePath)
+          : path.join(skillDir, referencePath);
+        if (!fs.existsSync(target)) failures.push(`${rel}: references missing file ${referencePath}`);
+      }
+    }
+
+    // (d) description: starts with "Use when", 100-400 characters.
+    const frontmatter = content.match(/^---\n([\s\S]*?)\n---/);
+    const description = (frontmatter?.[1].match(/^description:\s*(.+)$/m)?.[1].trim() ?? "")
+      .replace(/^(["'])(.*)\1$/, "$2");
+    if (!description.startsWith("Use when")) failures.push(`${name}: description must start with "Use when"`);
+    if (description.length < 100 || description.length > 400) {
+      failures.push(`${name}: description is ${description.length} characters, expected 100-400`);
+    }
+
+    // (e) line and character caps.
+    // Characters are bytes, as `wc -c` counts them.
+    const lines = content.split("\n").length - (content.endsWith("\n") ? 1 : 0);
+    const chars = Buffer.byteLength(content);
+    const limits = SKILL_CAPS[name];
+    if (lines > 500) failures.push(`${name}: ${lines} lines, expected at most 500`);
+    if (!limits) failures.push(`${name}: missing from SKILL_CAPS in tests/plugin-smoke.mjs`);
+    else if (chars > limits.cap && ENFORCE_CAPS) failures.push(`${name}: ${chars} characters, cap ${limits.cap}`);
+    report.push({ name, lines, chars, limits });
+  }
+  for (const name of Object.keys(SKILL_CAPS)) {
+    if (!skillSet.has(name)) failures.push(`SKILL_CAPS lists unknown skill ${name}`);
+  }
+
+  // (f) report characters per skill with cap and Target, plus the sums.
+  const rows = [["skill", "chars", "cap", "target", "state"]];
+  const sum = (names, key) => names.reduce((total, name) => total + (SKILL_CAPS[name]?.[key] ?? 0), 0);
+  for (const { name, chars, limits } of report) {
+    const state = !limits ? "NO CAP" : chars > limits.cap ? "over cap" : chars > limits.target ? "over target" : "ok";
+    rows.push([name, String(chars), String(limits?.cap ?? "-"), String(limits?.target ?? "-"), state]);
+  }
+  const chainChars = report.filter(({ name }) => ARCHITECTURAL_CHAIN.includes(name)).reduce((t, r) => t + r.chars, 0);
+  const totalChars = report.reduce((t, r) => t + r.chars, 0);
+  rows.push(["Architectural chain", String(chainChars), String(sum(ARCHITECTURAL_CHAIN, "cap")), String(sum(ARCHITECTURAL_CHAIN, "target")), "sum"]);
+  rows.push(["All skills", String(totalChars), String(sum(skillNames, "cap")), String(sum(skillNames, "target")), "sum"]);
+  const widths = rows[0].map((_, index) => Math.max(...rows.map((row) => row[index].length)));
+  console.log(rows.map((row) => row.map((cell, index) => cell.padEnd(widths[index])).join("  ")).join("\n"));
+
+  assert.deepEqual(failures, [], `skill checks failed:\n${failures.join("\n")}`);
+}
+
+skillChecks();
 
 const runHook = (env = {}) => JSON.parse(execFileSync(
   process.execPath,
