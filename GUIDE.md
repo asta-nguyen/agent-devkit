@@ -4,6 +4,22 @@
 > read code before changing it, design before coding, and verify before claiming
 > completion.
 
+## Cheat sheet
+
+The agent classifies each task and states the class; you can override it. You
+approve once per route, and you review the diff and commit.
+
+| Task | What the agent does | What you approve | Files produced |
+|---|---|---|---|
+| Spike or bug question | Investigates and reports evidence or a recommendation | A Spike: a nod on what it will try; a bug question: nothing | None (probe code stays throwaway) |
+| Clear, small change | Checks impact, codes, checks, reviews | Nothing; it posts a notice | Code and tests; `delta.md` only if a wiki requirement changes |
+| Bounded feature | Settles decisions, shows a short design in chat | The chat design | Code and tests; `delta.md` only if needed |
+| Bounded bug | Reproduces, finds the root cause, fixes, reviews | Nothing, unless expected behavior is unclear | Regression check and fix; `delta.md` only if needed |
+| Architectural feature or bug | Clarifies, writes `design.md` and `tasks.md` | One joint approval of `design.md`, `tasks.md`, and any `delta.md` | Change folder `docs/agent-devkit/changes/<name>/`, archived after final review |
+
+Every stop ends with `Next / Waiting on / Done when`. Legacy plans, specs, and
+decision files are read-only; new work uses change folders.
+
 ---
 
 ## Table of Contents
@@ -45,12 +61,16 @@ implementation → verification → documentation.
 
 ## 2. Installation
 
-### Option 1: Agent Skills CLI (recommended)
+### Option 1: Agent Skills CLI (default branch; unpinned)
 
 ```bash
 # Install all skills into Claude Code
 npx skills add asta-nguyen/agent-devkit -a claude-code
 ```
+
+This follows the repository's default branch. For team installs that need a
+fixed version, use the native plugin commands below and pin every client to the
+same published release tag.
 
 > **Note:** The GitHub repository is `asta-nguyen/agent-devkit` (not
 > `asta/agent-devkit`).
@@ -72,6 +92,35 @@ This repository includes native packaging for the supported clients:
 
 Each client reuses the canonical Markdown skills under `skills/`.
 
+### Pin one release for the team
+
+Use one published tag across clients. These examples use `v0.9.0`; replace it
+in all three places with a release tag that contains the changes the team needs.
+
+```bash
+codex plugin marketplace add asta-nguyen/agent-devkit --ref v0.9.0
+codex plugin add agent-devkit@agent-devkit
+```
+
+```bash
+claude plugin marketplace add asta-nguyen/agent-devkit#v0.9.0
+claude plugin install agent-devkit@agent-devkit --scope user
+```
+
+For OpenCode, set the plugin entry in `opencode.json`:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    "agent-devkit@git+https://github.com/asta-nguyen/agent-devkit.git#v0.9.0"
+  ]
+}
+```
+
+Change all configured refs together when the team upgrades, then follow each
+client's update steps. Refreshing a marketplace alone keeps its existing pin.
+
 ### Option 3: Manual copy (for projects that discover `.agents/skills`)
 
 ```bash
@@ -83,6 +132,34 @@ find .agents/skills -name SKILL.md -print
 
 When installed this way, run the bundled wiki check from the target project
 with `node .agents/skills/document-wiki/scripts/validate-llm-wiki.mjs .`.
+
+To run the check on every pull request, add this workflow as
+`.github/workflows/validate-llm-wiki.yml`. The `pull_request` trigger has no
+path filter, so it runs for every PR. Keep its `ref` on the same DevKit release
+tag the team uses.
+
+```yaml
+name: Validate LLM wiki
+
+on:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - uses: actions/checkout@v7
+        with:
+          repository: asta-nguyen/agent-devkit
+          ref: v0.9.0
+          path: .agent-devkit
+      - name: Validate wiki
+        run: node .agent-devkit/skills/document-wiki/scripts/validate-llm-wiki.mjs .
+```
 
 ### Option 4: OpenEZ (optional semantic index)
 
@@ -193,7 +270,7 @@ FFF is never required. Without it, skills use `rg` and reach the same results.
 | `setup-codebase` | The repo lacks context files or recorded repository conventions | Reads repository evidence, creates missing context files, and captures missing conventions only after user approval. |
 | `setup-openez` | The user agrees to use OpenEZ or the index is stale | Gets approval before CLI install, existing `AGENTS.md` guidance, or client wiring; reports CLI indexing separately from MCP verification and marks an unavailable MCP query unverified. |
 | `read-codebase-context` | Before design, planning, or wiki work that needs affected files, callers, and tests | Uses OpenEZ for concepts/callers, FFF for fuzzy filenames/literal references, `rg` for regex, then reads current source and records an impact map. |
-| `context-handoff` | A session must pause or is approaching its context limit | Saves a compact, source-grounded checkpoint under `docs/agent-devkit/handoffs/` for the next session. |
+| `context-handoff` | A session must pause or is approaching its context limit | Saves a compact, source-grounded checkpoint (`handoff.md` in the change folder, or `docs/agent-devkit/handoffs/` outside a change) for the next session. |
 
 ### Feature Development
 
@@ -202,7 +279,7 @@ FFF is never required. Without it, skills use `rg` and reach the same results.
 | `brainstorm-feature` | A new, ambiguous request or a request that changes product behavior | Classifies Spike / Bounded / Architectural, asks clarifying questions, and presents a design; routes Spike to investigation, Bounded to implementation, and Architectural through a change folder. Only eligible exact-scope changes skip waiting after impact checks. |
 | `plan-feature` | Right after an architectural `design.md` is written, or to revise an open change | Writes `tasks.md` (the plan): behavior, interfaces, named test cases, verification, and progress, without function or test code; presents design and tasks for one joint approval. |
 | `estimate-feature` | When a PM or BA explicitly requests an estimate | Estimates an hours range for each plan task with confidence and rationale. Runs only when requested. |
-| `implement-task` | An approved bounded design or an approved architectural plan exists | Traces code, applies the 6-step implementation ladder, and verifies each non-trivial change; `review-and-verify` owns the final wiki-impact block. |
+| `implement-task` | An approved bounded design or an approved architectural plan exists | Runs existing relevant checks before the first source edit, traces code, and verifies each non-trivial change; it does not add a runner just to record a baseline. |
 | `systematic-debugging` | Any technical issue: bug, test failure, build failure, or performance problem | Investigates root cause, classifies the bug, writes a verify plan, then fixes bounded bugs or hands architectural bugs off for design. |
 | `review-and-verify` | After implementation and before claiming completion | Enforces **NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE**. Reviews the diff, runs checks, and performs a complexity pass. |
 
@@ -253,6 +330,9 @@ the agent calls the next skill itself, and every stop ends with a
   boundary, or data-loss risk; and it is not a bug. Otherwise it is Bounded.
 - `design.md` explains the solution and behavior; `tasks.md` is the plan
   (steps, verification, progress). There is no separate plan file.
+- Before the first source edit, implementation runs existing relevant tests or
+  checks and records failures as baseline. If none exist, it records that; it
+  does not add a test runner just to establish a baseline.
 - Before approval, the agent summarizes the goal, scope/impact, ordered tasks,
   verification, documentation, and risks/open decisions in chat, with links to
   the detailed files. It states what approval permits; planning-only requests
@@ -263,14 +343,19 @@ the agent calls the next skill itself, and every stop ends with a
   equivalent revisions keep approval without another approval request.
 - One approval authorizes implementation through final review. The agent asks
   again only when scope, behavior, an interface, a schema, or risk changes
-  materially. In-scope check failures are fixed and rerun; the agent stops
-  only when a blocker repeats with no new information, fails three fix
-  attempts, needs out-of-scope work, or needs your decision.
+  materially. In-scope check failures are fixed and rerun. The agent stops when
+  the same blocker remains after a fix attempt with no new information, after
+  three failed attempts on one blocker (then it returns to `brainstorm-feature`),
+  when a fix needs out-of-scope work, or when a decision is needed.
 - Implementation updates documentation for affected behavior automatically
   when `docs/llm/` exists. It merges any delta before other content edits;
   final review verifies code and documentation, then archives and checks links.
-  Missing required coverage blocks completion. Without a wiki, skip updates
-  without creating one. You review the diff and commit.
+  To cancel an open change, record the user's reason, move its folder to
+  `changes/cancelled/<same name>/` with the archive's move-and-relink step
+  (only links change), and list it under `## Cancelled changes`.
+  Cancellation does not complete the change or discard code/Git work; follow-up
+  starts a new change. Missing required coverage blocks completion. Without a
+  wiki, skip updates without creating one. You review the diff and commit.
 - `estimate-feature` runs before the joint approval only when you ask for an
   estimate; "estimate only" or "plan only" never starts implementation.
 - Planning and estimation may use a written design with planned assumptions
@@ -450,11 +535,12 @@ docs/
         delta.md                      # ADDED / MODIFIED / REMOVED requirements
         tasks.md                      # execution tasks
         estimate.md                   # optional, when requested
-    specs/ plans/                     # legacy designs and plans stay as history
-    decisions/                         # work outside a change
-      2026-08-17-upload-policy.md
-    estimates/                         # work outside a change
-      2026-08-17-bg-jobs-estimate.md
+        decisions.md                  # optional, persistent decisions
+        handoff.md                    # optional, when work pauses
+      archive/                        # completed changes
+      cancelled/                      # cancelled changes, with reason in INDEX.md
+    specs/ plans/ decisions/ estimates/   # legacy, read-only history
+    handoffs/                         # checkpoints outside a change
   llm/                                # source-grounded, verified wiki
     AGENTS.md
     INDEX.md
@@ -502,13 +588,13 @@ Fix this failure quickly.
 
 **Phase 4 — Implement:**
 
-- Classify the bug as Diagnostic investigation, Bounded, or Architectural. A
-  Diagnostic investigation reports evidence and stops; an Architectural bug
-  hands off to `brainstorm-feature`.
+- Classify the bug as a Bug question, Bounded, or Architectural. A Bug
+  question reports evidence and stops; an Architectural bug hands off to
+  `brainstorm-feature`.
 - For a Bounded bug, establish expected behavior from source, tests, and the
   current wiki.
 - If investigation points to an environmental, timing-dependent, or external
-  cause, record the evidence. Diagnostic investigation reports and stops. Any
+  cause, record the evidence. A Bug question reports and stops. Any
   production handling returns to classification, expected-behavior, and verify
   plan gates; unresolved behavior goes to `brainstorm-feature` for approval.
 - Write a verify plan before the regression check or production fix.
@@ -637,8 +723,9 @@ Estimate this plan in hours for a developer using an AI coding agent.
    | Task 4: Tests      | 2-4h  | Medium     | Integration test setup needed      |
    ```
 
-4. Save at `docs/agent-devkit/estimates/YYYY-MM-DD-<slug>-estimate.md`.
-5. Link the estimate ↔ plan ↔ `INDEX.md`.
+4. Save it as `estimate.md` beside `tasks.md` in the change folder (a legacy
+   plan keeps `docs/agent-devkit/estimates/YYYY-MM-DD-<slug>-estimate.md`).
+5. Link the estimate from `tasks.md`; the change folder is already indexed.
 6. **Do not** apply a generic "AI is 50% faster" discount.
 7. **Do not** edit application code or commit.
 
@@ -696,11 +783,12 @@ is global or mandatory: each entry appears only when its condition holds.
 | `docs/agent-devkit/INDEX.md` | process | First process artifact exists | whichever skill creates it |
 | `docs/agent-devkit/specs/` | process (legacy) | Approved architectural design (legacy work) | `brainstorm-feature` |
 | `docs/agent-devkit/plans/` | process (legacy) | After spec approval (legacy work) | `plan-feature` |
-| `docs/agent-devkit/decisions/` | process | Decision for work outside an active change or plan/spec | `implement-task` |
+| `docs/agent-devkit/decisions/` | process | Legacy decisions; read only, new decisions go to a change's `decisions.md` | none (legacy) |
 | `docs/agent-devkit/estimates/` | process | User-requested estimate for a legacy plan | `estimate-feature` |
 | `docs/agent-devkit/handoffs/` | process | Checkpoint for work outside an active change | `context-handoff` |
 | `docs/agent-devkit/changes/<name>/` | process | Open change: Architectural has `design.md` and `tasks.md`, with `delta.md` only when needed; Bounded has `delta.md` only when needed. A Bounded change with no artifact has no folder. Optional `estimate.md` (when `tasks.md` exists), `decisions.md`, and `handoff.md` stay alongside them. | `brainstorm-feature`, `plan-feature`, `implement-task` |
 | `docs/agent-devkit/changes/archive/<name>/` | process | `review-and-verify` archives a verified change | `review-and-verify` |
+| `docs/agent-devkit/changes/cancelled/<name>/` | process | An open change is cancelled with a recorded reason; its folder moves with only links rewritten, and its INDEX link moves to `## Cancelled changes`. This does not mark work complete. | `using-devkit` |
 | `docs/llm/AGENTS.md`, `INDEX.md` | wiki | Wiki skeleton is created | `setup-codebase` |
 | `docs/llm/FEATURES.md` | wiki | Only updated if it already exists | `document-wiki` |
 | `docs/llm/architecture/overview.md` | wiki | Baseline map | `document-wiki` |
@@ -743,18 +831,19 @@ category folders appear only when a real page needs them.
   `approved`; the agent must not ask twice.
 - **User clarifications become explicit decisions.** Implementation-only
   choices stay in the current session. Observable behavior or requirement
-  changes go into the active plan/spec `## Decision Log`; bounded tasks without
-  one create a task-scoped file under `docs/agent-devkit/decisions/`. Material
-  changes reset the approval to `pending`.
+  changes go into the change's `decisions.md` (creating and indexing the change
+  folder when needed) or a legacy plan/spec `## Decision Log`. Material changes
+  to `tasks.md` go back through `plan-feature`, which resets the approval to
+  `pending`.
 - **Plans carry approved constraints forward.** `## Global Constraints` copies
   cross-task rules from the design, or says `None.`; edge
   cases map to concrete tasks and checks.
-- **Completed plans stay historical.** New plans start with `Execution: open`;
-  `review-and-verify` marks them `complete` only after all tasks pass final
-  review.
-  Later requirements are classified as new work: bounded changes need no plan,
-  while architectural changes get a new spec and plan. An open plan is revised
-  in place and keeps its original filename.
+- **Completed changes stay historical.** A change folder has no `Execution`
+  field: `review-and-verify` archives it only after all tasks pass final
+  review. Later requirements are new work: bounded changes need no folder,
+  while architectural changes get a new change folder. An open change is
+  revised in place and keeps its folder name. Legacy plans keep their
+  `Execution` field and are read-only for new work.
 - **Low-impact ambiguity does not stall implementation.** The agent may record
   a session-only technical ruling only when every viable choice is reversible
   within the current task and preserves observable behavior.

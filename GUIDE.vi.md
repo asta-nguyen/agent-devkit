@@ -2,6 +2,20 @@
 
 Bản tiếng Việt của [GUIDE.md](GUIDE.md), mở rộng theo hướng training team: cài đặt, bootstrap, cách chọn skill, đi qua các bước từ yêu cầu đến review, hiểu các loại tài liệu được tạo và biết folder nào xuất hiện trong từng workflow. Khi làm task thật, luôn đọc AGENTS.md của project đích và làm theo hướng dẫn đầy đủ của skill đang dùng.
 
+## Cheat sheet
+
+Agent phân loại từng task và nói rõ loại đó; bạn có thể đổi. Bạn duyệt một lần cho mỗi route, rồi review diff và commit.
+
+| Task | Agent làm gì | Bạn duyệt gì | File được tạo |
+|---|---|---|---|
+| Spike hoặc bug question | Điều tra, báo evidence hoặc khuyến nghị | Spike: một cái gật đầu cho những gì sẽ thử; bug question: không | Không có (probe code chỉ là throwaway) |
+| Clear, small change | Kiểm tra impact, code, check, review | Không; agent đăng một notice | Code và test; `delta.md` chỉ khi requirement trong wiki đổi |
+| Bounded feature | Chốt quyết định, đưa design ngắn trong chat | Design trong chat | Code và test; `delta.md` chỉ khi cần |
+| Bounded bug | Tái hiện, tìm root cause, sửa, review | Không, trừ khi expected behavior chưa rõ | Regression check và fix; `delta.md` chỉ khi cần |
+| Architectural feature hoặc bug | Làm rõ, viết `design.md` và `tasks.md` | Một lần duyệt chung `design.md`, `tasks.md` và `delta.md` (nếu có) | Change folder `docs/agent-devkit/changes/<name>/`, archive sau final review |
+
+Mọi điểm dừng kết thúc bằng `Next / Waiting on / Done when`. Plan, spec và decision file legacy chỉ đọc; việc mới dùng change folder.
+
 ## 1. Mô hình làm việc
 
 agent-devkit là bộ playbook Markdown cho coding agent. Skill hướng dẫn agent làm việc theo quy trình; nó không phải thư viện ứng dụng và không tự chạy business logic.
@@ -28,17 +42,24 @@ Cài **nguyên bộ** `skills/` — các skill handoff cho nhau và load file tr
 
 | Client | Lệnh |
 |---|---|
-| Claude Code | `claude plugin marketplace add asta-nguyen/agent-devkit` rồi `claude plugin install agent-devkit@agent-devkit` |
-| Codex | `codex plugin marketplace add asta-nguyen/agent-devkit --ref main` rồi `codex plugin add agent-devkit@agent-devkit` |
+| Claude Code | `claude plugin marketplace add asta-nguyen/agent-devkit#v0.9.0` rồi `claude plugin install agent-devkit@agent-devkit --scope user` |
+| Codex | `codex plugin marketplace add asta-nguyen/agent-devkit --ref v0.9.0` rồi `codex plugin add agent-devkit@agent-devkit` |
 | Devin CLI | `devin plugins install asta-nguyen/agent-devkit` |
 | Cursor | import `.cursor-plugin/marketplace.json` qua team marketplace, hoặc đặt repo tại `~/.cursor/plugins/local/agent-devkit` rồi reload |
-| OpenCode | thêm `agent-devkit@git+https://github.com/asta-nguyen/agent-devkit.git` vào `plugin` trong `opencode.json` rồi restart |
+| OpenCode | thêm `agent-devkit@git+https://github.com/asta-nguyen/agent-devkit.git#v0.9.0` vào `plugin` trong `opencode.json` rồi restart |
+
+Các lệnh minh họa dùng cùng release tag `v0.9.0`. Khi team chuyển sang
+release mới, cập nhật mọi source pin cùng lúc và làm theo bước update riêng của
+từng client; refresh marketplace không tự đổi tag đã pin.
 
 **Agent Skills CLI:**
 
 ```bash
 npx skills add asta-nguyen/agent-devkit -a claude-code
 ```
+
+Lệnh này theo default branch, không pin version cho cả team. Dùng native plugin
+ở trên nếu cần mọi client chạy cùng release.
 
 Repository public là `asta-nguyen/agent-devkit` (không phải `asta/agent-devkit`).
 
@@ -52,6 +73,33 @@ find .agents/skills -name SKILL.md -print
 
 Với cách cài này, tại root project chạy validator bằng
 `node .agents/skills/document-wiki/scripts/validate-llm-wiki.mjs .`.
+
+Để chạy check này với mọi pull request, thêm workflow sau tại
+`.github/workflows/validate-llm-wiki.yml`. Không có path filter nên mọi PR đều
+được kiểm tra. Giữ `ref` cùng tag DevKit mà team đang dùng.
+
+```yaml
+name: Validate LLM wiki
+
+on:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - uses: actions/checkout@v7
+        with:
+          repository: asta-nguyen/agent-devkit
+          ref: v0.9.0
+          path: .agent-devkit
+      - name: Validate wiki
+        run: node .agent-devkit/skills/document-wiki/scripts/validate-llm-wiki.mjs .
+```
 
 Chi tiết và câu lệnh update cho từng client: [README tiếng Việt — Sử dụng skills](README.vi.md#sử-dụng-skills). OpenEZ (semantic index) và FFF (fuzzy search) là tùy chọn, chỉ đáng cài trong repo lớn — xem [GUIDE.md §2](GUIDE.md#2-installation).
 
@@ -96,7 +144,7 @@ Nếu thiếu using-devkit, skill tham chiếu nó phải dừng và báo thiế
 | Repo mới hoặc thiếu context | setup-codebase | Tạo context cần thiết; chỉ tạo wiki khi người dùng yêu cầu setup wiki/repository trực tiếp |
 | Ý tưởng mới hoặc yêu cầu còn mơ hồ | brainstorm-feature | Phân loại, làm rõ, đề xuất design và xin approval |
 | Design kiến trúc đã duyệt, cần task để implement | plan-feature | Plan chi tiết, Approval Gate và verification |
-| Bắt đầu code theo design/plan đã duyệt | implement-task | Thay đổi code theo task và ghi evidence |
+| Bắt đầu code theo design/plan đã duyệt | implement-task | Chạy check hiện có trước lần sửa source đầu tiên, ghi baseline rồi implement và verify |
 | Xác minh diff trước khi kết thúc | review-and-verify | Kết quả pass/fail cùng blocker và Spec gaps |
 | Bug, test fail, behavior bất ngờ | systematic-debugging | Điều tra root cause rồi fix hoặc chuyển sang design |
 | Tạo/refresh wiki từ source hiện tại | document-wiki | Domain map, feature inventory, các trang được chọn |
@@ -163,7 +211,7 @@ Done when: <kết quả quan sát được để xong bước kế>
 - `design.md` giải thích giải pháp và behavior; `tasks.md` chính là plan (bước triển khai, verification, progress). Không có file plan riêng.
 - Trước khi xin duyệt, agent tóm tắt trong chat: mục tiêu, scope/impact, task theo thứ tự, cách verify, tài liệu cần cập nhật và rủi ro/quyết định còn mở; kèm link file chi tiết và nói rõ duyệt để code hay chỉ dừng ở planning. Yêu cầu plan-only cũng nhận tóm tắt, không tự bắt đầu code.
 - Setup trong task code không tự dựng wiki. Bootstrap chỉ tạo source sau khi kiểm tra approval/decision; debugging giữa implementation trả evidence về caller, không final review/archive plan còn dở. Revision tương đương giữ approval, không hỏi duyệt lại.
-- Một lần duyệt cho phép code tới final review. Agent chỉ xin duyệt lại khi scope, behavior, interface, schema hoặc rủi ro thay đổi material. Check fail trong scope thì agent tự sửa và chạy lại; chỉ dừng khi cùng một blocker lặp lại mà không có thông tin mới, sửa 3 lần không được, cần làm ngoài scope, hoặc cần người dùng quyết định.
+- Một lần duyệt cho phép code tới final review. Agent chỉ xin duyệt lại khi scope, behavior, interface, schema hoặc rủi ro thay đổi material. Check fail trong scope thì agent tự sửa và chạy lại. Agent dừng nếu cùng blocker vẫn còn sau một lần sửa mà không có thông tin mới, sau ba lần sửa thất bại cho một blocker (khi đó quay lại `brainstorm-feature`), khi cần làm ngoài scope, hoặc khi cần người dùng quyết định.
 - Phân vân thì chọn dòng nặng hơn; lộ độ phức tạp thì nâng lên, không bao giờ hạ xuống. Agent tự cập nhật tài liệu bị ảnh hưởng trước final review; review pass thì archive và kiểm tra link. Không có `docs/llm/` thì bỏ qua wiki, không tự dựng. Người dùng tự commit.
 
 ### Spike
@@ -182,7 +230,7 @@ GET /items. Dùng brainstorm-feature để kiểm tra impact trước, rồi ch�
 design.
 ~~~
 
-Chỉ dùng explicit-change lane khi yêu cầu chỉ rõ file/symbol, kết quả không mơ hồ và impact map chứng minh mọi caller/test/config nằm trong phạm vi. Lane này không dùng cho bug fix hoặc thay đổi API/schema/security.
+Chỉ dùng lane Clear, small change khi yêu cầu chỉ rõ file/symbol, kết quả không mơ hồ và impact map chứng minh mọi caller/test/config nằm trong phạm vi. Lane này không dùng cho bug fix hoặc thay đổi API/schema/security.
 
 ### Architectural
 
@@ -202,7 +250,7 @@ Planning và estimate được dùng design đã viết với giả định ghi 
 
 `tasks.md` (hoặc plan legacy) là danh sách công việc, không phải chỗ viết sẵn code. Mỗi task cần nói rõ file/symbol, interface, behavior cần đổi và cách verify, kèm `Progress: todo | done` và `Result:`. implement-task chỉ đặt `done` và ghi `Result:` sau khi check `Verify` của task pass, nên session nào mở ra cũng biết đang dừng ở task nào. Khi sửa plan, task cũ giữ nguyên `Progress`/`Result`; phần bổ sung thành task mới. Plan cũ chưa có field này thì implement-task đối chiếu source và chạy lại check để điền `Progress` trước khi làm tiếp, không làm lại task đã xong. Tasks phải bao phủ edge case đã được duyệt; nếu còn quyết định làm thay đổi behavior hoặc scope, quay lại brainstorm-feature.
 
-Change mới nằm trực tiếp dưới `docs/agent-devkit/changes/` khi còn open. `tasks.md` có `## Approval Gate` và `## Decision Log` nhưng không có field `Execution`. Trong implementation, `document-wiki` merge delta và cập nhật tài liệu liên quan. Sau khi mọi task, tài liệu và verification bắt buộc pass final review, `review-and-verify` chuyển folder sang `changes/archive/` và cập nhật INDEX cùng các link. Bước archive đánh dấu change complete; change không có delta vẫn được chuyển folder sau final review.
+Change mới nằm trực tiếp dưới `docs/agent-devkit/changes/` khi còn open. `tasks.md` có `## Approval Gate` và `## Decision Log` nhưng không có field `Execution`. Trong implementation, `document-wiki` merge delta và cập nhật tài liệu liên quan. Sau khi task, tài liệu và verification bắt buộc pass final review, `review-and-verify` chuyển folder sang `changes/archive/` và cập nhật INDEX cùng các link; đây mới là completion. Nếu user hủy change open, ghi lý do rồi chuyển folder sang `changes/cancelled/<same name>/` theo bước move-and-relink của archive (chỉ sửa link), đổi link sang `## Cancelled changes` kèm lý do. Hủy không hoàn thành task, không xóa code hay reset Git; nếu chưa có process folder thì không tạo folder chỉ để hủy. Follow-up bắt đầu change mới.
 
 Plan legacy trong `docs/agent-devkit/plans/` có `## Approval Gate` dùng `Status` và `Execution: open | complete`. `Status` cho biết plan đã được duyệt để thi hành chưa; `Execution` cho biết final review của chính plan đã hoàn tất chưa. Chỉ final review-and-verify của plan đó mới đặt `Execution: complete` sau khi mọi task đã implement và mọi verification bắt buộc pass.
 
@@ -212,6 +260,7 @@ Không đặt `Execution: complete` chỉ vì spec hoặc plan legacy được a
 |---|---|
 | Change còn open | Sửa các file trong chính folder đó; giữ kết quả đã xong và thêm task mới qua plan-feature khi cần. |
 | Change đã archive | Đưa yêu cầu mới qua brainstorm-feature; Architectural tạo change folder mới, Bounded có thể không cần folder. |
+| Change đã hủy | Giữ folder ở `changes/cancelled/`; follow-up bắt đầu change mới thay vì mở lại folder đã hủy. |
 | Plan legacy còn open | Dùng plan-feature sửa chính file plan đó tại chỗ, giữ tên file và kết quả của task đã xong. |
 | Plan legacy đã complete | Đưa yêu cầu mới qua brainstorm-feature; không nối task mới vào plan cũ. Design mới có `## Previous work` link tới artifacts trước. |
 | Plan legacy có task hoàn thành nhưng thiếu field | Đọc bằng chứng task và verification trước khi coi plan là active/completed. Không suy ra complete chỉ từ Status: approved. |
@@ -222,7 +271,7 @@ Ví dụ: hôm nay có thêm yêu cầu “hỗ trợ sub” sau khi change hôm
 
 ## 8. Implement và review
 
-implement-task đọc AGENTS, `design.md`, `tasks.md`, `delta.md` liên quan, context và source trước khi sửa; với việc legacy, đọc spec/plan cũ. Nó chỉ thực hiện scope được duyệt, làm lần lượt từ task đầu tiên chưa `done`. Khi phát hiện behavior ngoài dự kiến hoặc yêu cầu mới, agent dừng để phân loại/approval lại; không âm thầm nới scope. Quyết định trong change ghi vào `decisions.md`; material change cũng cập nhật Decision Log và approval gate của `tasks.md`. Việc ngoài change dùng artifact quyết định phù hợp.
+implement-task đọc AGENTS, `design.md`, `tasks.md`, `delta.md` liên quan, context và source trước khi sửa; với việc legacy, đọc spec/plan cũ. Trước lần sửa source đầu tiên, chạy test/check liên quan đã có và ghi failure làm baseline; nếu không có check thì ghi rõ, không tạo test runner chỉ để lấy baseline. Nó chỉ thực hiện scope được duyệt, làm lần lượt từ task đầu tiên chưa `done`. Khi phát hiện behavior ngoài dự kiến hoặc yêu cầu mới, agent dừng để phân loại/approval lại; không âm thầm nới scope. Quyết định trong change ghi vào `decisions.md`; material change cũng cập nhật Decision Log và approval gate của `tasks.md`. Việc ngoài change dùng artifact quyết định phù hợp.
 
 Sau implementation, dùng review-and-verify. Đây là review theo diff và yêu cầu, không chỉ là chạy test:
 
@@ -231,7 +280,7 @@ Sau implementation, dùng review-and-verify. Đây là review theo diff và yêu
 3. Đọc toàn bộ output, kể cả warning và failure.
 4. Tìm spec gap khi chưa đủ evidence; ghi rõ lệnh hoặc bằng chứng còn thiếu.
 5. Kiểm tra stale docs, caller, boundary bảo mật, error handling và scope ngoài plan.
-6. Phân loại ảnh hưởng tới wiki. Nếu tài liệu trong scope còn thiếu hoặc sai, agent tự gọi Task updates để cập nhật và verify; chưa báo pass trước khi xong.
+6. Phân loại ảnh hưởng tới wiki. Nếu tài liệu trong scope còn thiếu hoặc sai, review báo blocker với `Status: fail` và `implement-task` gọi Task updates để cập nhật và verify; chưa báo pass trước khi xong.
 
 Review kết thúc bằng result block có Status, Evidence, Blockers, Non-blockers, Spec gaps, Wiki impact, Wiki pages và Wiki action. Chỉ nói pass khi tất cả yêu cầu và verification bắt buộc có evidence mới. Verification chưa chạy hoặc không thể chạy không được đổi thành pass; ghi cụ thể cannot verify và lý do.
 
@@ -307,7 +356,7 @@ Ví dụ link từ trang khác:
 
 document-wiki chạy `scripts/validate-llm-wiki.mjs` trong folder skill sau khi ghi wiki để kiểm source paths, Sources, relative links và anchors, ID trùng, prefix registry, thứ tự ID, SHALL/scenario và evidence. review-and-verify chạy lại script cho wiki đã đổi trong task, trước khi archive. Agent vẫn tự kiểm duplicate behavior và việc evidence có thật sự hỗ trợ requirement. Một test pass không đủ để chứng minh các phần ngữ nghĩa đó.
 
-Thiết kế chia bốn phần: truth layer (format Requirements), change folder, merge delta trong implementation và archive sau review, và validator script. Validator nằm trong `skills/document-wiki/scripts/` và nhận root của project đích làm tham số; CI của project chỉ chạy nó nếu team cấu hình thêm.
+Thiết kế chia bốn phần: truth layer (format Requirements), change folder, merge delta trong implementation và archive sau review, và validator script. Validator nằm trong `skills/document-wiki/scripts/` và nhận root của project đích làm tham số; team có thể chạy validator trên mọi PR bằng workflow mẫu trong mục 2.
 
 ## 10. Những folder nào xuất hiện?
 
@@ -321,11 +370,12 @@ Thiết kế chia bốn phần: truth layer (format Requirements), change folder
 | `docs/agent-devkit/INDEX.md` | process | Process artifact đầu tiên được tạo | skill tạo artifact đầu tiên |
 | `docs/agent-devkit/specs/` | process (legacy) | Architectural design được duyệt (việc cũ) | brainstorm-feature |
 | `docs/agent-devkit/plans/` | process (legacy) | Sau khi spec được duyệt (việc cũ) | plan-feature |
-| `docs/agent-devkit/decisions/` | process | Quyết định của việc không thuộc change hay plan/spec active | implement-task |
+| `docs/agent-devkit/decisions/` | process | Quyết định legacy; chỉ đọc, quyết định mới vào `decisions.md` của change | không (legacy) |
 | `docs/agent-devkit/estimates/` | process | Estimate được yêu cầu cho plan legacy | estimate-feature |
 | `docs/agent-devkit/handoffs/` | process | Checkpoint của việc không thuộc change folder | context-handoff |
 | `docs/agent-devkit/changes/<folder>/` | process | Change còn open: Architectural có `design.md` và `tasks.md`, thêm `delta.md` khi cần; Bounded chỉ có `delta.md` khi cần. Bounded không có artifact thì không tạo folder. `estimate.md` cần `tasks.md`; decision và handoff tùy chọn nằm cùng folder | brainstorm-feature, plan-feature, implement-task |
 | `docs/agent-devkit/changes/archive/<folder>/` | process | Sau khi `review-and-verify` archive một change đã verify | review-and-verify |
+| `docs/agent-devkit/changes/cancelled/<folder>/` | process | Change open bị hủy; nội dung giữ nguyên trừ link được rewrite, chuyển link sang `## Cancelled changes` và ghi lý do. Không đánh dấu complete | using-devkit |
 | `docs/llm/AGENTS.md` | wiki | Wiki skeleton được tạo | setup-codebase |
 | `docs/llm/INDEX.md` | wiki | Wiki skeleton; và khi thêm `## Requirement prefixes` | setup-codebase, document-wiki |
 | `docs/llm/FEATURES.md` | wiki | Chỉ khi file đã tồn tại | document-wiki (chỉ update) |
@@ -393,7 +443,7 @@ shop-api/
 
 ### Folder chỉ xuất hiện khi có lý do
 
-- `docs/agent-devkit/decisions/`: việc không thuộc change hay plan/spec active nhưng có quyết định cần lưu. Nếu có change, dùng `decisions.md` trong folder; material change cũng cập nhật Decision Log của `tasks.md`.
+- `docs/agent-devkit/decisions/`: legacy, chỉ đọc. Quyết định mới vào `decisions.md` của change (tạo và index folder nếu chưa có); material change với `tasks.md` đi qua `plan-feature`.
 - `docs/agent-devkit/estimates/`: chỉ khi người dùng yêu cầu estimate cho plan ngoài change folder. Estimate của change nằm cạnh `tasks.md` dưới tên `estimate.md`.
 - `docs/agent-devkit/handoffs/`: checkpoint ngoài change folder; work thuộc change dùng `handoff.md` trong folder.
 - Các category dưới `docs/llm/` như `domains/`, `workflows/`, `integrations/` hoặc `operations/`: chỉ tạo khi có trang wiki thực sự thuộc category đó. `architecture/overview.md` là baseline map khi workflow wiki cần tạo nó.

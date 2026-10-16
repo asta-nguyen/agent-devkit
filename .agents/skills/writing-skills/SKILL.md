@@ -55,26 +55,28 @@ Table of rationalizations and reality. Keep this section last.
 
 ## Skill Discovery Optimization (SDO)
 
-### Description = WHEN to use, NOT WHAT it does
+### Description = trigger first, then at most one purpose clause
 
-The description must only describe triggering conditions. Do NOT summarize
-the skill's process or workflow — agents will follow the description
-instead of reading the full skill.
+The description states when to use the skill, then at most one clause naming the
+outcome. Never list the skill's steps: agents follow the description instead of
+reading the full skill. This matches Anthropic's "Skill authoring best
+practices" (state what the skill does and when to use it; at most 1,024
+characters).
 
 ```yaml
-# BAD: summarizes workflow — agents follow this shortcut
+# BAD: summarizes the workflow — agents follow this shortcut
 description: Use when executing plans - dispatches subagent per task with review between tasks
 
-# GOOD: triggering conditions only
-description: Use when executing implementation plans with independent tasks
+# GOOD: trigger first, one purpose clause, no steps
+description: Use when executing an implementation plan with independent tasks, to deliver each task reviewed and verified
 ```
 
 **Rules:**
-- Start with "Use when..."
+- Start with "Use when..."; put the triggering conditions first
 - Include specific symptoms, situations, contexts
+- Add at most one purpose clause that names the outcome, never the steps
 - Third person
-- Under 500 characters
-- Never summarize the workflow
+- 100–400 characters (never over 1,024)
 
 ### Keyword coverage
 
@@ -104,6 +106,27 @@ Before writing guidance, classify the baseline failure:
 **No nuance clauses.** "Don't X unless it matters" reopens negotiation.
 Express a real exception as its own conditional on an observable predicate.
 
+## Test wording before keeping it
+
+Judge every added or cut sentence by a measured run, not by how it reads.
+
+1. **Scenario first.** Name the scenario in `EVALS.md` that exercises the
+   wording and its written pass condition. Write one if none exists.
+2. **Control.** Run the scenario three times without the new wording (baseline
+   or current skill), each in a fresh session on a disposable repository. Record
+   `Control: x/3`. Harness, grading, and flags are in `EVALS.md`, "Running a
+   scenario".
+3. **Treatment.** Run it three times with the new wording. Record `Runs: y/3`.
+4. **Keep or cut.**
+   - Keep new wording only when the control fails at least one run and the
+     treatment passes every run. Wording that the control already passes in 3/3
+     adds context cost with no measured effect: do not add it.
+   - A cut is safe when every scenario that exercises it keeps a pass count not
+     lower than the baseline's. Otherwise restore the wording.
+5. **Record** the host and version, run counts, and input and output tokens
+   when the host reports them. An unavailable host is `cannot verify`, never a
+   manual pass.
+
 ## Bulletproofing discipline skills
 
 Skills that enforce discipline need to resist rationalization. Agents find
@@ -130,22 +153,29 @@ loopholes under pressure.
 
 ## Token efficiency
 
-Skills load into agent context. Every token counts.
+Skills load into agent context. Every token counts. Limits follow Anthropic's
+"Skill authoring best practices" (body under 500 lines; description at most
+1,024 characters; references one level deep):
 
-- Keep skills under 500 words when possible
-- Cross-reference other skills instead of repeating
+| Item | Limit |
+|---|---|
+| `SKILL.md` lines | at most 500 (tested) |
+| `SKILL.md` characters | the skill's cap in `tests/plugin-smoke.mjs` (tested); a skill missing from its table fails |
+| `description` | starts "Use when"; trigger first, at most one purpose clause, no steps; 100–400 characters (tested) |
+| Reference files | linked from `SKILL.md` as "Read `references/x.md` when <condition>"; a table of contents when over 100 lines; one level deep |
+
+- Each shared rule has one owner; every other skill points to it in one line
+- Move conditional procedures to `references/`; keep prohibitions, red flags,
+  approval gates, and stop conditions inline
 - Compress examples to minimal viable illustration
 - Don't explain what's obvious from the command (`--help` exists)
-
-This authoring reference exceeds 500 words because it owns the repository's
-complete structure, discovery, discipline, and quality contract.
 
 ## Quality checklist
 
 Before deploying a skill:
 
 - [ ] Name uses only letters, numbers, hyphens
-- [ ] Description starts with "Use when..." — triggers only, no workflow summary
+- [ ] Description starts with "Use when...", puts triggers first, has at most one purpose clause, no steps, 100–400 characters
 - [ ] Keywords throughout for search (errors, symptoms, tools)
 - [ ] Clear overview with core principle
 - [ ] One excellent example (not multi-language)
@@ -154,7 +184,7 @@ Before deploying a skill:
 - [ ] Red flags table (if discipline skill)
 - [ ] No narrative storytelling
 - [ ] Supporting files only for heavy reference or reusable tools
-- [ ] Under 500 words (or justified exception)
+- [ ] At most 500 lines and within its character cap; conditional procedures moved to `references/`
 
 ## Common mistakes
 
@@ -167,7 +197,7 @@ Before deploying a skill:
 
 | Thought | Reality |
 |---|---|
-| "The description should explain what the skill does" | The description is a trigger filter. Explaining the workflow makes agents follow the shortcut and skip the skill body. |
+| "The description should explain what the skill does" | State the triggers first and at most one purpose clause naming the outcome. Listing the steps makes agents follow the shortcut and skip the skill body. |
 | "A longer skill is more helpful" | Skills load into context. Bloat pushes out the user's code. Trim to the minimum that survives pressure. |
 | "I'll add a `unless it makes sense` exemption" | Nuance clauses reopen negotiation under pressure. Express the real exception as a conditional on an observable predicate. |
 | "One example per language is clearer" | Multi-language dilution lowers every example's quality. Pick one excellent example. |

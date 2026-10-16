@@ -25,7 +25,7 @@ When skills request actions, use these OpenCode equivalents:
 - Dispatch a subagent → \`task\` with \`subagent_type: "general"\`
 - Invoke a skill → OpenCode's native \`skill\` tool
 - Read files → \`read\`
-- Create, edit, or delete files → \`apply_patch\`
+- Create, edit, or delete files → \`edit\` / \`write\`, or \`apply_patch\` when that is the available edit tool
 - Run shell commands → \`bash\`
 - Search files → \`grep\`, \`glob\`
 - Fetch a URL → \`webfetch\`
