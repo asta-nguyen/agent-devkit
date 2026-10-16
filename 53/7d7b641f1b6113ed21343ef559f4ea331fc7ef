@@ -1,0 +1,34 @@
+EVALS.md
+  s_0c32d80816c100::t_6da54b50292967 372-373
+  s_0c32d80816c100::t_7b173a79e9e6d3 328-347
+  s_0c32d80816c100::t_e30f2b9e41df99 348-371,374
+skills/context-handoff/SKILL.md
+  s_90722ea9228554::t_3e88b39bdcaf1e 74-81
+skills/using-devkit/SKILL.md
+  s_90722ea9228554::t_ba591526a9fc99 23-24
+  s_0c32d80816c100::t_deb7eb5f1917c6 19-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "537d7b641f1b6113ed21343ef559f4ea331fc7ef",
+  "prompts": {},
+  "sessions": {
+    "s_0c32d80816c100": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a14061-5519-7d41-95d5-42ae90db82d8",
+        "model": "gpt-6-luna"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    },
+    "s_90722ea9228554": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "180218c3-b948-414f-b9f7-4dd21878ff7e",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
