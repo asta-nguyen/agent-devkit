@@ -71,6 +71,14 @@ Do not create handoffs for short tasks that are already complete.
    index.
 5. Run `git diff --check` and read the created checkpoint before stopping.
 
+## Git safety
+
+Working-tree changes and untracked notes are user-owned. A request to clean up,
+reset, or "discard whatever is lying around" does not authorize `git reset
+--hard`, `git clean`, `git checkout -- <path>`, `git stash`, or deleting files.
+A copy or stash first does not change that. List what would be lost, ask which
+exact paths and command the user approves, and stop until they answer.
+
 ## Resume
 
 At the start of the next session, find the handoff in `docs/agent-devkit/changes/*/handoff.md`

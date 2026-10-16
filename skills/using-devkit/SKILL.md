@@ -16,11 +16,12 @@ first: `read-codebase-context`, or `setup-codebase` on a first visit.
 - Link internally with relative Markdown links; convert legacy `[[...]]` links
   in any document you edit and report unresolvable targets.
 - Never put process artifacts in or link them from `docs/llm/`.
-- Commit or push only when the user explicitly asks (a commit only after final
-  `review-and-verify` passes), within the repository's approval rules. One
-  branch/PR per task; no locks or coordination tools. When resolving conflicts in
-  `docs/agent-devkit/INDEX.md` or `docs/llm/INDEX.md`, keep every task link and
-  verify all targets.
+- Commit/push only on explicit user request; commits require final
+  `review-and-verify` pass. One branch/PR per task; no locks or coordination
+  tools. For conflicts in `docs/agent-devkit/INDEX.md` or `docs/llm/INDEX.md`,
+  preserve every task link and verify targets.
+- Working-tree changes are user-owned: "clean up" never authorizes `git reset
+  --hard`, `git clean`, `git stash`, or deletes, even after a backup. Ask first.
 
 ## Handoffs and stops
 
