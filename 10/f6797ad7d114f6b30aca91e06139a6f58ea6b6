@@ -1,0 +1,109 @@
+package.json
+  s_a2f655af6c9e37::t_216637c9239b9b 3
+skills/using-devkit/SKILL.md
+  s_0c32d80816c100::t_ca0594b1ca14a1 62
+  s_0c32d80816c100::t_8a31c94c99ef48 38
+  s_a2f655af6c9e37::t_1ddd979bd0d839 56-58
+  s_a2f655af6c9e37::t_a56fed33453c33 36-37
+  s_0c32d80816c100::t_70813d7d1e82cb 54
+  s_a2f655af6c9e37::t_ef1acee53185f8 19-20,73-76,80-81,85,101
+  s_a2f655af6c9e37::t_7c3045ebadbf36 72
+  s_0c32d80816c100::t_d850afbe0380fb 29-33,60-61
+  s_0c32d80816c100::t_62d19f3ecc8200 63,71
+  s_a2f655af6c9e37::t_7b6e8290ad0970 65-68
+  s_a2f655af6c9e37::t_ceb3af110a5948 88
+  s_0c32d80816c100::t_da2d13e84d6a46 27-28,39-41
+  s_a2f655af6c9e37::t_8a30222309c551 64
+  s_0c32d80816c100::t_f3e4788e02b351 55
+  s_a2f655af6c9e37::t_e00f5e435722fd 69-70
+  s_a2f655af6c9e37::t_33cc3bc743deab 59
+.claude-plugin/plugin.json
+  s_a2f655af6c9e37::t_216637c9239b9b 3
+.cursor-plugin/plugin.json
+  s_a2f655af6c9e37::t_216637c9239b9b 3
+GUIDE.md
+  s_0c32d80816c100::t_0c21b79248d245 64,71-74,95-96,98-100,102-105,107-115,117-120,136-157,159-163,282,333-335,541
+  s_0c32d80816c100::t_aaaccf0e7bde93 121-122
+  s_a2f655af6c9e37::t_216637c9239b9b 97,101,106,116,158
+  s_0c32d80816c100::t_50af17d48cec86 356-358
+  s_a2f655af6c9e37::t_a14024bc9b585c 353-355,791
+  s_a2f655af6c9e37::t_cbecf405de24db 123
+EVALS.md
+  s_0c32d80816c100::t_94bee39f6033d6 1234-1242,1244,1247-1249,1286-1299
+  s_0c32d80816c100::t_b461cab2092b96 1250-1267,1300,1310-1318,1322-1326
+  s_0c32d80816c100::t_7020f093c97988 1301-1309,1319-1321
+  s_a2f655af6c9e37::t_a14024bc9b585c 1243,1245-1246,1270-1271
+  s_0c32d80816c100::t_e73dbcb4291e9a 1268-1269
+  s_a2f655af6c9e37::t_ea8c0f84cc0789 1272-1285
+  s_0c32d80816c100::t_24771d0f7ebe92 49-52
+.claude-plugin/marketplace.json
+  s_a2f655af6c9e37::t_216637c9239b9b 12
+.opencode/INSTALL.md
+  s_0c32d80816c100::t_6bc133c540957a 16-17
+  s_a2f655af6c9e37::t_216637c9239b9b 9
+GUIDE.vi.md
+  s_0c32d80816c100::t_bf1fcb7637f86c 359
+  s_a2f655af6c9e37::t_216637c9239b9b 45-46,49-51,98
+  s_0c32d80816c100::t_aaaccf0e7bde93 52-53
+  s_0c32d80816c100::t_e7b2504f5735e5 147,274
+  s_a2f655af6c9e37::t_a14024bc9b585c 253,378
+  s_0c32d80816c100::t_50af17d48cec86 263
+  s_0c32d80816c100::t_4d5f8114b503c5 61-63,77-97,99-102
+  s_a2f655af6c9e37::t_e2c74da0586b40 103
+.cursor-plugin/marketplace.json
+  s_a2f655af6c9e37::t_216637c9239b9b 14
+PILOT.md
+  s_0c32d80816c100::t_c20f36db08fbec 14,96,99,201-210
+  s_a2f655af6c9e37::t_216637c9239b9b 97-98
+  s_0c32d80816c100::t_94bee39f6033d6 105-106,333-334
+  s_a2f655af6c9e37::t_6e62d234296813 211
+skills/implement-task/SKILL.md
+  s_0c32d80816c100::t_a2349a2e9b305f 54
+RELEASE_DESCRIPTION.md
+  s_a2f655af6c9e37::t_07e03d330699ed 1,3-5,9-22,26-29,31-34,38-39
+.codex-plugin/plugin.json
+  s_a2f655af6c9e37::t_216637c9239b9b 3
+README.md
+  s_0c32d80816c100::t_50af17d48cec86 308
+  s_0c32d80816c100::t_aaaccf0e7bde93 103-106,115-119
+  s_a2f655af6c9e37::t_216637c9239b9b 10,95,99,111,138
+  s_0c32d80816c100::t_3ab55247bc846b 92-93
+  s_0c32d80816c100::t_6bc133c540957a 94,96,112,144-146,171-172
+  s_a2f655af6c9e37::t_58f29b24ac44d0 173
+.devin-plugin/plugin.json
+  s_a2f655af6c9e37::t_216637c9239b9b 3
+README.vi.md
+  s_a2f655af6c9e37::t_216637c9239b9b 10,94,98,109,137
+  s_0c32d80816c100::t_50af17d48cec86 35,307
+  s_0c32d80816c100::t_aaaccf0e7bde93 102-104,113-116
+  s_0c32d80816c100::t_6bc133c540957a 93,95,110,145-146,172-173
+  s_a2f655af6c9e37::t_a429fe1f5cdcf9 96,174
+CHANGELOG.md
+  s_a2f655af6c9e37::t_216637c9239b9b 3
+  s_a2f655af6c9e37::t_a14024bc9b585c 7
+  s_0c32d80816c100::t_40b81bab6c6abc 8-10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "10f6797ad7d114f6b30aca91e06139a6f58ea6b6",
+  "prompts": {},
+  "sessions": {
+    "s_0c32d80816c100": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a14061-5519-7d41-95d5-42ae90db82d8",
+        "model": "gpt-6-luna"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    },
+    "s_a2f655af6c9e37": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "31a036d9-4b6a-45ef-b71a-51baa2825f26",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
