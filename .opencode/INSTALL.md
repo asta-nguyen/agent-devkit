@@ -6,13 +6,15 @@ Add the Git-backed plugin to the target project's `opencode.json`:
 {
   "$schema": "https://opencode.ai/config.json",
   "plugin": [
-    "agent-devkit@git+https://github.com/asta-nguyen/agent-devkit.git"
+    "agent-devkit@git+https://github.com/asta-nguyen/agent-devkit.git#v0.9.0"
   ]
 }
 ```
 
 Restart OpenCode. The plugin registers the bundled `skills/` directory and
 injects `using-devkit` into the first user message.
+Use the same release tag shown in the Codex and Claude Code install commands
+when configuring the rest of the team. Change the tag and restart to upgrade.
 
 Verify the installation by asking OpenCode to list its skills or by running:
 

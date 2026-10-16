@@ -51,6 +51,7 @@ context.
 4. Read `## Decision sources` below; conversation memory is not one. Persist a
    newer user answer through the clarification flow below before using it.
 5. After tracing the real flow, apply `## Implementation ladder` below.
+6. Follow `using-devkit`'s baseline rule.
 
 ## Implementation ladder
 

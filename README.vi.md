@@ -7,7 +7,7 @@ thiết, code, check, cập nhật tài liệu liên quan và review.
 
 **Hiểu task → thực hiện → review và hoàn tất.**
 
-Version 0.8.0 — xem [changelog](CHANGELOG.md) và [release notes](RELEASE_DESCRIPTION.md).
+Version 0.9.0 — xem [changelog](CHANGELOG.md) và [release notes](RELEASE_DESCRIPTION.md).
 
 Không cần nhớ tên skill. Chỉ cần giao task:
 
@@ -32,7 +32,7 @@ lần. Agent tự gọi skill tiếp theo. Hướng dẫn chi tiết:
 | Semantic / RAG-style code retrieval | Semantic search, graph traversal và caller analysis qua OpenEZ tùy chọn; source trực tiếp vẫn là nguồn sự thật. |
 | Delivery theo spec và plan | Design đã approve, plan mô tả behavior và test case có tên, impact map được lưu, edge-case coverage và gate implementation rõ ràng. |
 | Quản lý context tiết kiệm token | Truy hồi source có trọng tâm, handoff ngắn gọn và evidence thay vì nạp cả repository vào context. |
-| Verification dựa trên evidence | Test/check mới, finding chính xác `path:line` và gap `cannot verify` khi thiếu bằng chứng. |
+| Verification dựa trên evidence | Baseline từ check đã có, finding chính xác `path:line` và gap `cannot verify` khi thiếu bằng chứng; không tự dựng test runner chỉ để có baseline. |
 | Capture và enforce convention | Rule riêng của repository có provenance, approval, scoped precedence và review evidence. |
 | Lean audit toàn repository | Finding report-only với `delete`, `stdlib`, `native`, `yagni`, `shrink`, không auto-fix. |
 
@@ -90,23 +90,30 @@ Project đích, không phải repository này, sở hữu `AGENTS.md` và
 Repository này expose Codex plugin qua marketplace tại
 `.agents/plugins/marketplace.json`:
 
+Để cả team dùng cùng version, pin Codex, Claude Code và OpenCode vào cùng một
+release tag. Ví dụ dưới đây dùng `v0.9.0`; khi nâng version, đổi cả ba ref
+cùng lúc sang release có chứa thay đổi team cần dùng.
+
 ```bash
-codex plugin marketplace add asta-nguyen/agent-devkit --ref main
+codex plugin marketplace add asta-nguyen/agent-devkit --ref v0.9.0
 codex plugin add agent-devkit@agent-devkit
 ```
 
-Sau khi push update, chạy `codex plugin marketplace upgrade agent-devkit`, rồi
-mở một Codex thread mới để load version plugin mới.
+Khi chuyển team sang tag mới, cập nhật source marketplace đã cấu hình sang ref
+đó, chạy `codex plugin marketplace upgrade agent-devkit`, rồi mở Codex thread
+mới. Lệnh upgrade chỉ refresh source hiện tại, không tự đổi pin.
 
 ### Cài Claude Code plugin
 
 ```bash
-claude plugin marketplace add asta-nguyen/agent-devkit
-claude plugin install agent-devkit@agent-devkit
+claude plugin marketplace add asta-nguyen/agent-devkit#v0.9.0
+claude plugin install agent-devkit@agent-devkit --scope user
 ```
 
-Sau khi update, chạy `claude plugin marketplace update agent-devkit`, rồi
-`/reload-plugins` trong Claude Code.
+Khi chuyển sang tag mới, đăng ký lại Claude marketplace với ref mới rồi cài
+plugin lại. `claude plugin marketplace update agent-devkit` chỉ refresh source
+đã đăng ký, không tự đổi pin. Xóa marketplace sẽ gỡ plugin của nó, nên cần cài
+lại ở cùng scope. Xem [hướng dẫn quản lý plugin của Claude Code](https://code.claude.com/docs/en/plugins/install).
 
 ### Cài Cursor và Devin CLI
 
@@ -127,7 +134,7 @@ Trong `opencode.json` của project đích, thêm Git-backed plugin:
 {
   "$schema": "https://opencode.ai/config.json",
   "plugin": [
-    "agent-devkit@git+https://github.com/asta-nguyen/agent-devkit.git"
+    "agent-devkit@git+https://github.com/asta-nguyen/agent-devkit.git#v0.9.0"
   ]
 }
 ```
@@ -135,11 +142,8 @@ Trong `opencode.json` của project đích, thêm Git-backed plugin:
 Restart OpenCode sau khi đổi config. Plugin đăng ký các skill đi kèm và inject
 `using-devkit` vào user message đầu tiên. Adapter hiện nhắm tới OpenCode 1.x;
 OpenCode V2 sẽ cần adapter plugin API riêng khi V2 trở thành release được hỗ
-trợ.
-Để pin một release, thêm tag vào URL (ví dụ `agent-devkit.git#v0.8.0`).
-OpenCode cache mỗi URL trong `~/.cache/opencode/packages/`, nên tag đã pin
-không tự cập nhật: đổi tag để nâng cấp. Với URL không pin, xóa folder cache
-tương ứng rồi restart để lấy bản mới nhất.
+trợ. OpenCode cache mỗi URL trong `~/.cache/opencode/packages/`; khi nâng
+version cho team, đổi tag sang release mới rồi restart.
 
 ### Cài skill trực tiếp vào project
 
@@ -164,6 +168,9 @@ cần `skill.json`.
 ```bash
 npx skills add asta-nguyen/agent-devkit -a claude-code
 ```
+
+Lệnh này theo default branch. Nếu team cần pin version, dùng hướng dẫn native
+plugin phía trên.
 
 Repository public hiện tại là `asta-nguyen/agent-devkit`; shorthand
 `asta/agent-devkit` không phải GitHub path hiện tại.
@@ -297,7 +304,7 @@ FFF không bắt buộc. Không có FFF, các skill dùng `rg` và vẫn đạt 
 | `brainstorm-feature` | Phân loại scope, làm rõ và xin design approval; Spike đi tới điều tra, Bounded tới implement, Architectural qua change folder. |
 | `plan-feature` | Viết `tasks.md` cạnh `design.md`, tóm tắt plan và xin duyệt chung một lần; plan legacy giữ vị trí/gate cũ. |
 | `estimate-feature` | Estimate task trong change Architectural hoặc plan legacy khi được yêu cầu. |
-| `implement-task` | Thực thi task đã duyệt, ghi progress/result, check code và tự cập nhật tài liệu liên quan trước final review. |
+| `implement-task` | Chạy check hiện có trước lần sửa source đầu tiên, thực thi task đã duyệt, ghi progress/result và cập nhật tài liệu trước final review. |
 | `systematic-debugging` | Tìm root cause, phân loại bug rồi fix hoặc hand off để design. |
 | `review-and-verify` | Review diff, chạy check và không claim hoàn tất nếu thiếu evidence mới. |
 

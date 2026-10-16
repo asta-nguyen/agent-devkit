@@ -61,12 +61,16 @@ implementation → verification → documentation.
 
 ## 2. Installation
 
-### Option 1: Agent Skills CLI (recommended)
+### Option 1: Agent Skills CLI (default branch; unpinned)
 
 ```bash
 # Install all skills into Claude Code
 npx skills add asta-nguyen/agent-devkit -a claude-code
 ```
+
+This follows the repository's default branch. For team installs that need a
+fixed version, use the native plugin commands below and pin every client to the
+same published release tag.
 
 > **Note:** The GitHub repository is `asta-nguyen/agent-devkit` (not
 > `asta/agent-devkit`).
@@ -88,6 +92,35 @@ This repository includes native packaging for the supported clients:
 
 Each client reuses the canonical Markdown skills under `skills/`.
 
+### Pin one release for the team
+
+Use one published tag across clients. These examples use `v0.9.0`; replace it
+in all three places with a release tag that contains the changes the team needs.
+
+```bash
+codex plugin marketplace add asta-nguyen/agent-devkit --ref v0.9.0
+codex plugin add agent-devkit@agent-devkit
+```
+
+```bash
+claude plugin marketplace add asta-nguyen/agent-devkit#v0.9.0
+claude plugin install agent-devkit@agent-devkit --scope user
+```
+
+For OpenCode, set the plugin entry in `opencode.json`:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    "agent-devkit@git+https://github.com/asta-nguyen/agent-devkit.git#v0.9.0"
+  ]
+}
+```
+
+Change all configured refs together when the team upgrades, then follow each
+client's update steps. Refreshing a marketplace alone keeps its existing pin.
+
 ### Option 3: Manual copy (for projects that discover `.agents/skills`)
 
 ```bash
@@ -99,6 +132,34 @@ find .agents/skills -name SKILL.md -print
 
 When installed this way, run the bundled wiki check from the target project
 with `node .agents/skills/document-wiki/scripts/validate-llm-wiki.mjs .`.
+
+To run the check on every pull request, add this workflow as
+`.github/workflows/validate-llm-wiki.yml`. The `pull_request` trigger has no
+path filter, so it runs for every PR. Keep its `ref` on the same DevKit release
+tag the team uses.
+
+```yaml
+name: Validate LLM wiki
+
+on:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - uses: actions/checkout@v7
+        with:
+          repository: asta-nguyen/agent-devkit
+          ref: v0.9.0
+          path: .agent-devkit
+      - name: Validate wiki
+        run: node .agent-devkit/skills/document-wiki/scripts/validate-llm-wiki.mjs .
+```
 
 ### Option 4: OpenEZ (optional semantic index)
 
@@ -218,7 +279,7 @@ FFF is never required. Without it, skills use `rg` and reach the same results.
 | `brainstorm-feature` | A new, ambiguous request or a request that changes product behavior | Classifies Spike / Bounded / Architectural, asks clarifying questions, and presents a design; routes Spike to investigation, Bounded to implementation, and Architectural through a change folder. Only eligible exact-scope changes skip waiting after impact checks. |
 | `plan-feature` | Right after an architectural `design.md` is written, or to revise an open change | Writes `tasks.md` (the plan): behavior, interfaces, named test cases, verification, and progress, without function or test code; presents design and tasks for one joint approval. |
 | `estimate-feature` | When a PM or BA explicitly requests an estimate | Estimates an hours range for each plan task with confidence and rationale. Runs only when requested. |
-| `implement-task` | An approved bounded design or an approved architectural plan exists | Traces code, applies the 6-step implementation ladder, and verifies each non-trivial change; `review-and-verify` owns the final wiki-impact block. |
+| `implement-task` | An approved bounded design or an approved architectural plan exists | Runs existing relevant checks before the first source edit, traces code, and verifies each non-trivial change; it does not add a runner just to record a baseline. |
 | `systematic-debugging` | Any technical issue: bug, test failure, build failure, or performance problem | Investigates root cause, classifies the bug, writes a verify plan, then fixes bounded bugs or hands architectural bugs off for design. |
 | `review-and-verify` | After implementation and before claiming completion | Enforces **NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE**. Reviews the diff, runs checks, and performs a complexity pass. |
 
@@ -269,6 +330,9 @@ the agent calls the next skill itself, and every stop ends with a
   boundary, or data-loss risk; and it is not a bug. Otherwise it is Bounded.
 - `design.md` explains the solution and behavior; `tasks.md` is the plan
   (steps, verification, progress). There is no separate plan file.
+- Before the first source edit, implementation runs existing relevant tests or
+  checks and records failures as baseline. If none exist, it records that; it
+  does not add a test runner just to establish a baseline.
 - Before approval, the agent summarizes the goal, scope/impact, ordered tasks,
   verification, documentation, and risks/open decisions in chat, with links to
   the detailed files. It states what approval permits; planning-only requests
@@ -286,8 +350,12 @@ the agent calls the next skill itself, and every stop ends with a
 - Implementation updates documentation for affected behavior automatically
   when `docs/llm/` exists. It merges any delta before other content edits;
   final review verifies code and documentation, then archives and checks links.
-  Missing required coverage blocks completion. Without a wiki, skip updates
-  without creating one. You review the diff and commit.
+  To cancel an open change, record the user's reason, move its folder to
+  `changes/cancelled/<same name>/` with the archive's move-and-relink step
+  (only links change), and list it under `## Cancelled changes`.
+  Cancellation does not complete the change or discard code/Git work; follow-up
+  starts a new change. Missing required coverage blocks completion. Without a
+  wiki, skip updates without creating one. You review the diff and commit.
 - `estimate-feature` runs before the joint approval only when you ask for an
   estimate; "estimate only" or "plan only" never starts implementation.
 - Planning and estimation may use a written design with planned assumptions
@@ -470,6 +538,7 @@ docs/
         decisions.md                  # optional, persistent decisions
         handoff.md                    # optional, when work pauses
       archive/                        # completed changes
+      cancelled/                      # cancelled changes, with reason in INDEX.md
     specs/ plans/ decisions/ estimates/   # legacy, read-only history
     handoffs/                         # checkpoints outside a change
   llm/                                # source-grounded, verified wiki
@@ -719,6 +788,7 @@ is global or mandatory: each entry appears only when its condition holds.
 | `docs/agent-devkit/handoffs/` | process | Checkpoint for work outside an active change | `context-handoff` |
 | `docs/agent-devkit/changes/<name>/` | process | Open change: Architectural has `design.md` and `tasks.md`, with `delta.md` only when needed; Bounded has `delta.md` only when needed. A Bounded change with no artifact has no folder. Optional `estimate.md` (when `tasks.md` exists), `decisions.md`, and `handoff.md` stay alongside them. | `brainstorm-feature`, `plan-feature`, `implement-task` |
 | `docs/agent-devkit/changes/archive/<name>/` | process | `review-and-verify` archives a verified change | `review-and-verify` |
+| `docs/agent-devkit/changes/cancelled/<name>/` | process | An open change is cancelled with a recorded reason; its folder moves with only links rewritten, and its INDEX link moves to `## Cancelled changes`. This does not mark work complete. | `using-devkit` |
 | `docs/llm/AGENTS.md`, `INDEX.md` | wiki | Wiki skeleton is created | `setup-codebase` |
 | `docs/llm/FEATURES.md` | wiki | Only updated if it already exists | `document-wiki` |
 | `docs/llm/architecture/overview.md` | wiki | Baseline map | `document-wiki` |

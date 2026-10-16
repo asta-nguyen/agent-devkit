@@ -11,7 +11,7 @@
 2. [Trial preparation](#2-trial-preparation)
 3. [Running the trial](#3-running-the-trial)
 4. [Evaluation criteria](#4-evaluation-criteria)
-5. [Evaluation form](#5-evaluation-form)
+5. [Evaluation form](#5-evaluation-form-template)
 6. [Post-trial decision](#6-post-trial-decision)
 
 ---
@@ -93,13 +93,17 @@ Use this task log so time and token fields stay together:
 The tech lead does this once for the whole team:
 
 ```bash
-# Install skills for all pilot users
-npx skills add asta-nguyen/agent-devkit -a claude-code
+# Use one published release tag for every team client.
+# Example: replace v0.9.0 everywhere with the same tag containing the pilot changes.
+claude plugin marketplace add asta-nguyen/agent-devkit#v0.9.0
+claude plugin install agent-devkit@agent-devkit --scope user
 
 # In the target repository, run setup-codebase to create context files
 # (AGENTS.md, CLAUDE.md, docs/llm/ skeleton)
 ```
 
+- Codex and OpenCode users should use the same release tag selected above in the
+  README install commands/config; change it across all clients together.
 - OpenEZ is optional: use semantic/graph search only when a task needs code
   relationship lookup and the workspace index is healthy; otherwise continue
   with FFF or `rg`. Do not install OpenEZ based on repository line count.
@@ -193,6 +197,17 @@ Record these during the trial:
 - Which workflows conflicted with the team's habits?
 - Did the agent ignore any skill instructions?
 - Were there times you wanted to bypass a workflow? Why?
+
+When reporting an agent mistake, post a short reproducible report in the shared
+channel or note from the Day 1 checklist:
+
+- Task and exact prompt, client/model/version, and skill involved.
+- Expected behavior versus actual behavior, plus the shortest steps to reproduce.
+- The relevant log or tool-output excerpt and affected paths.
+
+Redact API keys, tokens, credentials, personal/customer data, and unrelated
+conversation or source before sharing. Include only the excerpt needed to show
+the failure.
 
 ---
 
@@ -315,8 +330,8 @@ real need:
 
 - **Monorepo support** — define boundaries between root/package-level
   `AGENTS.md` files, per-package wikis, and cross-package dependency tracing.
-- **CI validation** — choose minimal validation for YAML frontmatter and internal
-  links; avoid adding dependencies if GitHub Actions or native tooling is enough.
+- **Additional CI checks** — consider only if the pilot shows a need beyond the
+  documented wiki validator workflow.
 - **Subagent/parallel execution** — consider it only after measuring a bottleneck
   and agreeing on ownership, merge handling, verification evidence, and cost/context limits.
 

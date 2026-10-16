@@ -16,32 +16,29 @@ first: `read-codebase-context`, or `setup-codebase` on a first visit.
 - Link internally with relative Markdown links; convert legacy `[[...]]` links
   in any document you edit and report unresolvable targets.
 - Never put process artifacts in or link them from `docs/llm/`.
-- Commit/push only on explicit user request; commits require final
-  `review-and-verify` pass. One branch/PR per task; no locks or coordination
-  tools. For conflicts in `docs/agent-devkit/INDEX.md` or `docs/llm/INDEX.md`,
+- Commit/push only on explicit request, after a final `review-and-verify`
+  pass. One branch/PR per task; no locks or coordination tools. For conflicts in `docs/agent-devkit/INDEX.md` or `docs/llm/INDEX.md`,
   preserve every task link and verify targets.
 - Working-tree changes are user-owned: "clean up" never authorizes `git reset
   --hard`, `git clean`, `git stash`, or deletes, even after a backup. Ask first.
 
 ## Handoffs and stops
 
-- Call the next skill directly; the user never retypes a skill name. Stop only
-  for an approval gate, a user question, an action only the user can do, or a
-  stalled fix loop (`implement-task`).
-- Each route has one approval: the chat design (Bounded) or `design.md` +
-  `tasks.md` (+ `delta.md`) together (Architectural). It authorizes
-  implementation through final review; ask again only when scope, observable
-  behavior, an interface, a schema, or risk changes materially. An instruction
-  given before the approved files existed is not approval.
-- A **route handoff** advances the work (design → plan → implement → review). A
-  **repair handoff** fixes an artifact another skill needs; the repairing skill
-  returns to its caller and never starts a route handoff.
+- Call the next skill directly. Stop only for approval, user question/action,
+  or a stalled fix loop. Route handoffs advance; repair handoffs return to caller.
+- Each route has one approval: Bounded chat design or Architectural
+  `design.md` + `tasks.md` (+ `delta.md`). It authorizes implementation through
+  review; ask again only for a material change to scope, behavior, interface,
+  schema, or risk. An instruction before the approved files existed is not
+  approval.
 - Stop where the user limited the request ("plan only"); never call
   `implement-task` without a request to implement.
-- Implementation includes documentation: call `document-wiki`'s
-  `## Task updates` when an existing wiki needs an in-scope update; stale or
-  missing coverage blocks completion. Merge, archive, and relinking need no
-  extra approval.
+- **Baseline:** before the first source edit, run existing relevant checks and
+  record failures. If none, note it; no baseline-only test/runner.
+  Implementation includes documentation: call
+  `document-wiki`'s `## Task updates` when an existing wiki needs an in-scope
+  update; stale or missing coverage blocks completion. Merge, archive, and
+  relinking need no extra approval.
 - Every turn that ends a skill, stops for the user, or hands off ends with:
 
   ```text
@@ -54,40 +51,41 @@ first: `read-codebase-context`, or `setup-codebase` on a first visit.
 
 ## Change lifecycle
 
-A change has a folder, `docs/agent-devkit/changes/<name>/`, only when it
-produces a file (`design.md`, `tasks.md`, `delta.md`, `estimate.md`,
-`decisions.md`, `handoff.md`); an Architectural change always has `design.md`
-and `tasks.md`. Index a folder under `## Changes` in `docs/agent-devkit/INDEX.md`
-when it is created, creating the heading if missing; `plan-feature` indexes an
-Architectural folder only on joint approval.
+`docs/agent-devkit/changes/<name>/` exists only with a process file
+(`design.md`, `tasks.md`, `delta.md`, `estimate.md`, `decisions.md`, or
+`handoff.md`); Architectural changes need `design.md` and `tasks.md`. On
+creation (Architectural: on joint approval), link it under `## Changes` in
+`docs/agent-devkit/INDEX.md`, adding the heading if missing.
 
-- **Open:** revise files in place; `tasks.md`'s `## Approval Gate` records
-  approval, not completion. Material changes reopen the gate.
-- **Complete:** after final review passes, `review-and-verify` moves the folder
-  to `changes/archive/<same name>/` and its link to `## Archived changes`. An
-  archived change is history: add no requirements, tasks, or results, and start a
-  new change for a follow-up.
-- **Delta condition:** write `delta.md` only when a `docs/llm/`
-  requirement needs `ADDED`, `MODIFIED`, or `REMOVED`; a domain with no page, no
-  `docs/llm/`, or code restoring a documented requirement needs none. A delta
-  targets only a `## Requirements` page: first convert a legacy
-  `## Business rules` page with `document-wiki`'s
-  `## Convert a legacy target page`.
-- Earlier-version plans, specs, decision files, and `Required`/`Execution`
-  gates are legacy: read `references/legacy.md` when you meet one.
+- **Open:** edit in place; `tasks.md`'s `## Approval Gate` records approval,
+  not completion. Material changes reopen it.
+- **Complete:** after final review passes, `review-and-verify` moves the folder to
+  `changes/archive/<same name>/` and relinks under `## Archived changes`.
+- **Cancelled:** needs the user's reason (ask if missing). Move the folder to
+  `changes/cancelled/<same name>/` via `review-and-verify`'s move-and-relink
+  step (links only), listing it under `## Cancelled changes` with the reason.
+  Not completion: never archive, mark tasks done, or discard code/Git changes.
+  No folder: create none; say so.
+- Archived and cancelled folders are history: add no requirements, tasks, or
+  results; follow-up starts a new change.
+- **Delta:** create only for an existing wiki requirement needing
+  `ADDED`/`MODIFIED`/`REMOVED`; not for a domain with no page, missing wiki,
+  or restored behavior. Target `## Requirements` pages; convert a legacy
+  `## Business rules` page with `document-wiki` first.
+- Older plans, specs, decision files, and `Required`/`Execution` gates are
+  legacy: see `references/legacy.md`.
 
 ## Task flows
 
-Classify the task, state the class so the user can override it, then follow its
-row. When in doubt take the heavier row; hidden complexity found later moves up,
-never down.
+Classify the task, state the class (the user may override), then follow its
+row. When in doubt take the heavier row; hidden complexity moves up, never down.
 
 | Task | Flow and owning skills |
 |---|---|
-| Spike or bug question ("can we…?", "is this a bug?") | Investigate → report evidence or a recommendation; no production code: `brainstorm-feature` (Spike), `systematic-debugging` (bug question) |
+| Spike or bug question ("can we…?", "is this a bug?") | Investigate → report evidence; no production code: `brainstorm-feature` (Spike), `systematic-debugging` (bug question) |
 | Clear, small change (conditions below) | Impact check → code → review: `brainstorm-feature` → `implement-task` → `review-and-verify` |
 | Bounded feature (any other change to an existing flow) | Settle decisions → chat design → approve → code → review: `brainstorm-feature` → `implement-task` → `review-and-verify` |
-| Bounded bug | Reproduce → trace root cause → check fails → fix → check passes → review: `systematic-debugging` → `review-and-verify` |
+| Bounded bug | Reproduce → root cause → failing check → fix → passing check → review: `systematic-debugging` → `review-and-verify` |
 | Architectural feature or bug | Clarify → `design.md` + `tasks.md` → **one joint approval** → code → review: `brainstorm-feature` → `plan-feature` → `implement-task` → `review-and-verify` |
 
 - A clear, small change meets all four: the user named the exact change and file
@@ -100,5 +98,5 @@ never down.
   architectural bugs up.
 
 Other routes: `plan-feature` revises an open `tasks.md` or legacy plan (also for
-a material decision found during implementation); `brainstorm-feature` revises
+a material decision mid-implementation); `brainstorm-feature` revises
 an open Bounded `delta.md`; `implement-task` resumes an approved change.

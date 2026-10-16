@@ -1,9 +1,13 @@
 # Changelog
 
-## [Unreleased]
+## [0.9.0] - 2026-10-16
 
 ### Changed
 
+- Documented open-change cancellation with a reason and a relinked folder move,
+  pre-edit checks for existing failures, one shared client release tag, the
+  wiki-validator PR workflow, and pilot error reports; repaired the pilot
+  evaluation-form anchor.
 - Cut the skills' always-loaded context: all `SKILL.md` files shrink from about
   130,000 to about 100,000 bytes, and the per-session bootstrap (`using-devkit`)
   from about 9,700 to 5,900. Part of that content moved, not vanished: the

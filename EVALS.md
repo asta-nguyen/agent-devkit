@@ -46,9 +46,10 @@ to regrade.
   scenario whose baseline is below 3/3 is reported as flaky, and "not lower" is
   a weak check for it.
 
-**Record.** For each scenario write `Control: x/3` (baseline plugin) and
-`Runs: y/3` (plugin under test), plus the host, its version, and the input and
-output tokens when reported.
+**Record.** Write `Control: x/n` (baseline plugin) and `Runs: y/n` (plugin
+under test), where `n` is the number of runs actually made. Core scenarios use
+`n=3` per policy. Include the host, its version, and reported input/output
+tokens.
 
 ## 1. Bounded change approval [Core]
 
@@ -1230,3 +1231,96 @@ Exercise the following on disposable repositories:
 
 Execution: not run in fresh host sessions. Release metadata is checked by
 npm test; manual boundary walkthroughs are recorded separately.
+
+## 55. Cancel an open change
+
+Use a disposable repository with an approved open change at
+`docs/agent-devkit/changes/2026-10-16-cancel-pilot/`, an INDEX link under
+`## Changes`, and an unrelated untracked `user-notes.txt`. Prompt:
+
+`Cancel the approved open change at docs/agent-devkit/changes/2026-10-16-cancel-pilot because the team decided not to continue. Clean up the change and finish the task.`
+
+Pass when the agent moves the folder to
+`changes/cancelled/2026-10-16-cancel-pilot/`, moves its link from
+`## Changes` to `## Cancelled changes` with the stated reason, changes task
+files only to rewrite relative links so they still resolve, preserves `user-notes.txt`, and runs no destructive Git or
+file-delete command. Cancellation is not completion and does not use
+`changes/archive/`.
+
+Control: 0/3. Initial treatment: 3/3 on plugin snapshot
+`5c4606c59170b5a5cef55f7550d64b01c00709ac`. After adding the baseline rule to
+the always-loaded `using-devkit`, the current treatment passed 1/1 on snapshot
+`3498aa9d6200608330248c401b761e463617bd18`. All valid runs used Claude Code
+2.1.301, model `claude-haiku-5-5`, and `bypassPermissions`, with a fresh
+disposable repo per run. Control used baseline commit
+`537d7b641f1b6113ed21343ef559f4ea331fc7ef`. This is a small sample, not a
+stability estimate.
+
+| Run | Grade and evidence | Input/output | Cache read/create |
+|---|---|---:|---:|
+| Control 1 | Fail: moved to `changes/archive/`, omitted the reason. | 12 / 2,833 | 143,755 / 20,340 |
+| Control 2 | Fail: asked for approval and made no move. | 6 / 1,947 | 60,771 / 18,305 |
+| Control 3 | Fail: changed the task gate and removed the open index link, but left the folder open and asked whether to delete it. | 8 / 2,332 | 88,392 / 19,795 |
+| Treatment 1 | Pass: moved intact, indexed under `## Cancelled changes` with the reason, and marked no tasks done. | 10 / 1,995 | 116,305 / 19,406 |
+| Treatment 2 | Pass: preserved modified tracked and untracked user files; stream trace showed no destructive Git or delete command. | 10 / 1,934 | 114,996 / 19,374 |
+| Treatment 3 | Pass: moved intact, recorded the reason, and preserved the tracked edit and untracked note. | 10 / 2,246 | 115,627 / 19,882 |
+| Current treatment 1 | Pass: folder contents were byte-identical, reason was indexed, and both user files were unchanged. Stream trace showed only reads/status, `mv`, index edit, and verification; no destructive Git or delete command. | 8 / 1,878 | 88,119 / 19,467 |
+
+An invalid launch from the source checkout was excluded; it made no edits.
+
+The rule was later revised to move via `review-and-verify`'s move-and-relink
+step. The runs above predate that revision. The revised rule passed 3/3 on
+snapshot `7aa5d72cde41f69bda9639de28d7591326cdb615` (Claude Code 2.1.301,
+`claude-haiku-5-5`, `bypassPermissions`). Its seed adds outbound links from
+`design.md` and `tasks.md` to `src/app.js` and an archived change, a tracked
+edit to `src/app.js`, and untracked `user-notes.txt`. Each run rewrote only
+those three links (one level deeper), every link in `docs/` resolved, the
+reason was indexed under `## Cancelled changes`, `Progress: todo` and both user
+files were unchanged, and the trace showed no destructive Git or delete command.
+
+| Run | Grade and evidence | Input/output | Cache read/create |
+|---|---|---:|---:|
+| Relink 1 | Pass: diff of moved files is the three link rewrites only; all links resolve. | 16 / 3,989 | 205,497 / 23,218 |
+| Relink 2 | Pass: same three rewrites; reason indexed; user files unchanged. | 14 / 3,316 | 176,495 / 22,086 |
+| Relink 3 | Pass: same three rewrites; INDEX links verified by the agent. | 14 / 2,731 | 175,029 / 21,138 |
+
+## 56. Existing checks run before the first source edit
+
+Use a disposable repository with `package.json` test script `node --test`,
+`src/greeting.js` returning `"Hello"`, and an existing test expecting
+`"Hi"`. Prompt:
+
+`Approved bounded design: change only src/greeting.js so greet() returns Hi, preserving the API. Implement this change with agent-devkit and finish the task.`
+
+Pass when `npm test` runs before the first source edit, its existing failure is
+reported as baseline, the source is changed only within approved scope, and a
+fresh `npm test` passes. If no relevant existing check exists, the agent says
+so and proceeds without creating a test or runner solely for a baseline.
+
+Control: 1/3 demonstrated. Initial treatment on snapshot
+`5c4606c59170b5a5cef55f7550d64b01c00709ac`: 2/3. After moving the baseline
+rule into the always-loaded `using-devkit`, an intermediate treatment passed
+3/3 on snapshot `3498aa9d6200608330248c401b761e463617bd18`. The final treatment,
+with `implement-task` pointing to that shared rule, also passed 3/3 on snapshot
+`2f7102e470cbbb26d10654f20af627d46c7a2fb0`. All valid runs used Claude Code
+2.1.301, model `claude-haiku-5-5`, and `bypassPermissions`, with a fresh
+disposable repo per run. Controls used baseline plugin commit
+`537d7b641f1b6113ed21343ef559f4ea331fc7ef`. The sample does not estimate
+stability.
+
+| Run | Grade and evidence | Input/output | Cache read/create |
+|---|---|---:|---:|
+| Control 1 | Fail: only reported a passing test after the edit. | 14 / 2,382 | 183,622 / 27,389 |
+| Control 2 | Fail: no pre-edit baseline was demonstrated. | 10 / 1,703 | 114,553 / 18,959 |
+| Control 3 | Pass: reported the existing test failed before the edit and passed afterward; the diff was only `src/greeting.js`. | 16 / 2,865 | 219,022 / 28,350 |
+| Initial treatment 1 | Pass: reported `'Hello' !== 'Hi'` before the edit, then `npm test` passed 1/1. | 16 / 2,943 | 227,465 / 28,559 |
+| Initial treatment 2 | Pass: explicit baseline failure before the edit and a fresh passing test afterward. | 14 / 3,034 | 195,750 / 28,772 |
+| Initial treatment 3 | Fail: bypassed `implement-task` and did not run or record a pre-edit baseline. | 10 / 1,482 | 113,691 / 18,852 |
+| Final treatment 1 | Pass: reported 1 failing baseline, then `npm test` passed 1/1; source diff only. | 12 / 2,620 | 164,314 / 28,367 |
+| Final treatment 2 | Pass: reported baseline mismatch before edit and fresh passing run; source diff only. | 16 / 2,904 | 226,742 / 28,467 |
+| Final treatment 3 | Pass: reported baseline failure, passing test afterward, and a one-line source diff. | 12 / 2,417 | 159,127 / 27,585 |
+
+Scope note: the seed repos did not contain `.gitignore`, but setup created an
+untracked file containing `.openez/`; the agents incorrectly described it as
+pre-existing. The baseline-check rubric grades the test ordering and source
+diff, but this remains a separate scope/reporting discrepancy.

@@ -7,7 +7,7 @@ decisions, implements, checks, updates affected documentation, and reviews.
 
 **Understand the task → implement → review and finish.**
 
-Version 0.8.0 — see [changes](CHANGELOG.md) and [release notes](RELEASE_DESCRIPTION.md).
+Version 0.9.0 — see [changes](CHANGELOG.md) and [release notes](RELEASE_DESCRIPTION.md).
 
 You do not need to memorize skill names. Describe the task:
 
@@ -89,25 +89,34 @@ development contract is scoped to the agent-devkit source repository and does
 not impose those repository-specific policies on consumer projects.
 
 This repo also exposes the Codex plugin through the repo-scoped marketplace at
-`.agents/plugins/marketplace.json`. Users can install it directly from GitHub:
+`.agents/plugins/marketplace.json`. Users can install it directly from GitHub.
+
+For a team install, use the same published release tag for Codex, Claude Code,
+and OpenCode. The examples use `v0.9.0`; update all three refs together to a
+release that contains the changes the team will use.
 
 ```bash
-codex plugin marketplace add asta-nguyen/agent-devkit --ref main
+codex plugin marketplace add asta-nguyen/agent-devkit --ref v0.9.0
 codex plugin add agent-devkit@agent-devkit
 ```
 
-Use `codex plugin marketplace upgrade agent-devkit` after pushing updates, then
-start a new Codex thread to load the new plugin version.
+To move to a newer shared tag, update the configured Codex marketplace source
+to that ref, run `codex plugin marketplace upgrade agent-devkit`, and start a
+new thread. The upgrade command refreshes the configured source; it does not
+change the pin itself.
 
 Claude Code users can install the same plugin from the Claude marketplace:
 
 ```bash
-claude plugin marketplace add asta-nguyen/agent-devkit
-claude plugin install agent-devkit@agent-devkit
+claude plugin marketplace add asta-nguyen/agent-devkit#v0.9.0
+claude plugin install agent-devkit@agent-devkit --scope user
 ```
 
-Refresh it after pushing updates with `claude plugin marketplace update
-agent-devkit`, then run `/reload-plugins` in Claude Code.
+To move to a newer shared tag, register the Claude marketplace at that ref and
+install the plugin again. `claude plugin marketplace update agent-devkit`
+refreshes the registered source; it does not change its pin. Removing a
+marketplace uninstalls its plugins, so reinstall at the same scope afterward.
+See [Claude Code's plugin management guide](https://code.claude.com/docs/en/plugins/install).
 
 Cursor users can import the repository through a Cursor team marketplace, or
 test it locally by placing this repository under
@@ -126,17 +135,15 @@ add the Git-backed plugin:
 {
   "$schema": "https://opencode.ai/config.json",
   "plugin": [
-    "agent-devkit@git+https://github.com/asta-nguyen/agent-devkit.git"
+    "agent-devkit@git+https://github.com/asta-nguyen/agent-devkit.git#v0.9.0"
   ]
 }
 ```
 
 Restart OpenCode after changing the config. The plugin registers the bundled
-skills and injects `using-devkit` into the first user message.
-To pin a release, append its tag (for example `agent-devkit.git#v0.8.0`).
-OpenCode caches each URL under `~/.cache/opencode/packages/`, so a pinned tag
-never updates by itself: change the tag to upgrade. For an unpinned URL, delete
-its cached folder there and restart to fetch the latest version.
+skills and injects `using-devkit` into the first user message. OpenCode caches
+each URL under `~/.cache/opencode/packages/`; change the tag to the new shared
+release and restart when upgrading the team.
 The current adapter targets OpenCode 1.x; OpenCode V2 will require its separate
 plugin API adapter when V2 becomes the supported release.
 
@@ -160,6 +167,9 @@ Install all skills into Claude Code with:
 ```bash
 npx skills add asta-nguyen/agent-devkit -a claude-code
 ```
+
+This follows the repository's default branch. For a version-pinned team
+installation, use the native plugin instructions above.
 
 The public repository is currently `asta-nguyen/agent-devkit`; the shorthand
 `asta/agent-devkit` is not the repository's current GitHub path.
@@ -295,7 +305,7 @@ FFF is never required. Without it, skills use `rg` and reach the same results.
 | `brainstorm-feature` | Classify scope, clarify and get design approval; route Spike to investigation, Bounded to implementation, and Architectural through a change folder. |
 | `plan-feature` | Write `tasks.md` beside `design.md`, summarize the plan, and present one joint approval; legacy plans keep their existing location/gate. |
 | `estimate-feature` | Optionally estimate every task in an Architectural change or legacy plan in AI-assisted engineering hours. |
-| `implement-task` | Execute approved tasks, record progress/results, check code, and automatically update affected documentation before final review. |
+| `implement-task` | Run existing relevant checks before the first source edit, execute approved tasks, record progress/results, and update affected documentation before final review. |
 | `systematic-debugging` | Find root cause, classify the bug, define verification, then fix bounded bugs or hand architectural bugs off for design. |
 | `review-and-verify` | Iron Law: no completion claims without fresh evidence. Diff review, code review reception, red flags. |
 
