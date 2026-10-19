@@ -11,19 +11,20 @@ const validatorPath = path.join(repoRoot, "skills/document-wiki/scripts/validate
 const skillsRoot = path.join(repoRoot, "skills");
 
 // One character cap per skill (design: 2026-10-14-skill-context-budget, cap
-// table). Target = cap minus a reserve for approved follow-up additions; both
+// table; raised for two skills by D1 of change 2026-10-18-read-only-delegation).
+// Target = cap minus a reserve for approved follow-up additions; both
 // are printed, and only the cap fails. Characters are bytes, as `wc -c` counts
 // them. A skill missing from this map fails, so a new skill gets a deliberate
 // cap. Set ENFORCE_CAPS to false only to report sizes while restructuring.
 const ENFORCE_CAPS = true;
 const SKILL_CAPS = {
   "using-devkit": { cap: 6000, target: 5900 },
-  "read-codebase-context": { cap: 6000, target: 6000 },
+  "read-codebase-context": { cap: 6500, target: 6500 },
   "brainstorm-feature": { cap: 11000, target: 11000 },
   "plan-feature": { cap: 11000, target: 10800 },
   "implement-task": { cap: 11000, target: 10200 },
   "document-wiki": { cap: 12000, target: 12000 },
-  "review-and-verify": { cap: 12500, target: 11000 },
+  "review-and-verify": { cap: 12500, target: 11500 },
   "systematic-debugging": { cap: 10000, target: 10000 },
   "setup-codebase": { cap: 9500, target: 9500 },
   "estimate-feature": { cap: 6500, target: 6500 },
@@ -138,6 +139,12 @@ function skillChecks() {
   for (const name of Object.keys(SKILL_CAPS)) {
     if (!skillSet.has(name)) failures.push(`SKILL_CAPS lists unknown skill ${name}`);
   }
+
+  const reviewSkill = fs.readFileSync(path.join(skillsRoot, "review-and-verify", "SKILL.md"), "utf8");
+  assert.ok(
+    reviewSkill.includes('explicitly include "Do not edit files or delegate further."'),
+    "review-and-verify must require an explicit no-edit/no-delegation sentence in the brief",
+  );
 
   // (f) report characters per skill with cap and Target, plus the sums.
   const rows = [["skill", "chars", "cap", "target", "state"]];

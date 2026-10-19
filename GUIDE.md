@@ -17,8 +17,9 @@ approve once per route, and you review the diff and commit.
 | Bounded bug | Reproduces, finds the root cause, fixes, reviews | Nothing, unless expected behavior is unclear | Regression check and fix; `delta.md` only if needed |
 | Architectural feature or bug | Clarifies, writes `design.md` and `tasks.md` | One joint approval of `design.md`, `tasks.md`, and any `delta.md` | Change folder `docs/agent-devkit/changes/<name>/`, archived after final review |
 
-Every stop ends with `Next / Waiting on / Done when`. Legacy plans, specs, and
-decision files are read-only; new work uses change folders.
+Every stop ends with `Next / Waiting on / Done when`. Legacy specs and decision
+files are historical; open legacy plans can still be revised and finished. New
+work uses change folders.
 
 ---
 
@@ -94,16 +95,16 @@ Each client reuses the canonical Markdown skills under `skills/`.
 
 ### Pin one release for the team
 
-Use one published tag across clients. These examples use `v0.9.0`; replace it
+Use one published tag across clients. These examples use `v0.10.0`; replace it
 in all three places with a release tag that contains the changes the team needs.
 
 ```bash
-codex plugin marketplace add asta-nguyen/agent-devkit --ref v0.9.0
+codex plugin marketplace add asta-nguyen/agent-devkit --ref v0.10.0
 codex plugin add agent-devkit@agent-devkit
 ```
 
 ```bash
-claude plugin marketplace add asta-nguyen/agent-devkit#v0.9.0
+claude plugin marketplace add asta-nguyen/agent-devkit#v0.10.0
 claude plugin install agent-devkit@agent-devkit --scope user
 ```
 
@@ -113,13 +114,14 @@ For OpenCode, set the plugin entry in `opencode.json`:
 {
   "$schema": "https://opencode.ai/config.json",
   "plugin": [
-    "agent-devkit@git+https://github.com/asta-nguyen/agent-devkit.git#v0.9.0"
+    "agent-devkit@git+https://github.com/asta-nguyen/agent-devkit.git#v0.10.0"
   ]
 }
 ```
 
-Change all configured refs together when the team upgrades, then follow each
-client's update steps. Refreshing a marketplace alone keeps its existing pin.
+Change all configured refs together when the team upgrades; the per-client
+commands are in [README — Upgrade](README.md#upgrade). Refreshing a marketplace
+alone keeps its existing pin.
 
 ### Option 3: Manual copy (for projects that discover `.agents/skills`)
 
@@ -155,7 +157,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           repository: asta-nguyen/agent-devkit
-          ref: v0.9.0
+          ref: v0.10.0
           path: .agent-devkit
       - name: Validate wiki
         run: node .agent-devkit/skills/document-wiki/scripts/validate-llm-wiki.mjs .
@@ -269,7 +271,7 @@ FFF is never required. Without it, skills use `rg` and reach the same results.
 | `using-devkit` | Starting work or deciding which workflow applies | Routes the task to the owning devkit skill; it does not replace that skill's process. |
 | `setup-codebase` | The repo lacks context files or recorded repository conventions | Reads repository evidence, creates missing context files, and captures missing conventions only after user approval. |
 | `setup-openez` | The user agrees to use OpenEZ or the index is stale | Gets approval before CLI install, existing `AGENTS.md` guidance, or client wiring; reports CLI indexing separately from MCP verification and marks an unavailable MCP query unverified. |
-| `read-codebase-context` | Before design, planning, or wiki work that needs affected files, callers, and tests | Uses OpenEZ for concepts/callers, FFF for fuzzy filenames/literal references, `rg` for regex, then reads current source and records an impact map. |
+| `read-codebase-context` | Before design, planning, or wiki work that needs affected files, callers, and tests | Uses OpenEZ for concepts/callers, FFF for fuzzy filenames/literal references, `rg` for regex, then reads current source and records an impact map; may request a no-edit host subagent trace after Locate. |
 | `context-handoff` | A session must pause or is approaching its context limit | Saves a compact, source-grounded checkpoint (`handoff.md` in the change folder, or `docs/agent-devkit/handoffs/` outside a change) for the next session. |
 
 ### Feature Development
@@ -281,7 +283,7 @@ FFF is never required. Without it, skills use `rg` and reach the same results.
 | `estimate-feature` | When a PM or BA explicitly requests an estimate | Estimates an hours range for each plan task with confidence and rationale. Runs only when requested. |
 | `implement-task` | An approved bounded design or an approved architectural plan exists | Runs existing relevant checks before the first source edit, traces code, and verifies each non-trivial change; it does not add a runner just to record a baseline. |
 | `systematic-debugging` | Any technical issue: bug, test failure, build failure, or performance problem | Investigates root cause, classifies the bug, writes a verify plan, then fixes bounded bugs or hands architectural bugs off for design. |
-| `review-and-verify` | After implementation and before claiming completion | Enforces **NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE**. Reviews the diff, runs checks, and performs a complexity pass. |
+| `review-and-verify` | After implementation and before claiming completion | Enforces **NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE**. Reviews the diff, runs checks, performs a complexity pass, and may request an independent no-edit review when a spawn tool and exact diff target exist. |
 
 ### Auditing
 
@@ -539,7 +541,7 @@ docs/
         handoff.md                    # optional, when work pauses
       archive/                        # completed changes
       cancelled/                      # cancelled changes, with reason in INDEX.md
-    specs/ plans/ decisions/ estimates/   # legacy, read-only history
+    specs/ plans/ decisions/ estimates/   # legacy; open plans may be revised
     handoffs/                         # checkpoints outside a change
   llm/                                # source-grounded, verified wiki
     AGENTS.md

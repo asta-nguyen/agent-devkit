@@ -26,6 +26,18 @@ entry-point and implementation symbol in the map across the current repository
 using FFF multi-pattern grep or `rg`. Read current source for every file to
 edit and every newly found caller. The map guides navigation, not evidence.
 
+## Delegate the trace
+
+After Locate, immediately use one host spawn tool for an Expand-through-Read
+question; size is irrelevant. OpenCode: call `task` with
+`subagent_type: "explore"`. Assign no edits. Include goal, scope, repo path, no
+further delegation, and impact-map fields with `path:line` evidence. Omit this
+conversation; disable inherited history when supported (`fork_turns: "none"` in
+Codex). Treat its result as navigation: verify current source. On spawn failure,
+unverifiable claims, or no tool, search directly.
+
+No-edit is a prompt, not a permission limit; verify no trace edits.
+
 ## Trace and record the impact
 
 1. Check `docs/llm/AGENTS.md` and `docs/llm/INDEX.md` independently. If both

@@ -35,8 +35,10 @@ coding-agent context and an LLM-facing codebase wiki in sync.
   after the merge.
 - Treat generated LLM documentation as a product artifact: update it when the
   documented code or behavior changes.
-- Do not add TypeScript, a build system, or multi-agent behavior unless the task
-  explicitly asks for it.
+- Do not add TypeScript or a build system unless the task explicitly asks for it.
+- `read-codebase-context` and `review-and-verify` use no-edit subagent briefs.
+  These prompts do not restrict host permissions; parallel execution or
+  subagents assigned file edits need an explicit task.
 - Never hide errors that could leave code or documentation stale.
 - Do not commit secrets, generated dependency directories, or temporary files.
 - Do not create commits during implementation. Leave the working tree for the

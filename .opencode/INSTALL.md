@@ -6,7 +6,7 @@ Add the Git-backed plugin to the target project's `opencode.json`:
 {
   "$schema": "https://opencode.ai/config.json",
   "plugin": [
-    "agent-devkit@git+https://github.com/asta-nguyen/agent-devkit.git#v0.9.0"
+    "agent-devkit@git+https://github.com/asta-nguyen/agent-devkit.git#v0.10.0"
   ]
 }
 ```

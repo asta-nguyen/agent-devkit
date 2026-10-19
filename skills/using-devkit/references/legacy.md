@@ -3,8 +3,8 @@
 Earlier versions wrote plans, specs, and decision files outside change folders,
 and gave them `Required` and `Execution` gate fields. Creating new ones stops;
 existing ones stay readable, and an open legacy plan can still be revised in
-place and finished (below). Removal is scheduled for v0.10. Read this file only
-when you meet one.
+place and finished (below). Removal was scheduled for v0.10.0, then deferred;
+no target release is set. Read this file only when you meet one.
 
 ## Locations
 

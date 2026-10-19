@@ -157,6 +157,15 @@ calls `document-wiki`'s `## Task updates` before the next review. Unrelated gaps
 are optional findings. In the result block's `Evidence`, name the check for every
 listed caller, or state `Verification limit: <caller> — <reason>`.
 
+### Independent reviewer
+
+Dispatch when spawn and exact diff target exist; else review directly.
+Brief: design/plan/decisions; exact target (`git diff HEAD` + untracked paths, or
+branch range); omit conversation; explicitly include "Do not edit files or delegate further."
+OpenCode: `task` with `subagent_type: "explore"`. Disable inherited history
+when supported (Codex: `fork_turns: "none"`); tools may edit. Require
+path:line, problem, impact; no Status. Verify blockers, run checks, write result.
+
 ## Complexity pass
 
 Report each behavior-preserving simplification with a file reference and one
@@ -181,26 +190,28 @@ Done when: <observable result that completes the next step>
 ```
 
 On `fail`, `Next` is `implement-task` (or `systematic-debugging` for a bug) to
-fix the blockers. Attempt the available setup and checks first; if only the user
-can run a required check, give app-level steps and the expected result. Then add
-one or two sentences on what is done and which checks and documentation were
-updated, and end with this exact result block, repeating no finding in prose:
+fix the blockers; on `pass`, it is the user's step (review, then commit or PR).
+Run the available setup and checks first; if only the user can run a
+required check, give app-level steps and the expected result. Add one or two
+sentences on what changed and was checked, then end with this result block,
+repeating no finding in prose:
 
 ```md
 Status: pass | fail
-Evidence: <commands run and relevant results>
-Blockers: <required fixes, or none>
-Non-blockers: <optional findings, or none>
-Spec gaps: <missing spec, plan, or persisted-decision requirements, or none>
-Wiki impact: yes | no | not-applicable | unknown
-Wiki pages: <paths, or none>
-Wiki action: <updated and verified / no update needed / required update or limitation>
+Evidence: <`check → result` items joined by " · ">
+Blockers: <path:line — problem>
+Non-blockers: <findings or limitations, one line each>
+Spec gaps: <missing spec, plan, or decision requirements>
+Wiki impact: yes | no | not-applicable | unknown — <pages or reason>
 ```
 
+Omit empty `Blockers`, `Non-blockers`, `Spec gaps`. For `yes`, add `action:
+<updated / required update>`.
+
 Use `fail` when any blocker or spec gap remains; a passing check does not
-override a failed requirements or diff review. Report remaining limitations. A
-task is complete only when the result says `Status: pass` and code,
-documentation, and verification output agree. Never turn a failed blocker into a
+override a failed requirements or diff review. A task is complete only when the
+result says `Status: pass` and code, documentation, and verification output
+agree. Never turn a failed blocker into a
 non-blocker. Leave the verified tree to the user; commit only as `using-devkit`
 allows, never failing or unverified work. For external review feedback, read
 `references/receiving-code-review.md` first.

@@ -1,5 +1,27 @@
 # Changelog
 
+## [Unreleased]
+
+## [0.10.0] - 2026-10-19
+
+### Added
+
+- `read-codebase-context` promotes a no-edit subagent trace after Locate;
+  `review-and-verify` can delegate an independent review when a spawn tool and
+  exact diff target are available. OpenCode uses `task` with
+  `subagent_type: "explore"`. The parent verifies the returned evidence;
+  prompts do not limit host permissions.
+- README and README.vi add checked per-client upgrade commands for pinned and
+  default-branch installs; Devin's direct install follows the default branch
+  because its install command has no tag option.
+
+### Changed
+
+- New EVALS sessions use Codex CLI with `gpt-6-luna` at medium reasoning;
+  existing runs keep their original host and model attribution.
+- The removal of legacy plans, specs, decision files, and `Required`/`Execution`
+  gates, originally scheduled for v0.10.0, is deferred with no new target release.
+
 ## [0.9.0] - 2026-10-16
 
 ### Changed

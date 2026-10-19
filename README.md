@@ -7,7 +7,7 @@ decisions, implements, checks, updates affected documentation, and reviews.
 
 **Understand the task → implement → review and finish.**
 
-Version 0.9.0 — see [changes](CHANGELOG.md) and [release notes](RELEASE_DESCRIPTION.md).
+Version 0.10.0 — see [changes](CHANGELOG.md) and [release notes](RELEASE_DESCRIPTION.md).
 
 You do not need to memorize skill names. Describe the task:
 
@@ -34,6 +34,7 @@ itself. Detailed guidance:
 | Spec- and plan-driven delivery | Approved designs, behavior-level plans with named test cases, persisted impact maps, edge-case coverage, and explicit implementation gates. |
 | Token-aware context management | Focused source retrieval, compact handoffs, and evidence instead of dumping the whole repository into context. |
 | Evidence-first verification | Fresh tests/checks, precise `path:line` findings, and failing `cannot verify` gaps when proof is missing. |
+| Delegated tracing and review | No-edit briefs ask host subagents for code traces or independent diff review; the parent verifies evidence, while host permissions remain host-controlled. |
 | Convention capture and enforcement | Repository-specific rules with provenance, approval, scoped precedence, and review evidence. |
 | Whole-repository lean audit | Report-only `delete`, `stdlib`, `native`, `yagni`, and `shrink` findings with no auto-fix. |
 
@@ -92,37 +93,34 @@ This repo also exposes the Codex plugin through the repo-scoped marketplace at
 `.agents/plugins/marketplace.json`. Users can install it directly from GitHub.
 
 For a team install, use the same published release tag for Codex, Claude Code,
-and OpenCode. The examples use `v0.9.0`; update all three refs together to a
+and OpenCode. The examples use `v0.10.0`; update all three refs together to a
 release that contains the changes the team will use.
 
 ```bash
-codex plugin marketplace add asta-nguyen/agent-devkit --ref v0.9.0
+codex plugin marketplace add asta-nguyen/agent-devkit --ref v0.10.0
 codex plugin add agent-devkit@agent-devkit
 ```
 
-To move to a newer shared tag, update the configured Codex marketplace source
-to that ref, run `codex plugin marketplace upgrade agent-devkit`, and start a
-new thread. The upgrade command refreshes the configured source; it does not
-change the pin itself.
+To move to a newer release, see [Upgrade](#upgrade).
 
 Claude Code users can install the same plugin from the Claude marketplace:
 
 ```bash
-claude plugin marketplace add asta-nguyen/agent-devkit#v0.9.0
+claude plugin marketplace add asta-nguyen/agent-devkit#v0.10.0
 claude plugin install agent-devkit@agent-devkit --scope user
 ```
 
-To move to a newer shared tag, register the Claude marketplace at that ref and
-install the plugin again. `claude plugin marketplace update agent-devkit`
-refreshes the registered source; it does not change its pin. Removing a
-marketplace uninstalls its plugins, so reinstall at the same scope afterward.
-See [Claude Code's plugin management guide](https://code.claude.com/docs/en/plugins/install).
+To move to a newer release, see [Upgrade](#upgrade).
 
 Cursor users can import the repository through a Cursor team marketplace, or
 test it locally by placing this repository under
 `~/.cursor/plugins/local/agent-devkit` and reloading the Cursor window.
 
-Devin CLI users can install the plugin directly from GitHub:
+Devin CLI users can install the plugin directly from GitHub. `devin plugins
+install` has no tag option (`#` in its source selects a subdirectory), so a
+direct install follows the default branch. Devin's manifest dependency entries
+accept `ref` or `sha` ([Devin plugin docs](https://docs.devin.ai/cli/extensibility/plugins/overview));
+this repository does not document that route.
 
 ```bash
 devin plugins install asta-nguyen/agent-devkit
@@ -135,15 +133,14 @@ add the Git-backed plugin:
 {
   "$schema": "https://opencode.ai/config.json",
   "plugin": [
-    "agent-devkit@git+https://github.com/asta-nguyen/agent-devkit.git#v0.9.0"
+    "agent-devkit@git+https://github.com/asta-nguyen/agent-devkit.git#v0.10.0"
   ]
 }
 ```
 
 Restart OpenCode after changing the config. The plugin registers the bundled
-skills and injects `using-devkit` into the first user message. OpenCode caches
-each URL under `~/.cache/opencode/packages/`; change the tag to the new shared
-release and restart when upgrading the team.
+skills and injects `using-devkit` into the first user message. To move to a
+newer release, see [Upgrade](#upgrade).
 The current adapter targets OpenCode 1.x; OpenCode V2 will require its separate
 plugin API adapter when V2 becomes the supported release.
 
@@ -155,6 +152,34 @@ mkdir -p .agents/skills
 cp -R /path/to/agent-devkit/skills/. .agents/skills/
 find .agents/skills -name SKILL.md -print
 ```
+
+### Upgrade
+
+Pick the new release tag and move every pinned client to it together. Replace
+`vX.Y.Z` with that tag.
+
+| Client | Pinned to a tag | Following the default branch |
+|---|---|---|
+| Codex | Set `ref = "vX.Y.Z"` under `[marketplaces.agent-devkit]` in `~/.codex/config.toml`, then run `codex plugin marketplace upgrade agent-devkit` | `codex plugin marketplace upgrade agent-devkit` |
+| Claude Code | `claude plugin marketplace remove agent-devkit`<br>`claude plugin marketplace add asta-nguyen/agent-devkit#vX.Y.Z`<br>`claude plugin install agent-devkit@agent-devkit --scope user` | `claude plugin marketplace update agent-devkit`<br>`claude plugin update agent-devkit@agent-devkit` |
+| OpenCode | Change `#vX.Y.Z` in the `opencode.json` plugin entry | Delete the URL's folder under `~/.cache/opencode/packages/` |
+| Devin CLI | Not supported by `devin plugins install` | `devin plugins update agent-devkit` |
+| Cursor | Check out the tag in the local copy, or follow the team marketplace's update flow | Pull the local copy, or Refresh a GitHub-imported team marketplace (manual, or Auto Refresh; see [Cursor plugin docs](https://cursor.com/docs/plugins)) |
+
+Then start a new Codex thread, restart Claude Code (or run `/reload-plugins`),
+restart OpenCode, start a new Devin session, or reload the Cursor window. Check
+the result with `codex plugin list`, `claude plugin list`, or
+`devin plugins list`, and look for `AGENT-DEVKIT:ACTIVE` in a new session.
+
+- Codex and Claude Code refuse to add `agent-devkit` again from a different
+  ref while it is still configured. Their upgrade/update commands refresh the
+  current ref but never change it.
+- Removing the Claude marketplace uninstalls its plugin, so reinstall at the
+  same scope. See
+  [Claude Code's plugin management guide](https://code.claude.com/docs/en/plugins/install).
+- Checked with Codex CLI 0.163.0, Claude Code 2.1.301, and Devin CLI
+  3000.11.92 (v0.8.0 → v0.9.0); the OpenCode cache and Cursor steps were not
+  re-run.
 
 ### Install with Agent Skills CLI
 

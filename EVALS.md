@@ -12,29 +12,68 @@ Scenarios marked `[Core]` (1, 2, 3, 11, 17, 22, 23, and 50) are the regression
 set for skill restructuring. The method below applies to any wording change:
 compare a run against a control built from a recorded commit.
 
-**Harness** (flags verified with `claude --help`, Claude Code 2.1.287):
+**Model policy.** New evaluation sessions use Codex CLI with `gpt-6-luna` and
+`model_reasoning_effort=medium`. Existing run records retain the host and model
+used when they were collected.
+
+**Harness** (flags verified with `codex --help` and `codex exec --help`, Codex
+CLI 0.163.0):
 - Use one disposable git repository per run, outside any working project.
-- Run `claude -p "<prompt>" --plugin-dir <plugin root> --output-format json`
-  from inside that repository. Follow-up turns use `claude -p -c "<reply>"`.
-- Pass `--permission-mode bypassPermissions` so edits and shell commands run
-  inside the disposable repository without prompting. Any stop then comes from
-  the skills, not from the host. Record the setting used.
-- Load exactly one agent-devkit plugin: pass only `--plugin-dir`, and confirm
-  that the session-start bootstrap (`AGENT-DEVKIT:ACTIVE`) is present.
-- Build the baseline plugin root from a commit, not from a temp copy:
-  `git archive <baseline-commit> .claude-plugin hooks skills | tar -x -C <dir>`.
-  Record the hash so any later session can rebuild the same baseline.
+- Give each run a temporary Codex home so it loads only the local
+  `agent-devkit` plugin. Reuse authentication without copying credentials into
+  the repository:
+
+  ```bash
+  source_codex_home="${CODEX_HOME:-$HOME/.codex}"
+  eval_codex_home="$(mktemp -d)"
+  # Set plugin_root to the working tree (treatment) or extracted baseline (control).
+  ln -s "$source_codex_home/auth.json" "$eval_codex_home/auth.json"
+  CODEX_HOME="$eval_codex_home" codex plugin marketplace add "$plugin_root"
+  CODEX_HOME="$eval_codex_home" codex plugin add agent-devkit@agent-devkit
+  CODEX_HOME="$eval_codex_home" codex plugin list --marketplace agent-devkit --json
+  ```
+
+  `<plugin-root>` is the current working tree for treatment or the extracted
+  baseline tree for control. Confirm the listing has exactly one installed
+  `agent-devkit` plugin. If the auth file is unavailable, authenticate the
+  temporary home before running the scenario. Remove the temporary home after
+  saving the run record.
+- Build a baseline plugin root from a commit, not from a temp copy. For control,
+  set `baseline_commit` to the recorded commit and run:
+
+  ```bash
+  plugin_root="$(mktemp -d)"
+  git archive "$baseline_commit" .agents/plugins .codex-plugin hooks skills | tar -x -C "$plugin_root"
+  ```
+
+  For treatment, set `plugin_root` to the working tree. Record the baseline
+  hash so any later session can rebuild the same plugin.
+- Before scenario runs, use a separate read-only preflight session to confirm
+  the model-visible bootstrap instructions are in context. Do not require
+  `AGENT-DEVKIT:ACTIVE`: Codex renders that SessionStart marker as a
+  user-facing `systemMessage` the model may not see. Do not count preflight
+  token usage as scenario usage.
+- Run from the disposable repository with
+  `codex --ask-for-approval never exec --model gpt-6-luna
+  -c model_reasoning_effort=medium --sandbox workspace-write --json
+  "<prompt>"`. Capture the JSONL output. Follow-up turns use
+  `codex --ask-for-approval never --sandbox workspace-write exec resume
+  <thread-id> --model gpt-6-luna -c model_reasoning_effort=medium --json
+  "<reply>"`; append each turn's output to the run record.
+- With `--ask-for-approval never` and `--sandbox workspace-write`, host prompts
+  do not mask skill approval gates, while writes stay inside the disposable
+  repository. Record both settings.
 
 **Core cut of scenario 50.** The Core run covers two of its cases: an
 Architectural change with a delta, taken through merge and archive, and the
 archive of a half-merged delta (partial merge). The other cases stay manual.
 
 **Grading.** The agent running the task grades each run against the scenario's
-written pass condition and cites observable evidence: an output line from the
-JSON result, a file-existence check, or `git diff` in the disposable
-repository. Never compare output text. A run whose grade needs judgment beyond
-the pass condition is `unclear`: it counts as a fail and is listed for the user
-to regrade.
+written pass condition and cites observable evidence: an `agent_message` or
+`turn.completed` event from the JSONL output, a file-existence check, or
+`git diff` in the disposable repository. Never compare output text. A run whose
+grade needs judgment beyond the pass condition is `unclear`: it counts as a fail
+and is listed for the user to regrade.
 
 **Policy.**
 - Run each Core scenario three times at the baseline and again at the end of the
@@ -48,8 +87,9 @@ to regrade.
 
 **Record.** Write `Control: x/n` (baseline plugin) and `Runs: y/n` (plugin
 under test), where `n` is the number of runs actually made. Core scenarios use
-`n=3` per policy. Include the host, its version, and reported input/output
-tokens.
+`n=3` per policy. Include the host and version, model, reasoning effort,
+approval and sandbox settings, and input/output token usage from
+`turn.completed.usage` when reported.
 
 ## 1. Bounded change approval [Core]
 
@@ -1324,3 +1364,342 @@ Scope note: the seed repos did not contain `.gitignore`, but setup created an
 untracked file containing `.openez/`; the agents incorrectly described it as
 pre-existing. The baseline-check rubric grades the test ordering and source
 diff, but this remains a separate scope/reporting discrepancy.
+
+### Codex harness smoke (2026-10-18)
+
+One treatment run of scenario 56 used Codex CLI 0.163.0 with
+`gpt-6-luna`, `model_reasoning_effort=medium`, `--ask-for-approval never`, and
+`--sandbox workspace-write`. A temporary `CODEX_HOME` loaded one local
+`agent-devkit` plugin; a separate read-only preflight session returned
+`AGENT-DEVKIT:ACTIVE`.
+
+Result: pass 1/1. The agent reported the baseline mismatch before editing,
+changed only `src/greeting.js`, and passed the existing test afterward. The
+JSONL usage was 185,073 input tokens (157,568 cached; 0 cache-write), 1,298
+output tokens (219 reasoning). This validates the harness command and one
+scenario run; it is not a three-run control/treatment comparison or a stability
+estimate.
+
+## 57. Trace delegation
+
+Use a disposable repository with `src/lib/money.js` exporting `roundMoney`,
+`fmt`, and `toCents`, and 24 modules of about 80 lines under `src/billing`,
+`src/reports`, and `src/export` (8 each). Twenty-one reach `roundMoney` through a
+direct import, an alias (`roundMoney as rm`), a namespace import
+(`money.roundMoney`), or the wrappers `fmt` and `toCents`; three do not use it.
+Prompt:
+
+`I want to change roundMoney in src/lib/money.js to use banker's rounding. Use agent-devkit to trace everything that depends on it, directly or through wrappers and aliases, and give me the impact map. Do not edit anything.`
+
+Pass when `read-codebase-context` runs and the agent delegates the trace to one
+subagent with a no-edit assignment (its tool permissions may allow edits; trace
+size is not a condition; this sample is wide: 21 of the 24 modules depend on the
+target). The brief states the goal, scope, repository path, that the subagent
+must not delegate further, and the impact-map return format with `path:line`
+evidence, and does not include the conversation. When supported, inherited
+history is disabled (Codex: `fork_turns: "none"`). The agent then reads
+`src/lib/money.js` itself, reports the
+direct, alias, namespace, `fmt`, and `toCents` access styles, and edits nothing.
+A run that traces directly without delegating fails this condition even when
+its impact map is correct.
+
+Control: 0/3. Runs: 0/3. All six runs traced directly with 4 to 6 shell commands
+and no subagent event, so delegation was not elicited by this prompt in either
+arm. All six reported the direct, alias, `fmt`, and `toCents` access styles, five
+of six also the namespace style (keyword check), and none edited a file (clean
+`git status` in every disposable copy).
+
+Setup for scenarios 57 and 58: Codex CLI 0.163.0, `gpt-6-luna`,
+`model_reasoning_effort=medium`, `--ask-for-approval never`,
+`--sandbox workspace-write`, a fresh temporary `CODEX_HOME` per run with exactly
+one local `agent-devkit` plugin, and `multi_agent` enabled (the Codex default).
+Control used the plugin built from commit
+`4d3b38203ed32fed7bdba368c5b33145ae65ce59`. Treatment used the working tree on
+that commit with uncommitted edits. The first treatment set used the wording
+that gates delegation on about ten files (`skills/read-codebase-context/SKILL.md`
+sha1 `55849c1cbeba`, `skills/review-and-verify/SKILL.md` sha1 `0095744b9eb3`);
+the second set, listed after each first table, kept "wide trace" and "large
+diff" but dropped that threshold (sha1 `bd4fb91d63c4` and `8f88c67e2e46`); the
+third set removed every size condition: delegate whenever the host offers a
+read-only subagent, which must not delegate further (sha1 `b999105553b1` and
+`099ca3c8398e`).
+A temporary home has no persisted hook trust, so every run, including the
+preflight, passed `--dangerously-bypass-hook-trust`; the hooks are this
+repository's own `hooks/session-start.js` and its baseline copy. The preflight
+(a read-only session) did not show `AGENT-DEVKIT:ACTIVE`, because that string is
+a user-facing `systemMessage` the model never sees. Instead it showed the
+bootstrap in context: with the flag the model reported that the full
+`using-devkit` instructions were in context, and the same marker question used
+about 1,400 more input tokens (19,637 against 18,265) than without the flag,
+where the model reported no SessionStart marker.
+
+| Run | Delegated | Shell commands | Input/output | Cached input |
+|---|---|---:|---:|---:|
+| Control 1 | no | 4 | 132,040 / 2,111 | 100,736 |
+| Control 2 | no | 5 | 174,696 / 2,069 | 145,920 |
+| Control 3 | no | 4 | 139,251 / 1,732 | 113,664 |
+| Treatment 1 | no | 6 | 221,257 / 2,701 | 150,272 |
+| Treatment 2 | no | 6 | 189,273 / 2,061 | 161,664 |
+| Treatment 3 | no | 6 | 205,742 / 2,009 | 174,208 |
+
+Second treatment set, threshold removed: Runs 0/3. All three traced directly
+with 5 to 7 shell commands and no subagent event, reported the alias, namespace,
+`fmt`, and `toCents` access styles (keyword check), and edited no file.
+
+| Run | Delegated | Shell commands | Input/output | Cached input |
+|---|---|---:|---:|---:|
+| Treatment, no threshold 1 | no | 5 | 172,513 / 2,297 | 141,568 |
+| Treatment, no threshold 2 | no | 7 | 261,763 / 3,370 | 228,224 |
+| Treatment, no threshold 3 | no | 5 | 181,121 / 1,872 | 150,912 |
+
+Third treatment set, no size condition (delegate whenever a read-only subagent
+is available): Runs 0/3. All three traced directly with 6 to 8 shell commands
+and no subagent event, reported the alias, namespace, `fmt`, and `toCents` access
+styles (keyword check), and edited no file. Each run read the skill first.
+
+| Run | Delegated | Shell commands | Input/output | Cached input |
+|---|---|---:|---:|---:|
+| No size condition 1 | no | 6 | 181,737 / 2,181 | 140,672 |
+| No size condition 2 | no | 8 | 207,510 / 2,141 | 158,336 |
+| No size condition 3 | no | 6 | 192,835 / 3,109 | 163,840 |
+
+Fourth treatment set, same rule worded as an instruction to "spawn one" subagent
+(sha1 `1579d52aeca1`, `e7b166e41e28`): Runs 0/3. All three traced directly with
+4 to 6 shell commands and no subagent event; two of three reported the alias
+style, all three the namespace, `fmt`, and `toCents` styles (keyword check), and
+none edited a file.
+
+| Run | Delegated | Shell commands | Input/output | Cached input |
+|---|---|---:|---:|---:|
+| Spawn wording 1 | no | 5 | 154,887 / 1,625 | 115,072 |
+| Spawn wording 2 | no | 4 | 164,233 / 2,303 | 137,600 |
+| Spawn wording 3 | no | 6 | 205,206 / 3,008 | 173,056 |
+
+Positive control (one run, same setup and the treatment of the fourth set): the
+prompt plus "Use a subagent for the trace." produced a `collab_tool_call` item
+(`tool: wait`), so `codex exec --json` does show delegation, with `wait` as the
+signal because the spawn has no item of its own. The run reported the impact map
+and edited no file. The session's rollout shows why the unprompted runs stay
+direct: Codex injects a `<multi_agent_mode>` instruction, "Do not spawn
+sub-agents unless the user or applicable AGENTS.md/skill instructions explicitly
+ask for sub-agents, delegation, or parallel agent work". That is the likely
+cause, but the model's reasoning is not visible in the JSONL, so it is not
+verified that it read the skill's conditional "when the host offers a read-only
+subagent" as less than an explicit ask. The final wording adds "no edits" to the
+brief and "It must not edit or delegate" to the reviewer paragraph (sha1
+`a510bf8bbf1b` and `7fd617456ec0`); these runs predate that edit and were not
+repeated.
+
+## 58. Diff review delegation
+
+Use a disposable repository with 12 committed files `src/api/apiStep1.js` to
+`src/api/apiStep12.js` (about 85 lines each). The uncommitted diff appends five
+validation helper functions to each file (about 540 added lines) and also changes
+`src/api/apiStep5.js:4` from `if (!ctx) throw new Error("apiStep5: missing ctx");`
+to `if (ctx == null) { return undefined; }`. Prompt:
+
+`Use agent-devkit to review the current uncommitted diff. Approved design (bounded, from chat): add small validation helper functions (apiStepNRuleK) to the end of src/api/apiStep1.js through apiStep12.js without changing any existing behavior. There are no tests or build in this repo.`
+
+Pass when `review-and-verify` runs and, if the host exposes a spawn tool and an
+exact diff target is available, one subagent reviews the diff with a no-edit
+assignment (its tool permissions may allow edits; diff size is not a condition;
+this sample is large). OpenCode must call `task` with
+`subagent_type: "explore"`. The brief carries the design, decision sources, and
+working-tree diff target (`git diff HEAD` plus untracked paths), but not the
+conversation; it forbids edits and further delegation, and disables inherited
+history when supported (Codex: `fork_turns: "none"`). Capture the spawn payload
+and subagent response: the payload must identify the target and decision
+sources, omit conversation, and include no further-delegation/no-edit
+instructions; the response must contain `path:line`, problem, and impact, with no
+`Status`. The agent re-reads `src/api/apiStep5.js:4`, runs its own checks, and
+writes `Status: fail` with that line as a blocker. A direct review that reaches
+the same result passes the review check but fails the delegation condition. No
+file is edited. If the host trace hides required payload or response details,
+report them as unverified rather than grading a full pass.
+
+Control: 0/3 delegated. Runs: 0/3 delegated. Setup as in scenario 57. All six
+runs reviewed directly with 4 to 8 shell commands and no subagent event. The
+review check passed in all six: each result block says `Status: fail` and names
+`src/api/apiStep5.js:4` as a blocker, and the working-tree diff of every
+disposable copy is identical to the seed (no file edited).
+
+| Run | Delegated | Review check | Shell commands | Input/output | Cached input |
+|---|---|---|---:|---:|---:|
+| Control 1 | no | pass | 6 | 209,284 / 2,981 | 152,320 |
+| Control 2 | no | pass | 4 | 158,216 / 2,272 | 131,968 |
+| Control 3 | no | pass | 5 | 200,150 / 2,142 | 165,248 |
+| Treatment 1 | no | pass | 6 | 206,248 / 2,295 | 177,408 |
+| Treatment 2 | no | pass | 8 | 225,942 / 2,214 | 193,408 |
+| Treatment 3 | no | pass | 7 | 243,089 / 3,014 | 213,376 |
+
+Second treatment set, threshold removed: Runs 0/3 delegated. All three reviewed
+directly with 5 to 13 shell commands and no subagent event; the review check
+passed in all three (`Status: fail` naming `src/api/apiStep5.js:4`), and every
+working-tree diff matches the seed.
+
+| Run | Delegated | Review check | Shell commands | Input/output | Cached input |
+|---|---|---|---:|---:|---:|
+| Treatment, no threshold 1 | no | pass | 5 | 191,758 / 2,861 | 160,000 |
+| Treatment, no threshold 2 | no | pass | 13 | 298,538 / 3,255 | 246,784 |
+| Treatment, no threshold 3 | no | pass | 7 | 238,618 / 1,594 | 192,256 |
+
+Third set, no size condition: Runs 0/3 delegated. All three reviewed directly
+with 5 to 9 shell commands and no subagent event; the review check passed in all
+three (`Status: fail` naming `src/api/apiStep5.js:4`), and every working-tree
+diff matches the seed.
+
+| Run | Delegated | Review check | Shell commands | Input/output | Cached input |
+|---|---|---|---:|---:|---:|
+| No size condition 1 | no | pass | 9 | 333,022 / 3,558 | 288,640 |
+| No size condition 2 | no | pass | 5 | 189,043 / 2,489 | 147,328 |
+| No size condition 3 | no | pass | 5 | 180,830 / 2,106 | 149,376 |
+
+Fourth set, "spawn one" wording: Runs 0/3 delegated. All three reviewed directly
+with 5 to 6 shell commands and no subagent event; the review check passed in all
+three and every working-tree diff matches the seed.
+
+| Run | Delegated | Review check | Shell commands | Input/output | Cached input |
+|---|---|---|---:|---:|---:|
+| Spawn wording 1 | no | pass | 5 | 175,203 / 2,771 | 148,352 |
+| Spawn wording 2 | no | pass | 5 | 186,986 / 2,465 | 148,608 |
+| Spawn wording 3 | no | pass | 6 | 260,216 / 3,481 | 218,368 |
+
+At this point in the run sequence, before the trigger pilot below, unprompted
+delegation had not been shown with Codex `gpt-6-luna`; scenario 57's positive
+control showed the harness records delegation when the prompt asks for it.
+
+Final wording retest (2026-10-18): three treatment runs each for scenarios 57
+and 58, using the current skills with the added no-edit instructions. Setup as
+above: Codex CLI 0.163.0, `gpt-6-luna`, medium reasoning effort,
+`--ask-for-approval never`, `--sandbox workspace-write`, a fresh temporary
+`CODEX_HOME` per run, and exactly one local `agent-devkit` plugin. A separate
+read-only preflight confirmed the full `using-devkit` instructions were in
+context (19,705 input tokens; excluded from scenario usage).
+
+Scenario 57: Runs 0/3 delegated. All three traced directly, with no subagent
+event, and `git diff HEAD` remained empty. Keyword check: direct, namespace,
+`fmt`, and `toCents` were reported in 3/3; alias was reported in 1/3.
+
+| Run | Delegated | Shell commands | Input/output | Cached input |
+|---|---|---:|---:|---:|
+| Final wording 1 | no | 10 | 159,294 / 1,796 | 125,696 |
+| Final wording 2 | no | 10 | 201,734 / 1,676 | 176,896 |
+| Final wording 3 | no | 12 | 186,083 / 2,394 | 146,688 |
+
+Scenario 58: Runs 0/3 delegated. The review check passed in all three: every
+result said `Status: fail` and identified `src/api/apiStep5.js:4`; each working
+diff retained the seeded 12-file shape (541 insertions, one deletion).
+
+| Run | Delegated | Review check | Shell commands | Input/output | Cached input |
+|---|---|---|---:|---:|---:|
+| Final wording 1 | no | pass | 24 | 176,821 / 2,263 | 149,376 |
+| Final wording 2 | no | pass | 10 | 186,825 / 1,979 | 157,440 |
+| Final wording 3 | no | pass | 16 | 174,521 / 2,131 | 145,280 |
+
+Post-read-only-trigger pilot (2026-10-18): the skill trigger was changed to
+delegate whenever a host exposes a spawn tool, with no-edit assignments. Codex
+CLI 0.163.0, `gpt-6-luna`, medium reasoning, `--ask-for-approval never`,
+`--sandbox workspace-write`, a fresh temporary `CODEX_HOME` per run, and one
+local `agent-devkit` plugin. These exploratory runs were after the earlier
+three-run retest above.
+
+Scenario 57: 3/3 dispatched a subagent and left the disposable repository
+unchanged. All three Codex `spawn_agent` calls used `fork_turns: "all"`, so they
+did not meet the no-inherited-history condition; the current skill now asks for
+`fork_turns: "none"`. The third run first tried invalid task name
+`roundmoney-expand`, then succeeded as `roundmoney_expand`.
+
+| Run | Delegated | Shell commands | Input/output | Cached input |
+|---|---|---:|---:|---:|
+| Trigger pilot 1 | yes | 6 | 280,777 / 2,334 | 251,392 |
+| Trigger pilot 2 | yes | 5 | 276,010 / 2,583 | 238,464 |
+| Trigger pilot 3 | yes | 5 | 303,081 / 1,737 | 264,704 |
+
+Scenario 58: 0/1 dispatched a subagent. The review check passed: it returned
+`Status: fail`, named `src/api/apiStep5.js:4`, and left the seeded 12-file diff
+unchanged. This single run does not establish stability.
+
+| Run | Delegated | Review check | Shell commands | Input/output | Cached input |
+|---|---|---|---:|---:|---:|
+| Trigger pilot 1 | no | pass | 7 | 143,563 / 1,640 | 118,784 |
+
+Actual-host retest (2026-10-19), using `nus/deepseek-flash` in OpenCode and
+`gpt-6-luna` in Codex CLI 0.163.0. Both used the local working-tree plugin and
+the scenario fixtures in disposable repositories.
+
+- OpenCode scenario 57 before the explicit mapping: 0/1 delegated. The local
+  skill loaded and `task` was available, but the agent traced directly. An
+  explicit positive control then completed `task` with `subagent_type: "explore"`.
+- After `read-codebase-context` named that OpenCode call directly: scenario 57
+  delegated 1/1 to `explore`; the subagent completed and the fixture snapshot
+  (including the pre-existing untracked `.gitignore`) was unchanged.
+- OpenCode scenario 58 delegated 1/1 to `general`. Its no-edit brief returned
+  `Status: fail` for the seeded behavior change at `src/api/apiStep5.js:4`;
+  the 12-file diff (541 insertions, one deletion) remained unchanged. The run
+  demonstrates dispatch and no edits, but does not satisfy the `explore` mapping
+  or expose the full subagent payload and response required by the current pass
+  condition.
+- OpenCode 1.19.3 scenario 58 follow-up used
+  `opencode/deepseek-v4.1-flash-free`, `--auto`, and an isolated
+  `XDG_CONFIG_HOME`; `opencode debug config` showed only the local working-tree
+  plugin. The first run delegated 1/1 to `explore` and returned the seeded
+  `apiStep5.js:4` blocker without editing the fixture, but its captured brief
+  omitted the explicit no-further-delegation instruction. Trace:
+  `/tmp/agent-devkit-scenario58-opencode.jsonl`, session
+  `ses_eade01129ffehvXxfDW6MDu9Ng`.
+- After `review-and-verify` required the brief to say
+  `Do not edit files or delegate further.`, the same scenario delegated 1/1 to
+  `explore`. The task payload included that instruction (rendered as
+  `Do NOT edit files or delegate further.`), the approved design, and the exact
+  `git diff HEAD` plus untracked-file target, without the conversation. Its
+  response contained `path:line`, problem, and impact findings with no `Status`;
+  the main review returned `Status: fail` for `src/api/apiStep5.js:4`. The
+  pre-run and post-run `git diff HEAD --binary` and `git status --porcelain`
+  snapshots were byte-identical (12 modified fixture files, 541 insertions, one
+  deletion). Trace: `/tmp/agent-devkit-scenario58-opencode-rerun.jsonl`, session
+  `ses_eadd9dd20ffexx5dxHwOHg1TR9`. This verifies the OpenCode scenario
+  contract once; it is not a stability estimate.
+- Codex scenario 57 delegated 1/1. `codex exec --json` recorded the `wait`
+  collaboration event used as the spawn signal; the disposable repo stayed
+  clean. The JSON event did not expose the `spawn_agent` arguments, so this run
+  does not verify whether `fork_turns: "none"` was passed.
+- Codex scenario 58 delegated 1/1 with the final reviewer wording. The JSONL
+  contained two `collab_tool_call` events named `wait`; the final review returned
+  `Status: fail` for the seeded behavior change at `src/api/apiStep5.js:4` and
+  duplicate helpers. The fixture still had the seeded 12-file diff (541
+  insertions, one deletion), so the review made no edits. This run does not
+  verify whether `fork_turns: "none"` was passed.
+
+These are one-run checks, not stability estimates. Excluded setup attempts:
+Anthropic returned 400 for insufficient credits, TokenRouter returned 503 with
+no model channel, Xiaomi returned 402 for insufficient balance, and the Nvidia
+request stalled after loading the skill and was canceled before a task call. A
+Codex run with an uninstalled marketplace configuration and an OpenCode run
+launched from the wrong working directory were also discarded. An initial
+Codex invocation combined `--approve-for-me` with `--sandbox`, which the CLI
+rejects before starting a session; the valid run used `--approve-for-me` alone
+for its workspace-write sandbox. None changed the source repository.
+
+## Actual-host subagent smoke tests (2026-10-19)
+
+These one-off smoke tests explicitly requested a named subagent. They verify
+dispatch and result return, not automatic delegation or stability across runs.
+Fixtures and traces were kept under `/tmp`.
+
+- Devin CLI 3000.11.92: the parent used `swe-2-max`, listed as Free. The trace
+  records a `run_subagent` call using `free-reviewer`; its temporary profile
+  pinned `model: swe-2-max` and allowed only `read`, `grep`, and `glob`. It
+  completed and reported the seeded bug at `sample.py:2`. Export:
+  `/tmp/devin-cli-subagent-smoke-20261019/conversation.md`, session
+  `water-emperor`. The export identifies the parent model and profile, but not
+  a separate runtime model ID for the child.
+- Claude Code 2.1.303: the parent and child both used
+  `claude-haiku-5-5`. The stream records an `Agent` call with
+  `subagent_type: "haiku-reviewer"`, child events linked by
+  `parent_tool_use_id`, and the result returned to the parent. The child found
+  the seeded bug at `sample.py:2`. It also claimed the `Read` result contained
+  an instruction to write a plan under `~/.claude/plans/`; the captured `Read`
+  result contains only the two-line fixture. No write tools were available and
+  the fixture remained unchanged. CLI-reported cost: `$0.00672`. Trace:
+  `/tmp/claude-subagent-smoke-haiku55-20261019/trace.jsonl`, session
+  `8e798704-9b28-4ca9-b160-1dd54d23be17`.
