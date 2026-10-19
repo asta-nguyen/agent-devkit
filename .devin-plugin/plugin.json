@@ -1,6 +1,6 @@
 {
   "name": "agent-devkit",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Prompt-driven coding workflows and session bootstrap.",
   "author": {
     "name": "asta-nguyen"

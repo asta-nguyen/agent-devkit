@@ -22,7 +22,7 @@ export const AgentDevkitPlugin = async () => {
     const toolMapping = `**Tool Mapping for OpenCode:**
 When skills request actions, use these OpenCode equivalents:
 - Create or update todos → \`todowrite\`
-- Dispatch a subagent → \`task\` with \`subagent_type: "general"\`
+- Dispatch a subagent with a no-edit assignment → \`task\` with \`subagent_type: "explore"\`
 - Invoke a skill → OpenCode's native \`skill\` tool
 - Read files → \`read\`
 - Create, edit, or delete files → \`edit\` / \`write\`, or \`apply_patch\` when that is the available edit tool

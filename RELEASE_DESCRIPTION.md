@@ -1,39 +1,48 @@
-# agent-devkit 0.9.0
+# agent-devkit 0.10.0
 
-Smaller always-loaded skills, one owner per shared rule, and two new workflow
-rules: pre-edit baseline checks and cancelling an open change. Full list in
+Prompt-guided no-edit subagent briefs for repository tracing and independent
+diff review, updated per-client upgrade instructions, and evaluation records
+for Codex, OpenCode, Devin CLI, and Claude Code. Full list in
 [CHANGELOG.md](CHANGELOG.md).
 
 ## Changes
 
-- All `SKILL.md` files shrink from about 130,000 to about 100,000 bytes and the
-  `using-devkit` bootstrap to under 5,900 characters; `npm test` enforces a size
-  cap per skill. Detail moved to `references/` files read only when needed.
-- Each shared rule has one owning skill; others point to it.
-- Before the first source edit, implementation runs existing relevant checks
-  and records failures as baseline, without adding a runner just for that.
-- An open change can be cancelled with the user's reason: its folder moves to
-  `changes/cancelled/<same name>/` with relative links rewritten, indexed under
-  `## Cancelled changes`. Cancellation is not completion and discards no work.
-- `review-and-verify` only reports; fixes go through `implement-task`'s fix
-  loop, which stops after three failed attempts per blocker.
-- Install docs pin Codex, Claude Code, and OpenCode to one release tag
-  (`v0.9.0`), and add a GitHub Actions workflow that runs the wiki validator on
-  every PR. Plugin and marketplace metadata use 0.9.0.
+- `read-codebase-context` requests a source trace after Locate;
+  `review-and-verify` can request an independent review when a host spawn tool
+  and exact diff target are available. OpenCode uses `task` with
+  `subagent_type: "explore"`. The parent verifies the result. No-edit briefs
+  are prompts; they do not restrict host permissions.
+- README and README.vi document checked upgrade paths for pinned and
+  default-branch installs. Devin's direct install follows the default branch
+  because that command has no tag option.
+- Legacy plans, specs, decision files, and `Required`/`Execution` gates remain
+  supported for existing artifacts. Their removal, originally scheduled for
+  v0.10.0, is deferred with no replacement target version.
 
 ## Verification
 
-- `npm test` (plugin-smoke): passed — plugin loading, skill size caps,
-  reference paths, version consistency, and wiki validator fixtures.
-- `git diff --check`: clean.
-- document-wiki validator on this repository: 3 files, 11 requirements,
-  0 errors, 0 warnings.
-- Eval 55 (cancel an open change, relink rule): 3/3 on `claude-haiku-5-5`.
-- Eval 56 (baseline before first edit): 3/3 on `claude-haiku-5-5`.
-- Not verified: `claude plugin marketplace add owner/repo#ref` shorthand syntax;
-  only `claude-haiku-5-5` was used for the new evals.
+- Actual-host subagent checks are recorded in [EVALS.md](EVALS.md). They are
+  one-run smoke tests with explicit named-subagent prompts; they do not establish
+  automatic dispatch or stability across runs.
+- OpenCode 1.19.3 with a free DeepSeek model dispatched `explore`, returned the
+  seeded finding, and left the fixture unchanged. The full final brief was
+  exercised once.
+- Codex CLI 0.163.0 emitted collaboration events in scenarios 57 and 58, but
+  the captured JSONL did not expose spawn arguments; `fork_turns: "none"` and
+  reviewer history isolation remain unverified.
+- Devin CLI 3000.11.92, with parent model `swe-2-max` (Free), returned the
+  seeded finding through a profile pinned to `swe-2-max`; the export does not
+  identify a separate runtime model for the child.
+- Claude Code 2.1.303 returned the seeded finding using `claude-haiku-5-5`, but
+  the child also made an unsupported claim about the source it had read. No
+  write tool was available, and the fixture stayed unchanged; parent
+  verification remains necessary.
+- `rtk npm test`: passed plugin smoke checks, version consistency, skill size
+  limits, and reference validation. Node emitted a non-failing module-type
+  warning for the OpenCode plugin.
+- `rtk git diff HEAD --check`: clean.
 
 ## Publishing
 
-Not committed, tagged, or pushed. The `v0.9.0` pins in the docs resolve only
-after the tag is pushed.
+Prepared for 0.10.0; not committed, tagged, pushed, or published. The package
+is marked private, so npm publication is not the distribution path.

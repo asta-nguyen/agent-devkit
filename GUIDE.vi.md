@@ -14,7 +14,7 @@ Agent phân loại từng task và nói rõ loại đó; bạn có thể đổi.
 | Bounded bug | Tái hiện, tìm root cause, sửa, review | Không, trừ khi expected behavior chưa rõ | Regression check và fix; `delta.md` chỉ khi cần |
 | Architectural feature hoặc bug | Làm rõ, viết `design.md` và `tasks.md` | Một lần duyệt chung `design.md`, `tasks.md` và `delta.md` (nếu có) | Change folder `docs/agent-devkit/changes/<name>/`, archive sau final review |
 
-Mọi điểm dừng kết thúc bằng `Next / Waiting on / Done when`. Plan, spec và decision file legacy chỉ đọc; việc mới dùng change folder.
+Mọi điểm dừng kết thúc bằng `Next / Waiting on / Done when`. Spec và decision file legacy là lịch sử; plan legacy còn open vẫn có thể được sửa và hoàn tất. Việc mới dùng change folder.
 
 ## 1. Mô hình làm việc
 
@@ -42,15 +42,16 @@ Cài **nguyên bộ** `skills/` — các skill handoff cho nhau và load file tr
 
 | Client | Lệnh |
 |---|---|
-| Claude Code | `claude plugin marketplace add asta-nguyen/agent-devkit#v0.9.0` rồi `claude plugin install agent-devkit@agent-devkit --scope user` |
-| Codex | `codex plugin marketplace add asta-nguyen/agent-devkit --ref v0.9.0` rồi `codex plugin add agent-devkit@agent-devkit` |
+| Claude Code | `claude plugin marketplace add asta-nguyen/agent-devkit#v0.10.0` rồi `claude plugin install agent-devkit@agent-devkit --scope user` |
+| Codex | `codex plugin marketplace add asta-nguyen/agent-devkit --ref v0.10.0` rồi `codex plugin add agent-devkit@agent-devkit` |
 | Devin CLI | `devin plugins install asta-nguyen/agent-devkit` |
 | Cursor | import `.cursor-plugin/marketplace.json` qua team marketplace, hoặc đặt repo tại `~/.cursor/plugins/local/agent-devkit` rồi reload |
-| OpenCode | thêm `agent-devkit@git+https://github.com/asta-nguyen/agent-devkit.git#v0.9.0` vào `plugin` trong `opencode.json` rồi restart |
+| OpenCode | thêm `agent-devkit@git+https://github.com/asta-nguyen/agent-devkit.git#v0.10.0` vào `plugin` trong `opencode.json` rồi restart |
 
-Các lệnh minh họa dùng cùng release tag `v0.9.0`. Khi team chuyển sang
-release mới, cập nhật mọi source pin cùng lúc và làm theo bước update riêng của
-từng client; refresh marketplace không tự đổi tag đã pin.
+Các lệnh minh họa dùng cùng release tag `v0.10.0`. Khi team chuyển sang
+release mới, cập nhật mọi source pin cùng lúc theo
+[README tiếng Việt — Nâng cấp](README.vi.md#nâng-cấp); refresh marketplace
+không tự đổi tag đã pin.
 
 **Agent Skills CLI:**
 
@@ -95,13 +96,13 @@ jobs:
       - uses: actions/checkout@v7
         with:
           repository: asta-nguyen/agent-devkit
-          ref: v0.9.0
+          ref: v0.10.0
           path: .agent-devkit
       - name: Validate wiki
         run: node .agent-devkit/skills/document-wiki/scripts/validate-llm-wiki.mjs .
 ```
 
-Chi tiết và câu lệnh update cho từng client: [README tiếng Việt — Sử dụng skills](README.vi.md#sử-dụng-skills). OpenEZ (semantic index) và FFF (fuzzy search) là tùy chọn, chỉ đáng cài trong repo lớn — xem [GUIDE.md §2](GUIDE.md#2-installation).
+Chi tiết cài đặt: [README tiếng Việt — Sử dụng skills](README.vi.md#sử-dụng-skills); lệnh nâng cấp từng client: [Nâng cấp](README.vi.md#nâng-cấp). OpenEZ (semantic index) và FFF (fuzzy search) là tùy chọn, chỉ đáng cài trong repo lớn — xem [GUIDE.md §2](GUIDE.md#2-installation).
 
 ## 3. Bootstrap và hook
 
@@ -140,12 +141,12 @@ Nếu thiếu using-devkit, skill tham chiếu nó phải dừng và báo thiế
 | Nhu cầu | Skill bắt đầu | Kết quả thường thấy |
 |---|---|---|
 | Không rõ nên dùng quy trình nào | using-devkit | Định tuyến sang skill sở hữu |
-| Hiểu code path, caller, test hoặc impact | read-codebase-context | Sơ đồ entry → caller/callee → test và evidence |
+| Hiểu code path, caller, test hoặc impact | read-codebase-context | Sơ đồ entry → caller/callee → test và evidence; có thể yêu cầu host subagent trace không sửa file sau Locate |
 | Repo mới hoặc thiếu context | setup-codebase | Tạo context cần thiết; chỉ tạo wiki khi người dùng yêu cầu setup wiki/repository trực tiếp |
 | Ý tưởng mới hoặc yêu cầu còn mơ hồ | brainstorm-feature | Phân loại, làm rõ, đề xuất design và xin approval |
 | Design kiến trúc đã duyệt, cần task để implement | plan-feature | Plan chi tiết, Approval Gate và verification |
 | Bắt đầu code theo design/plan đã duyệt | implement-task | Chạy check hiện có trước lần sửa source đầu tiên, ghi baseline rồi implement và verify |
-| Xác minh diff trước khi kết thúc | review-and-verify | Kết quả pass/fail cùng blocker và Spec gaps |
+| Xác minh diff trước khi kết thúc | review-and-verify | Review diff, chạy check và complexity pass; có thể yêu cầu independent review không sửa file khi có spawn tool và exact diff target |
 | Bug, test fail, behavior bất ngờ | systematic-debugging | Điều tra root cause rồi fix hoặc chuyển sang design |
 | Tạo/refresh wiki từ source hiện tại | document-wiki | Domain map, feature inventory, các trang được chọn |
 | Ước lượng effort theo task | estimate-feature | Bảng estimate; chỉ chạy khi được yêu cầu |
@@ -282,7 +283,7 @@ Sau implementation, dùng review-and-verify. Đây là review theo diff và yêu
 5. Kiểm tra stale docs, caller, boundary bảo mật, error handling và scope ngoài plan.
 6. Phân loại ảnh hưởng tới wiki. Nếu tài liệu trong scope còn thiếu hoặc sai, review báo blocker với `Status: fail` và `implement-task` gọi Task updates để cập nhật và verify; chưa báo pass trước khi xong.
 
-Review kết thúc bằng result block có Status, Evidence, Blockers, Non-blockers, Spec gaps, Wiki impact, Wiki pages và Wiki action. Chỉ nói pass khi tất cả yêu cầu và verification bắt buộc có evidence mới. Verification chưa chạy hoặc không thể chạy không được đổi thành pass; ghi cụ thể cannot verify và lý do.
+Review kết thúc bằng result block có Status, Evidence và Wiki impact (kèm page và action khi cần); Blockers, Non-blockers và Spec gaps chỉ hiện khi có nội dung. Chỉ nói pass khi tất cả yêu cầu và verification bắt buộc có evidence mới. Verification chưa chạy hoặc không thể chạy không được đổi thành pass; ghi cụ thể cannot verify và lý do.
 
 ## 9. Wiki và format Requirements
 
@@ -514,7 +515,7 @@ Không báo pass. Ghi cannot verify với evidence/command cụ thể còn thi�
 - Nếu có wiki và behavior bị ảnh hưởng, tài liệu trong scope đã được agent cập nhật và verify trước completion chưa?
 - Wiki requirement có ID, SHALL, scenario, evidence, source paths và prefix registry đúng không?
 - Folder/artifact nào cũng có lý do; không tạo placeholder, LOG mới hoặc tracking system thứ hai?
-- review-and-verify có result block rõ Evidence, Blockers, Spec gaps và Wiki action chưa?
+- review-and-verify có result block gọn, có Evidence và Wiki impact, và chỉ hiện Blockers, Spec gaps khi có nội dung chưa?
 
 ## 14. Đọc thêm
 

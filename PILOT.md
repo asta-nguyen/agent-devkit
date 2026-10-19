@@ -94,8 +94,8 @@ The tech lead does this once for the whole team:
 
 ```bash
 # Use one published release tag for every team client.
-# Example: replace v0.9.0 everywhere with the same tag containing the pilot changes.
-claude plugin marketplace add asta-nguyen/agent-devkit#v0.9.0
+# Example: replace v0.10.0 everywhere with the same tag containing the pilot changes.
+claude plugin marketplace add asta-nguyen/agent-devkit#v0.10.0
 claude plugin install agent-devkit@agent-devkit --scope user
 
 # In the target repository, run setup-codebase to create context files
@@ -332,8 +332,14 @@ real need:
   `AGENTS.md` files, per-package wikis, and cross-package dependency tracing.
 - **Additional CI checks** — consider only if the pilot shows a need beyond the
   documented wiki validator workflow.
-- **Subagent/parallel execution** — consider it only after measuring a bottleneck
-  and agreeing on ownership, merge handling, verification evidence, and cost/context limits.
+- **Subagent/parallel execution** — no-edit delegation is promoted in
+  `read-codebase-context` for traces after Locate, and in `review-and-verify`
+  when the host exposes a spawn tool and an exact diff target is available.
+  Briefs request no edits but do not restrict host permissions; the parent must
+  verify evidence and check the resulting diff. Parallel execution and
+  subagents assigned file edits stay here: consider them only after measuring a
+  bottleneck and agreeing on ownership, merge handling, verification evidence,
+  and cost/context limits.
 
 Discuss at the final retrospective: how often monorepos came up, how many
 documentation/link errors occurred, and how many tasks actually benefited from
