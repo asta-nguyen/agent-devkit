@@ -1,0 +1,64 @@
+EVALS.md
+  s_0951a184c0db48::t_b659232e9dd032 1726-1746
+  s_0951a184c0db48::t_20d2cc0232d8d1 1706-1725
+hooks/session-start.js
+  s_aeafa978009993::t_1d5fe7e4628023 12,17-18,24-64,67,69,73
+  s_aeafa978009993::t_2cf80430a18bb3 66,70,76-77
+  s_aeafa978009993::t_15e08633290d8d 65,68,72,74-75,78-91
+  s_aeafa978009993::t_c4bab7a2a6a99a 10-11,13-16,19-23
+  s_aeafa978009993::t_c88cef64810a3d 71
+skills/read-codebase-context/SKILL.md
+  s_0951a184c0db48::t_14803a045a39ec 31,33,38
+  s_0951a184c0db48::t_ed8b6d25024c48 32
+  s_0951a184c0db48::t_8d9882ad7b44f6 34-37
+tests/plugin-smoke.mjs
+  s_aeafa978009993::t_55feed34996fe7 236-237
+  s_aeafa978009993::t_e6db02a61513c3 168-169,171-172,182,204-206,208-210,212-235,238-241
+  s_aeafa978009993::t_7c4dd54ca0dad8 183-203,207,211,242-244
+  s_aeafa978009993::t_e1cab0fa5e4e84 245
+GUIDE.md
+  s_bdcd85102b44b1::t_e0b60fc970091f 280
+  s_bdcd85102b44b1::t_56b3b1b57a5a46 262-267
+PILOT.md
+  s_0951a184c0db48::t_c731d0253244e8 335-336
+  s_0951a184c0db48::t_b49ffc657b1bc5 337-343
+GUIDE.vi.md
+  s_aeafa978009993::t_bd09e03e2b1106 120
+  s_aeafa978009993::t_287d0c1086401e 119
+  s_bdcd85102b44b1::t_8df0411ff4b733 146
+CHANGELOG.md
+  s_aeafa978009993::t_c020e3002e7533 5-6,16
+  s_aeafa978009993::t_287d0c1086401e 7-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "cabd89b6dd08016053986a82bd55f8f2e91db9c9",
+  "prompts": {},
+  "sessions": {
+    "s_0951a184c0db48": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a15729-7b2e-7fe1-b40d-0c10468a483a",
+        "model": "gpt-6-luna"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    },
+    "s_aeafa978009993": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "58328fa3-ca6e-4a67-9c02-bdf3bd3a83ed",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    },
+    "s_bdcd85102b44b1": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6a20b100-8be1-43fa-99ed-b6ffb98aa140",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "asta-nguyen <asta.dev.520@gmail.com>"
+    }
+  }
+}
