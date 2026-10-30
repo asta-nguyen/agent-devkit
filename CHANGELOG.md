@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+### Added
+
+- `node <plugin>/hooks/session-start.js --status` prints a read-only progress
+  overview of the current directory as plain text, on demand only: per open
+  change, the approval gate, done/total tasks, the current and next task, and
+  the handoff's Next action, plus the newest three standalone handoffs, or
+  "no saved progress". Only a missing path counts as no progress; any other
+  read error fails the command with exit 1. The `SessionStart` hook never
+  scans: it adds one line naming this exact command so an agent can run it when
+  the user asks for progress instead of opening every `tasks.md`. OpenCode's
+  plugin does not add the line.
+
 ## [0.10.0] - 2026-10-19
 
 ### Added

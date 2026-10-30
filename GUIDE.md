@@ -259,6 +259,12 @@ FFF is never required. Without it, skills use `rg` and reach the same results.
   same-named skills; retired skill folders must be removed manually.
 - Copy **all complete skill folders**, including their `references/` files,
   because skills chain together and load those supporting files when needed.
+- **Check progress on request.** Run
+  `node <plugin>/hooks/session-start.js --status` from the project root for a
+  read-only text overview: each open change's approval gate, done/total tasks,
+  current and next task, and handoff `Next action`, plus the newest three
+  standalone handoffs, or "no saved progress". The `SessionStart` hook never
+  scans; it only adds a line naming this command (OpenCode's plugin does not).
 
 ---
 
@@ -271,7 +277,7 @@ FFF is never required. Without it, skills use `rg` and reach the same results.
 | `using-devkit` | Starting work or deciding which workflow applies | Routes the task to the owning devkit skill; it does not replace that skill's process. |
 | `setup-codebase` | The repo lacks context files or recorded repository conventions | Reads repository evidence, creates missing context files, and captures missing conventions only after user approval. |
 | `setup-openez` | The user agrees to use OpenEZ or the index is stale | Gets approval before CLI install, existing `AGENTS.md` guidance, or client wiring; reports CLI indexing separately from MCP verification and marks an unavailable MCP query unverified. |
-| `read-codebase-context` | Before design, planning, or wiki work that needs affected files, callers, and tests | Uses OpenEZ for concepts/callers, FFF for fuzzy filenames/literal references, `rg` for regex, then reads current source and records an impact map; may request a no-edit host subagent trace after Locate. |
+| `read-codebase-context` | Before design, planning, or wiki work that needs affected files, callers, and tests | Uses OpenEZ for concepts/callers, FFF for fuzzy filenames/literal references, `rg` for regex, then reads current source and records an impact map; after Locate, may dispatch one no-edit host subagent per independent question, in parallel within host limits. |
 | `context-handoff` | A session must pause or is approaching its context limit | Saves a compact, source-grounded checkpoint (`handoff.md` in the change folder, or `docs/agent-devkit/handoffs/` outside a change) for the next session. |
 
 ### Feature Development

@@ -1703,3 +1703,44 @@ Fixtures and traces were kept under `/tmp`.
   the fixture remained unchanged. CLI-reported cost: `$0.00672`. Trace:
   `/tmp/claude-subagent-smoke-haiku55-20261019/trace.jsonl`, session
   `8e798704-9b28-4ca9-b160-1dd54d23be17`.
+
+## 59. Independent trace fan-out
+
+Use a disposable repository with two unrelated flows and no cross-imports:
+`src/auth/session.ts` with callers in `src/auth/refreshRoute.ts` and
+`src/auth/sessionStore.ts`; and `src/billing/invoice.ts` with callers in
+`src/billing/invoiceRoute.ts` and `src/billing/invoiceService.ts`. Prompt:
+
+`Use agent-devkit to map everything affected by changing session expiry and invoice recalculation. These are separate changes in one request; return one impact map per flow. Do not edit anything.`
+
+Pass when `read-codebase-context` identifies the separate scopes and dispatches
+one no-edit subagent per flow, not one subagent assigned both flows. Each brief
+is scoped to one flow, omits the conversation, forbids edits and further
+delegation, includes the goal, repository path, and `path:line` impact-map
+format, and disables inherited history when supported (`fork_turns: "none"` in
+Codex). Run the two traces in parallel when host capacity allows; otherwise use
+the host's available concurrency. The parent reads current source for both
+flows and verifies that the disposable repository has no trace edits. OpenCode
+uses `task` with `subagent_type: "explore"`. Report host limits and any
+unobservable brief or history-isolation details as verification limits.
+
+Collaboration-host comparison (2026-10-20): six fresh sessions used
+`gpt-6-luna` at medium reasoning with `fork_turns: "none"`. Controls read the
+skill from baseline commit `b7e67f591a7f7ce8407edffabb8d7da951d05134`;
+treatments read the working-tree skill. Each used a clean disposable fixture
+and the prompt above. Control delegated one combined trace in 3/3 sessions;
+treatment delegated two scoped traces in 3/3 sessions, in parallel. All six
+fixtures remained unchanged. This measures the collaboration host, not an
+isolated Codex CLI or OpenCode plugin setup. The host exposed no token counts;
+OpenEZ could not query the unregistered fixtures, so agents used `rg` and
+direct source reads. Internal spawn metadata beyond the visible assignment
+briefs was unavailable.
+
+| Run | Skill | Child trace agents | Fixture |
+|---|---|---:|---|
+| Control 1 | baseline | 1 combined | clean |
+| Control 2 | baseline | 1 combined | clean |
+| Control 3 | baseline | 1 combined | clean |
+| Treatment 1 | updated | 2 scoped, parallel | clean |
+| Treatment 2 | updated | 2 scoped, parallel | clean |
+| Treatment 3 | updated | 2 scoped, parallel | clean |

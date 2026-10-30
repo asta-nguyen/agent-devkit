@@ -165,10 +165,11 @@ function skillChecks() {
 
 skillChecks();
 
-const runHook = (env = {}) => JSON.parse(execFileSync(
+const hookPath = path.join(repoRoot, "hooks/session-start.js");
+const runHook = (env = {}, cwd = "/") => JSON.parse(execFileSync(
   process.execPath,
-  [path.join(repoRoot, "hooks/session-start.js")],
-  { cwd: "/", encoding: "utf8", env: { ...process.env, ...env } },
+  [hookPath],
+  { cwd, encoding: "utf8", env: { ...process.env, ...env } },
 ));
 
 const claude = runHook();
@@ -177,6 +178,70 @@ assert.match(claude.hookSpecificOutput.additionalContext, /name: using-devkit/);
 const cursor = runHook({ CURSOR_PLUGIN_ROOT: repoRoot });
 assert.match(cursor.additional_context, /name: using-devkit/);
 assert.equal(cursor.hookSpecificOutput, undefined);
+
+// SessionStart never scans; it only names the on-demand `--status` command, which does the scan.
+const statusFixture = fs.mkdtempSync(path.join(os.tmpdir(), "devkit-status-"));
+try {
+  const write = (file, text) => {
+    fs.mkdirSync(path.dirname(path.join(statusFixture, file)), { recursive: true });
+    fs.writeFileSync(path.join(statusFixture, file), text);
+  };
+  const base = "docs/agent-devkit";
+  write(`${base}/changes/2026-10-20-demo/tasks.md`, [
+    "# Demo tasks", "## Tasks",
+    "### Task 1 — First", "Progress: done", "Result: ok",
+    "### Task 2 — Second", "Progress: todo", "Result: none",
+    "### Task 3 — Third", "Progress: todo", "Result: none",
+    "### Task 4 — Fourth", "Progress: todo", "Result: none",
+    "## Approval Gate", "", "Status: approved", "## Decision Log", "None.", "",
+  ].join("\n"));
+  write(`${base}/changes/2026-10-20-demo/handoff.md`, "# Handoff: Demo\n\n## Next action\nRun the Task 2 check\n");
+  write(`${base}/changes/2026-10-20-bounded/delta.md`, "# Delta\n");
+  write(`${base}/changes/archive/2026-10-01-old/tasks.md`, "### Task 1 — Old\nProgress: todo\n");
+  for (const day of ["10", "11", "12", "13"]) write(`${base}/handoffs/2026-10-${day}-loose.md`, `# Handoff: Loose ${day}\n`);
+
+  for (const context of [
+    claude.hookSpecificOutput.additionalContext,
+    cursor.additional_context,
+    runHook({}, statusFixture).hookSpecificOutput.additionalContext,
+  ]) {
+    assert.match(context, /on request only, never at session start/);
+    assert.match(context, /node ".*session-start\.js" --status/);
+    assert.doesNotMatch(context, /AGENT-DEVKIT STATUS|no saved progress|2026-10-20-demo/);
+  }
+
+  // The command the hook names runs from the project root and prints plain text, no skill.
+  const command = claude.hookSpecificOutput.additionalContext.match(/`(node ".*session-start\.js" --status)`/)?.[1];
+  assert.ok(command, "hook context must name the --status command");
+  const ran = spawnSync("/bin/sh", ["-c", command], { cwd: statusFixture, encoding: "utf8" });
+  assert.equal(ran.status, 0, ran.stderr);
+  assert.doesNotMatch(ran.stdout, /name: using-devkit/);
+  assert.match(ran.stdout, /do not resume, edit code/);
+  assert.match(ran.stdout, /2026-10-20-demo: plan approved; 1\/4 tasks done; current: Task 2 — Second; next: Task 3 — Third; \+1 pending/);
+  assert.match(ran.stdout, /handoff Next action: Run the Task 2 check/);
+  assert.match(ran.stdout, /2026-10-20-bounded: open change, no tasks\.md/);
+  assert.doesNotMatch(ran.stdout, /2026-10-01-old/);
+  assert.match(ran.stdout, /2026-10-13-loose: Loose 13/);
+  assert.match(ran.stdout, /2026-10-11-loose/);
+  assert.doesNotMatch(ran.stdout, /2026-10-10-loose/);
+
+  // A project with no progress files: only a missing path counts as "no saved progress".
+  const empty = path.join(statusFixture, "empty");
+  fs.mkdirSync(empty);
+  const none = spawnSync("/bin/sh", ["-c", command], { cwd: empty, encoding: "utf8" });
+  assert.equal(none.status, 0);
+  assert.match(none.stdout, /no saved progress/);
+
+  // Any other read error (tasks.md is a directory: EISDIR, same path as EACCES) fails the scan loudly.
+  const broken = path.join(statusFixture, "broken");
+  fs.mkdirSync(path.join(broken, base, "changes/bad/tasks.md"), { recursive: true });
+  const failed = spawnSync("/bin/sh", ["-c", command], { cwd: broken, encoding: "utf8" });
+  assert.equal(failed.status, 1);
+  assert.match(failed.stderr, /status failed: EISDIR/);
+  assert.doesNotMatch(failed.stdout, /no saved progress|no tasks\.md/);
+} finally {
+  fs.rmSync(statusFixture, { recursive: true, force: true });
+}
 
 const devinHooks = JSON.parse(fs.readFileSync(path.join(repoRoot, "hooks.json"), "utf8"));
 const devinStart = devinHooks.hooks.SessionStart;

@@ -116,6 +116,8 @@ Mỗi packaging đăng ký một `SessionStart` hook để inject `using-devkit`
 | Devin CLI | `.devin-plugin/` + `hooks.json` ở root |
 | OpenCode | `.opencode/plugins/agent-devkit.js` |
 
+Cần xem tiến độ? Chạy `node <plugin>/hooks/session-start.js --status` từ thư mục dự án (chỉ khi bạn yêu cầu; hook mở session **không** quét). Lệnh in tổng quan chỉ-đọc dạng text: mỗi change đang mở với approval gate, số task đã xong, task hiện tại/kế tiếp, `Next action` của handoff, cùng 3 handoff độc lập mới nhất; không có gì thì báo "chưa có tiến độ được lưu", file đọc lỗi thì thoát với exit 1. Hook (trừ OpenCode) chỉ thêm một dòng ghi sẵn lệnh này với đường dẫn thật của bản đang cài, để agent chạy khi bạn hỏi tiến độ thay vì mở lại từng `tasks.md`.
+
 Sau khi cài:
 
 - **Restart agent session** để skill list reload.
@@ -141,7 +143,7 @@ Nếu thiếu using-devkit, skill tham chiếu nó phải dừng và báo thiế
 | Nhu cầu | Skill bắt đầu | Kết quả thường thấy |
 |---|---|---|
 | Không rõ nên dùng quy trình nào | using-devkit | Định tuyến sang skill sở hữu |
-| Hiểu code path, caller, test hoặc impact | read-codebase-context | Sơ đồ entry → caller/callee → test và evidence; có thể yêu cầu host subagent trace không sửa file sau Locate |
+| Hiểu code path, caller, test hoặc impact | read-codebase-context | Sơ đồ entry → caller/callee → test và evidence; sau Locate có thể giao mỗi câu hỏi độc lập cho một host subagent không sửa file, chạy song song trong giới hạn của host |
 | Repo mới hoặc thiếu context | setup-codebase | Tạo context cần thiết; chỉ tạo wiki khi người dùng yêu cầu setup wiki/repository trực tiếp |
 | Ý tưởng mới hoặc yêu cầu còn mơ hồ | brainstorm-feature | Phân loại, làm rõ, đề xuất design và xin approval |
 | Design kiến trúc đã duyệt, cần task để implement | plan-feature | Plan chi tiết, Approval Gate và verification |

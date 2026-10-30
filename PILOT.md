@@ -332,14 +332,15 @@ real need:
   `AGENTS.md` files, per-package wikis, and cross-package dependency tracing.
 - **Additional CI checks** — consider only if the pilot shows a need beyond the
   documented wiki validator workflow.
-- **Subagent/parallel execution** — no-edit delegation is promoted in
-  `read-codebase-context` for traces after Locate, and in `review-and-verify`
-  when the host exposes a spawn tool and an exact diff target is available.
-  Briefs request no edits but do not restrict host permissions; the parent must
-  verify evidence and check the resulting diff. Parallel execution and
-  subagents assigned file edits stay here: consider them only after measuring a
-  bottleneck and agreeing on ownership, merge handling, verification evidence,
-  and cost/context limits.
+- **Parallel implementation and edit-capable subagents** — read-only trace
+  fan-out is supported for independent questions in `read-codebase-context`,
+  within host concurrency. `review-and-verify` also delegates a no-edit diff
+  review when the host exposes a spawn tool and the diff target is exact. Tool
+  permissions may still allow edits, so the parent verifies trace evidence and
+  checks the working tree for subagent edits. Parallel code edits and subagents
+  assigned file edits stay here: consider them only after measuring a bottleneck
+  and agreeing on ownership, merge handling, verification evidence, and
+  cost/context limits.
 
 Discuss at the final retrospective: how often monorepos came up, how many
 documentation/link errors occurred, and how many tasks actually benefited from

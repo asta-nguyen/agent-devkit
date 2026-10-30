@@ -28,15 +28,14 @@ edit and every newly found caller. The map guides navigation, not evidence.
 
 ## Delegate the trace
 
-After Locate, immediately use one host spawn tool for an Expand-through-Read
-question; size is irrelevant. OpenCode: call `task` with
-`subagent_type: "explore"`. Assign no edits. Include goal, scope, repo path, no
-further delegation, and impact-map fields with `path:line` evidence. Omit this
-conversation; disable inherited history when supported (`fork_turns: "none"` in
-Codex). Treat its result as navigation: verify current source. On spawn failure,
-unverifiable claims, or no tool, search directly.
-
-No-edit is a prompt, not a permission limit; verify no trace edits.
+After Locate, split independent questions by scope. Use one no-edit
+subagent per question; parallelize within host limits; combine
+overlapping/dependent scopes. No Devkit-wide numeric cap. OpenCode: `task`
+with `subagent_type: "explore"`. Brief: goal, scope, repo path, no further
+delegation, and `path:line` impact map. Omit conversation; disable inherited
+history when supported (`fork_turns: "none"` in Codex). Results are navigation:
+verify source and no trace edits. On spawn failure, unverifiable results, or no
+tool, trace directly. No-edit is only a prompt.
 
 ## Trace and record the impact
 
